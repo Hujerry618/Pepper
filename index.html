@@ -177,6 +177,7 @@
             flex: 1;
             position: relative;
             min-height: calc(100vh - 140px);
+            padding-bottom: 2.5rem;
         }
         .trigger {
             position: fixed;
@@ -499,9 +500,9 @@
             justify-self: start;
         }
         .today-datetime {
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            font-weight: 500;
+            font-size: 0.85rem;
+            color: white;
+            font-weight: 600;
             white-space: nowrap;
             justify-self: center;
         }
@@ -932,7 +933,10 @@
             text-align: center;
             color: var(--text-muted);
             font-size: 0.8rem;
-            position: relative;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
             z-index: 200;
         }
         
@@ -1081,8 +1085,8 @@
                         <h1 class="today-title">📋 今日工作与重要提醒</h1>
                         <span class="today-datetime" id="todayDatetime"></span>
                         <div class="today-actions">
-                            <button class="today-btn" onclick="openTaskModal()">➕ 任务</button>
-                            <button class="today-btn" onclick="openReminderModal()">➕ 提醒</button>
+                            <button class="today-btn" onclick="openTaskModal()">添加任务</button>
+                            <button class="today-btn" onclick="openReminderModal()">添加提醒</button>
                         </div>
                     </div>
                     
@@ -1955,11 +1959,9 @@
             const month = String(now.getMonth() + 1).padStart(2, '0');
             const day = String(now.getDate()).padStart(2, '0');
             const weekday = now.toLocaleDateString('zh-CN', { weekday: 'long' });
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
             const datetimeEl = document.getElementById('todayDatetime');
             if (datetimeEl) {
-                datetimeEl.textContent = `${year}年${month}月${day}日 ${hours}:${minutes} (${weekday})`;
+                datetimeEl.textContent = `${year}年${month}月${day}日 (${weekday})`;
             }
         }
         setInterval(updateTimeDisplay, 60000); // 每分钟更新
@@ -1971,11 +1973,9 @@
             const month = String(now.getMonth() + 1).padStart(2, '0');
             const day = String(now.getDate()).padStart(2, '0');
             const weekday = now.toLocaleDateString('zh-CN', { weekday: 'long' });
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
             const datetimeEl = document.getElementById('todayDatetime');
             if (datetimeEl) {
-                datetimeEl.textContent = `${year}年${month}月${day}日 ${hours}:${minutes} (${weekday})`;
+                datetimeEl.textContent = `${year}年${month}月${day}日 (${weekday})`;
             }
             
             // 分类任务
