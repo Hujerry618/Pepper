@@ -513,9 +513,9 @@
         
         /* ==================== 今日工作安排页面 ==================== */
         .today-work-page {
-            max-width: 1000px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 1.5rem 2rem;
+            padding: 1rem 1.5rem;
             width: 100%;
             position: sticky;
             top: 0;
@@ -527,12 +527,12 @@
             grid-template-columns: 1fr auto 1fr;
             align-items: center;
             gap: 1rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
             border-bottom: 3px solid var(--accent);
         }
         .today-title {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 700;
             color: var(--text-primary);
             justify-self: start;
@@ -568,23 +568,33 @@
             background: var(--accent-hover);
             transform: scale(1.05);
         }
+        
+        /* 横版布局 - 任务区域并排显示 */
+        .today-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
         .today-section {
             background: var(--bg-card);
             border-radius: var(--radius-lg);
-            padding: 1rem 1.25rem;
-            margin-bottom: 1rem;
+            padding: 0.75rem 1rem;
             border: 1px solid var(--border-color);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .today-section.full-width {
+            grid-column: 1 / -1;
         }
         .section-title {
-            font-size: 1.05rem;
+            font-size: 0.95rem;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.6rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            padding-bottom: 0.6rem;
+            gap: 0.4rem;
+            padding-bottom: 0.5rem;
             border-bottom: 2px solid var(--border-color);
         }
         .must-section {
@@ -598,16 +608,16 @@
         .task-list, .priority-list, .reminder-list {
             display: flex;
             flex-direction: column;
-            gap: 0.6rem;
+            gap: 0.5rem;
         }
         .task-item {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
-            padding: 0.75rem 1rem;
+            padding: 0.6rem 0.85rem;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 0.6rem;
             transition: all 0.2s;
             position: relative;
         }
@@ -1120,43 +1130,49 @@
                 <!-- 今日工作安排页面 -->
                 <div class="today-work-page" id="todayWorkPage">
                     <div class="today-header">
-                        <h1 class="today-title">📋 今日工作与重要提醒</h1>
+                        <h1 class="today-title" data-i18n="todayTitle">📋 今日工作与重要提醒</h1>
                         <span class="today-datetime" id="todayDatetime"></span>
                         <div class="today-actions">
-                            <button class="today-btn" onclick="openTaskModal()">添加任务</button>
-                            <button class="today-btn" onclick="openReminderModal()">添加提醒</button>
+                            <button class="today-btn" onclick="openTaskModal()" data-i18n="addTask">添加任务</button>
+                            <button class="today-btn" onclick="openReminderModal()" data-i18n="addReminder">添加提醒</button>
                         </div>
                     </div>
                     
-                    <!-- 今日核心任务 -->
-                    <section class="today-section">
-                        <h2 class="section-title">🎯 今日核心任务（3 项）</h2>
-                        <div class="task-list" id="coreTasks"></div>
-                    </section>
+                    <!-- 横版布局：三列并排 -->
+                    <div class="today-grid">
+                        <!-- 今日核心任务 -->
+                        <section class="today-section">
+                            <h2 class="section-title">🎯 <span data-i18n="coreTasks">今日核心任务</span></h2>
+                            <div class="task-list" id="coreTasks"></div>
+                        </section>
+                        
+                        <!-- 高优工作 -->
+                        <section class="today-section">
+                            <h2 class="section-title">⚡ <span data-i18n="priorityTasks">高优工作</span></h2>
+                            <div class="priority-list" id="priorityTasks"></div>
+                        </section>
+                        
+                        <!-- 常规工作 -->
+                        <section class="today-section">
+                            <h2 class="section-title">📝 <span data-i18n="regularTasks">常规工作</span></h2>
+                            <div class="task-list" id="regularTasks"></div>
+                        </section>
+                    </div>
                     
-                    <!-- 高优工作 -->
-                    <section class="today-section">
-                        <h2 class="section-title">⚡ 高优工作（带时间节点）</h2>
-                        <div class="priority-list" id="priorityTasks"></div>
-                    </section>
-                    
-                    <!-- 常规工作 -->
-                    <section class="today-section">
-                        <h2 class="section-title">📝 常规工作</h2>
-                        <div class="task-list" id="regularTasks"></div>
-                    </section>
-                    
-                    <!-- 今日必须完成事项 -->
-                    <section class="today-section must-section">
-                        <h2 class="section-title must-title">🔥 今日必须完成事项</h2>
-                        <div class="task-list" id="mustTasks"></div>
-                    </section>
-                    
-                    <!-- 重要提醒 -->
-                    <section class="today-section">
-                        <h2 class="section-title">⚠️ 重要提醒（风险/截止/会议）</h2>
-                        <div class="reminder-list" id="reminders"></div>
-                    </section>
+                    <!-- 第二行：全宽布局 -->
+                    <div class="today-grid">
+                        <!-- 今日必须完成事项 -->
+                        <section class="today-section must-section full-width">
+                            <h2 class="section-title must-title">🔥 <span data-i18n="mustTasks">今日必须完成</span></h2>
+                            <div class="task-list" id="mustTasks"></div>
+                        </section>
+                        
+                        <!-- 重要提醒 -->
+                        <section class="today-section full-width">
+                            <h2 class="section-title">⚠️ <span data-i18n="reminders">重要提醒</span></h2>
+                            <div class="reminder-list" id="reminders"></div>
+                        </section>
+                    </div>
                 </div>
                 
                 <!-- 默认占位页面 -->
@@ -1947,18 +1963,90 @@
             renderCats();
         }
 
+        // ==================== 国际化 ====================
+        const i18n = {
+            zh: {
+                todayTitle: '📋 今日工作与重要提醒',
+                addTask: '添加任务',
+                addReminder: '添加提醒',
+                coreTasks: '今日核心任务',
+                priorityTasks: '高优工作',
+                regularTasks: '常规工作',
+                mustTasks: '今日必须完成',
+                reminders: '重要提醒',
+                close: '关闭',
+                exportData: '导出数据',
+                exportDesc: '将当前所有数据导出为 JSON 文件',
+                importData: '导入数据',
+                importDesc: '从 JSON 文件导入数据（会覆盖当前数据）',
+                resetData: '恢复初始数据',
+                resetDesc: '清空所有自定义数据，恢复默认分类和网站',
+                saveToday: '保存今日工作数据',
+                saveTodayDesc: '将今日工作和提醒数据保存到本地文件',
+                loadToday: '恢复今日工作数据',
+                loadTodayDesc: '从文件恢复今日工作和提醒数据',
+                language: '🌐 语言 / Language',
+                langDesc: '切换界面显示语言'
+            },
+            en: {
+                todayTitle: '📋 Today\'s Work & Reminders',
+                addTask: '+ Task',
+                addReminder: '+ Reminder',
+                coreTasks: 'Core Tasks',
+                priorityTasks: 'Priority Tasks',
+                regularTasks: 'Regular Tasks',
+                mustTasks: 'Must Complete Today',
+                reminders: 'Important Reminders',
+                close: 'Close',
+                exportData: '📤 Export Data',
+                exportDesc: 'Export all data as JSON file',
+                importData: '📥 Import Data',
+                importDesc: 'Import data from JSON (will overwrite current data)',
+                resetData: '🔄 Reset Data',
+                resetDesc: 'Clear all custom data and restore defaults',
+                saveToday: '💾 Save Today\'s Data',
+                saveTodayDesc: 'Save today\'s tasks and reminders to file',
+                loadToday: '📂 Load Today\'s Data',
+                loadTodayDesc: 'Restore tasks and reminders from file',
+                language: '🌐 Language / 语言',
+                langDesc: 'Switch interface language'
+            }
+        };
+        
+        function updatePageLanguage(lang) {
+            const texts = i18n[lang] || i18n.zh;
+            // 更新所有带 data-i18n 属性的元素
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (texts[key]) {
+                    el.textContent = texts[key];
+                }
+            });
+            // 更新设置模态框
+            document.querySelector('[onclick="exportData()"] span:last-child').textContent = texts.exportData.includes('📤') ? texts.exportData.split(' ')[1] || texts.exportData : texts.exportData;
+            document.querySelectorAll('.settings-desc')[0].textContent = texts.exportDesc;
+            document.querySelectorAll('.settings-desc')[1].textContent = texts.importDesc;
+            document.querySelectorAll('.settings-desc')[2].textContent = texts.resetDesc;
+            document.querySelectorAll('.settings-desc')[3].textContent = texts.saveTodayDesc;
+            document.querySelectorAll('.settings-desc')[4].textContent = texts.loadTodayDesc;
+            document.querySelector('.settings-label').textContent = texts.language;
+            document.querySelector('#settingsModal .modal-actions .btn').textContent = texts.close;
+        }
+        
         // ==================== 设置功能 ====================
         function openSettingsModal() {
             document.getElementById('settingsModal').classList.add('active');
             // 加载当前语言状态
             const currentLang = localStorage.getItem('panelLanguage') || 'zh';
             updateLangButtons(currentLang);
+            updatePageLanguage(currentLang);
         }
         
         // 语言切换
         function setLanguage(lang) {
             localStorage.setItem('panelLanguage', lang);
             updateLangButtons(lang);
+            updatePageLanguage(lang);
             alert(lang === 'zh' ? '✅ 已切换为中文' : '✅ Switched to English');
         }
         
@@ -2495,6 +2583,7 @@
         function initLanguage() {
             const lang = localStorage.getItem('panelLanguage') || 'zh';
             updateLangButtons(lang);
+            updatePageLanguage(lang);
         }
         
         init();
