@@ -101,8 +101,8 @@
         .settings-btn:hover { border-color: var(--accent); transform: rotate(30deg) scale(1.05); }
         
         .settings-group {
-            margin-bottom: 1.2rem;
-            padding: 1rem;
+            margin-bottom: 0.75rem;
+            padding: 0.75rem;
             background: var(--bg-primary);
             border-radius: var(--radius-md);
             border: 1px solid var(--border-color);
@@ -111,14 +111,14 @@
             width: 100%;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1rem;
+            gap: 0.6rem;
+            padding: 0.6rem 0.85rem;
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
             cursor: pointer;
             transition: all 0.2s;
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: var(--text-primary);
             text-align: left;
         }
@@ -132,39 +132,39 @@
             background: rgba(239, 68, 68, 0.1);
         }
         .settings-action-icon {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
         }
         .settings-desc {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
-            margin-top: 0.5rem;
+            margin-top: 0.4rem;
             padding-left: 0.5rem;
         }
         .settings-label {
             display: block;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             color: var(--text-primary);
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.6rem;
         }
         .settings-divider {
             border: none;
             border-top: 1px solid var(--border-color);
-            margin: 1.5rem 0;
+            margin: 1rem 0;
         }
         .lang-switch {
             display: flex;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
+            gap: 0.4rem;
+            margin-bottom: 0.4rem;
         }
         .lang-btn {
             flex: 1;
-            padding: 0.6rem 1rem;
+            padding: 0.5rem 0.85rem;
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             color: var(--text-primary);
             transition: all 0.2s;
@@ -1120,7 +1120,7 @@
             </div>
             <div class="sidebar left" id="sidebarLeft">
                 <div class="sidebar-header">
-                    <span class="sidebar-title">🖥️ 办公场景</span>
+                    <span class="sidebar-title" data-i18n="workZone">🖥️ 办公场景</span>
                     <button class="add-btn" onclick="openCatModal('left')">➕</button>
                 </div>
                 <div class="sidebar-content" id="leftCats"></div>
@@ -1196,7 +1196,7 @@
             
             <div class="sidebar right" id="sidebarRight">
                 <div class="sidebar-header">
-                    <span class="sidebar-title">🎮 休闲场景</span>
+                    <span class="sidebar-title" data-i18n="leisureZone">🎮 休闲场景</span>
                     <button class="add-btn" onclick="openCatModal('right')">➕</button>
                 </div>
                 <div class="sidebar-content" id="rightCats"></div>
@@ -1656,7 +1656,21 @@
             initCatDrag();
         }
 
+        function getI18nText(catId, defaultName) {
+            const lang = localStorage.getItem('panelLanguage') || 'zh';
+            const key = 'cat' + catId.charAt(0).toUpperCase() + catId.slice(1);
+            return i18n[lang]?.[key] || defaultName;
+        }
+        
+        function getWebI18nText(webId, defaultName, isDesc = false) {
+            const lang = localStorage.getItem('panelLanguage') || 'zh';
+            const key = (isDesc ? 'desc' : 'web') + webId.charAt(0).toUpperCase() + webId.slice(1);
+            return i18n[lang]?.[key] || defaultName;
+        }
+        
         function createCatCard(cat, zone) {
+            const lang = localStorage.getItem('panelLanguage') || 'zh';
+            const translatedName = getI18nText(cat.id, cat.name);
             const div = document.createElement('div');
             div.className = 'cat-card' + (currentCatId === cat.id ? ' active' : '');
             div.dataset.zone = zone;
@@ -1664,16 +1678,16 @@
             div.onclick = (e) => { if (!e.target.closest('.cat-action')) selectCat(cat, zone); };
             div.innerHTML = `
                 <div class="cat-header">
-                    <span class="cat-name"><span class="cat-icon">${cat.icon}</span>${cat.name}</span>
+                    <span class="cat-name"><span class="cat-icon">${cat.icon}</span>${translatedName}</span>
                     <div class="cat-actions">
                         <button class="cat-action edit" onclick="event.stopPropagation();editCat('${cat.id}','${zone}')">✏️</button>
                         <button class="cat-action delete" onclick="event.stopPropagation();deleteCat('${cat.id}','${zone}')">🗑️</button>
                     </div>
                 </div>
                 <div class="web-list">
-                    ${cat.websites.slice(0, 6).map(w => `<div class="web-item"><span class="web-icon">${w.icon}</span><span class="web-name">${w.name}</span></div>`).join('')}
+                    ${cat.websites.slice(0, 6).map(w => `<div class="web-item"><span class="web-icon">${w.icon}</span><span class="web-name">${getWebI18nText(w.id, w.name)}</span></div>`).join('')}
                 </div>
-                <div class="cat-count">${cat.websites.length} 个网站</div>
+                <div class="cat-count">${cat.websites.length} ${lang === 'zh' ? '个网站' : 'sites'}</div>
             `;
             return div;
         }
@@ -1684,7 +1698,7 @@
             document.getElementById('placeholder').style.display = 'none';
             document.getElementById('detailView').classList.add('active');
             document.getElementById('detailIcon').textContent = cat.icon;
-            document.getElementById('detailName').textContent = cat.name;
+            document.getElementById('detailName').textContent = getI18nText(cat.id, cat.name);
             renderWebsites(cat);
             renderCats();
         }
@@ -1696,15 +1710,15 @@
                 const typeIcon = type === 'app' ? '🖥️' : type === 'dir' ? '📁' : '🌐';
                 let clickHandler = `openUrl('${w.url.replace(/\\/g, '\\\\')}', '${type}')`;
                 return `
-                <div class="web-card" onclick="${clickHandler}">
+                <div class="web-card" data-web-id="${w.id}" onclick="${clickHandler}">
                     <div class="web-type-badge">${typeIcon}</div>
                     <div class="web-actions">
                         <button class="web-action" onclick="event.stopPropagation();editWeb('${w.id}')">✏️</button>
                         <button class="web-action" onclick="event.stopPropagation();deleteWeb('${w.id}')">🗑️</button>
                     </div>
                     <span class="web-icon">${w.icon}</span>
-                    <span class="web-name">${w.name}</span>
-                    <span class="web-desc">${w.desc || ''}</span>
+                    <span class="web-name">${getWebI18nText(w.id, w.name)}</span>
+                    <span class="web-desc">${getWebI18nText(w.id, w.desc || '', true)}</span>
                 </div>
             `;
             }).join('');
@@ -1966,6 +1980,7 @@
         // ==================== 国际化 ====================
         const i18n = {
             zh: {
+                // 今日工作页面
                 todayTitle: '📋 今日工作与重要提醒',
                 addTask: '添加任务',
                 addReminder: '添加提醒',
@@ -1974,6 +1989,22 @@
                 regularTasks: '常规工作',
                 mustTasks: '今日必须完成',
                 reminders: '重要提醒',
+                // 侧边栏
+                workZone: '工作场景',
+                leisureZone: '休闲场景',
+                addCat: '➕',
+                // 分类名称
+                catWork: '工作类',
+                catTools: '工具类',
+                catLearn: '学习类',
+                catDesign: '设计类',
+                catDev: '开发类',
+                catFun: '娱乐类',
+                catLife: '生活类',
+                catSocial: '社交类',
+                catNews: '新闻类',
+                // 设置
+                settingsTitle: '⚙️ 设置',
                 close: '关闭',
                 exportData: '导出数据',
                 exportDesc: '将当前所有数据导出为 JSON 文件',
@@ -1986,9 +2017,48 @@
                 loadToday: '恢复今日工作数据',
                 loadTodayDesc: '从文件恢复今日工作和提醒数据',
                 language: '🌐 语言 / Language',
-                langDesc: '切换界面显示语言'
+                langDesc: '切换界面显示语言',
+                // 网站名称
+                webMail: '企业邮箱',
+                webDingTalk: '钉钉',
+                webDocs: '腾讯文档',
+                webProcessOn: 'ProcessOn',
+                webTinyPNG: 'TinyPNG',
+                webBilibili: 'B 站学习',
+                webZhihu: '知乎',
+                webZcool: '站酷',
+                webHuaban: '花瓣网',
+                webGitHub: 'GitHub',
+                webStackOverflow: 'Stack Overflow',
+                webNetease: '网易云音乐',
+                webXiachufang: '下厨房',
+                webSmzdm: '什么值得买',
+                webWeibo: '微博',
+                webXiaohongshu: '小红书',
+                webToutiao: '今日头条',
+                webThepaper: '澎湃新闻',
+                // 网站描述
+                descMail: '日常工作邮件',
+                descDingTalk: '团队沟通协作',
+                descDocs: '在线协作文档',
+                descProcessOn: '在线作图工具',
+                descTinyPNG: '图片压缩工具',
+                descBilibili: '视频教程平台',
+                descZhihu: '知识分享社区',
+                descZcool: '设计师平台',
+                descHuaban: '灵感收集',
+                descGitHub: '代码托管平台',
+                descStackOverflow: '技术问答',
+                descNetease: '在线音乐',
+                descXiachufang: '美食菜谱',
+                descSmzdm: '购物指南',
+                descWeibo: '社交媒体',
+                descXiaohongshu: '生活分享',
+                descToutiao: '新闻资讯',
+                descThepaper: '时事新闻'
             },
             en: {
+                // Today's Work Page
                 todayTitle: '📋 Today\'s Work & Reminders',
                 addTask: '+ Task',
                 addReminder: '+ Reminder',
@@ -1997,19 +2067,73 @@
                 regularTasks: 'Regular Tasks',
                 mustTasks: 'Must Complete Today',
                 reminders: 'Important Reminders',
+                // Sidebar
+                workZone: 'Work',
+                leisureZone: 'Leisure',
+                addCat: '➕',
+                // Categories
+                catWork: 'Work',
+                catTools: 'Tools',
+                catLearn: 'Learning',
+                catDesign: 'Design',
+                catDev: 'Development',
+                catFun: 'Entertainment',
+                catLife: 'Life',
+                catSocial: 'Social',
+                catNews: 'News',
+                // Settings
+                settingsTitle: '⚙️ Settings',
                 close: 'Close',
-                exportData: '📤 Export Data',
-                exportDesc: 'Export all data as JSON file',
-                importData: '📥 Import Data',
-                importDesc: 'Import data from JSON (will overwrite current data)',
-                resetData: '🔄 Reset Data',
-                resetDesc: 'Clear all custom data and restore defaults',
-                saveToday: '💾 Save Today\'s Data',
-                saveTodayDesc: 'Save today\'s tasks and reminders to file',
-                loadToday: '📂 Load Today\'s Data',
-                loadTodayDesc: 'Restore tasks and reminders from file',
+                exportData: '📤 Export',
+                exportDesc: 'Export all data as JSON',
+                importData: '📥 Import',
+                importDesc: 'Import from JSON (overwrite)',
+                resetData: '🔄 Reset',
+                resetDesc: 'Restore default data',
+                saveToday: '💾 Save Today',
+                saveTodayDesc: 'Save tasks & reminders to file',
+                loadToday: '📂 Load Today',
+                loadTodayDesc: 'Restore from file',
                 language: '🌐 Language / 语言',
-                langDesc: 'Switch interface language'
+                langDesc: 'Switch language',
+                // Website names
+                webMail: 'Work Email',
+                webDingTalk: 'DingTalk',
+                webDocs: 'Tencent Docs',
+                webProcessOn: 'ProcessOn',
+                webTinyPNG: 'TinyPNG',
+                webBilibili: 'Bilibili',
+                webZhihu: 'Zhihu',
+                webZcool: 'ZCool',
+                webHuaban: 'Huaban',
+                webGitHub: 'GitHub',
+                webStackOverflow: 'Stack Overflow',
+                webNetease: 'Netease Music',
+                webXiachufang: 'Xiachufang',
+                webSmzdm: 'SMZDM',
+                webWeibo: 'Weibo',
+                webXiaohongshu: 'Xiaohongshu',
+                webToutiao: 'Toutiao',
+                webThepaper: 'The Paper',
+                // Descriptions
+                descMail: 'Work email',
+                descDingTalk: 'Team collaboration',
+                descDocs: 'Online documents',
+                descProcessOn: 'Diagram tool',
+                descTinyPNG: 'Image compressor',
+                descBilibili: 'Video tutorials',
+                descZhihu: 'Knowledge community',
+                descZcool: 'Designer platform',
+                descHuaban: 'Inspiration board',
+                descGitHub: 'Code hosting',
+                descStackOverflow: 'Tech Q&A',
+                descNetease: 'Online music',
+                descXiachufang: 'Recipes',
+                descSmzdm: 'Shopping guide',
+                descWeibo: 'Social media',
+                descXiaohongshu: 'Life sharing',
+                descToutiao: 'News',
+                descThepaper: 'Current affairs'
             }
         };
         
@@ -2022,15 +2146,55 @@
                     el.textContent = texts[key];
                 }
             });
-            // 更新设置模态框
-            document.querySelector('[onclick="exportData()"] span:last-child').textContent = texts.exportData.includes('📤') ? texts.exportData.split(' ')[1] || texts.exportData : texts.exportData;
-            document.querySelectorAll('.settings-desc')[0].textContent = texts.exportDesc;
-            document.querySelectorAll('.settings-desc')[1].textContent = texts.importDesc;
-            document.querySelectorAll('.settings-desc')[2].textContent = texts.resetDesc;
-            document.querySelectorAll('.settings-desc')[3].textContent = texts.saveTodayDesc;
-            document.querySelectorAll('.settings-desc')[4].textContent = texts.loadTodayDesc;
+            // 更新侧边栏标题
+            const sidebarTitles = document.querySelectorAll('.sidebar-title');
+            if (sidebarTitles[0]) sidebarTitles[0].textContent = (lang === 'zh' ? '💼 ' : '💼 ') + texts.workZone;
+            if (sidebarTitles[1]) sidebarTitles[1].textContent = (lang === 'zh' ? '🎮 ' : '🎮 ') + texts.leisureZone;
+            
+            // 更新设置模态框标题
+            document.querySelector('#settingsModal .modal-title').textContent = texts.settingsTitle;
+            
+            // 更新设置按钮文字
+            const settingBtns = document.querySelectorAll('.settings-action-btn span:last-child');
+            if (settingBtns[0]) settingBtns[0].textContent = texts.saveToday;
+            if (settingBtns[1]) settingBtns[1].textContent = texts.loadToday;
+            if (settingBtns[2]) settingBtns[2].textContent = texts.exportData.includes('📤') ? texts.exportData.split(' ')[1] || texts.exportData : texts.exportData;
+            if (settingBtns[3]) settingBtns[3].textContent = texts.importData;
+            if (settingBtns[4]) settingBtns[4].textContent = texts.resetData;
+            
+            // 更新设置描述
+            const settingDescs = document.querySelectorAll('.settings-desc');
+            if (settingDescs[0]) settingDescs[0].textContent = texts.saveTodayDesc;
+            if (settingDescs[1]) settingDescs[1].textContent = texts.loadTodayDesc;
+            if (settingDescs[2]) settingDescs[2].textContent = texts.exportDesc;
+            if (settingDescs[3]) settingDescs[3].textContent = texts.importDesc;
+            if (settingDescs[4]) settingDescs[4].textContent = texts.resetDesc;
+            
+            // 更新语言标签和按钮
             document.querySelector('.settings-label').textContent = texts.language;
             document.querySelector('#settingsModal .modal-actions .btn').textContent = texts.close;
+            
+            // 更新分类名称
+            document.querySelectorAll('.cat-name').forEach(el => {
+                const catId = el.closest('.cat-card')?.dataset?.catId;
+                if (catId && texts['cat' + catId.charAt(0).toUpperCase() + catId.slice(1)]) {
+                    el.textContent = texts['cat' + catId.charAt(0).toUpperCase() + catId.slice(1)];
+                }
+            });
+            
+            // 更新网站名称和描述
+            document.querySelectorAll('.web-name').forEach(el => {
+                const webId = el.closest('.web-card')?.dataset?.webId;
+                if (webId && texts['web' + webId.charAt(0).toUpperCase() + webId.slice(1)]) {
+                    el.textContent = texts['web' + webId.charAt(0).toUpperCase() + webId.slice(1)];
+                }
+            });
+            document.querySelectorAll('.web-desc').forEach(el => {
+                const webId = el.closest('.web-card')?.dataset?.webId;
+                if (webId && texts['desc' + webId.charAt(0).toUpperCase() + webId.slice(1)]) {
+                    el.textContent = texts['desc' + webId.charAt(0).toUpperCase() + webId.slice(1)];
+                }
+            });
         }
         
         // ==================== 设置功能 ====================
@@ -2055,17 +2219,90 @@
             document.getElementById('langEn').classList.toggle('active', lang === 'en');
         }
         
-        // 今日工作数据保存
+        // 今日工作数据保存（文本格式 summary）
         function saveTodayWorkData() {
-            const dataStr = JSON.stringify(todayData, null, 2);
-            const blob = new Blob([dataStr], { type: 'application/json' });
+            const date = new Date().toISOString().slice(0, 10);
+            const dateStr = new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+            
+            // 生成易读的文本格式
+            let summary = `═══════════════════════════════════════════════════════\n`;
+            summary += `  工作日报 - ${dateStr}\n`;
+            summary += `═══════════════════════════════════════════════════════\n\n`;
+            
+            // 核心任务
+            summary += `【核心任务】\n`;
+            summary += `───────────────────────────────────────────────────────\n`;
+            if (todayData.tasks.filter(t => t.priority === 'core').length > 0) {
+                todayData.tasks.filter(t => t.priority === 'core').forEach((t, i) => {
+                    summary += `  ${i + 1}. ${t.content}${t.time ? ` ⏰ ${t.time}` : ''}\n`;
+                });
+            } else {
+                summary += `  (无)\n`;
+            }
+            summary += `\n`;
+            
+            // 高优工作
+            summary += `【高优工作 - 带时间节点】\n`;
+            summary += `───────────────────────────────────────────────────────\n`;
+            if (todayData.tasks.filter(t => t.priority === 'high').length > 0) {
+                todayData.tasks.filter(t => t.priority === 'high').forEach((t, i) => {
+                    summary += `  ${i + 1}. ${t.content}${t.time ? ` ⏰ ${t.time}` : ''}\n`;
+                });
+            } else {
+                summary += `  (无)\n`;
+            }
+            summary += `\n`;
+            
+            // 常规工作
+            summary += `【常规工作】\n`;
+            summary += `───────────────────────────────────────────────────────\n`;
+            if (todayData.tasks.filter(t => t.priority === 'regular').length > 0) {
+                todayData.tasks.filter(t => t.priority === 'regular').forEach((t, i) => {
+                    summary += `  ${i + 1}. ${t.content}${t.time ? ` ⏰ ${t.time}` : ''}\n`;
+                });
+            } else {
+                summary += `  (无)\n`;
+            }
+            summary += `\n`;
+            
+            // 必须完成
+            summary += `【🔥 今日必须完成】\n`;
+            summary += `───────────────────────────────────────────────────────\n`;
+            if (todayData.tasks.filter(t => t.priority === 'must').length > 0) {
+                todayData.tasks.filter(t => t.priority === 'must').forEach((t, i) => {
+                    summary += `  ${i + 1}. ${t.content}${t.time ? ` ⏰ ${t.time}` : ''}\n`;
+                });
+            } else {
+                summary += `  (无)\n`;
+            }
+            summary += `\n`;
+            
+            // 重要提醒
+            summary += `【⚠️ 重要提醒】\n`;
+            summary += `───────────────────────────────────────────────────────\n`;
+            if (todayData.reminders.length > 0) {
+                todayData.reminders.forEach((r, i) => {
+                    summary += `  ${i + 1}. ${r.content}${r.time ? ` ⏰ ${r.time}` : ''}\n`;
+                });
+            } else {
+                summary += `  (无)\n`;
+            }
+            summary += `\n`;
+            
+            // 统计
+            summary += `═══════════════════════════════════════════════════════\n`;
+            summary += `  统计：任务总计 ${todayData.tasks.length} 项 | 提醒 ${todayData.reminders.length} 项\n`;
+            summary += `  生成时间：${new Date().toLocaleString('zh-CN')}\n`;
+            summary += `═══════════════════════════════════════════════════════\n`;
+            
+            const blob = new Blob([summary], { type: 'text/plain;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `today-work-${new Date().toISOString().slice(0,10)}.json`;
+            a.download = `工作日报-${date}.txt`;
             a.click();
             URL.revokeObjectURL(url);
-            alert('✅ 今日工作数据已保存！');
+            alert('✅ 今日工作数据已保存为文本格式！');
         }
         
         // 今日工作数据恢复
