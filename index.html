@@ -1169,6 +1169,28 @@
             font-size: 0.95rem;
             padding: 0.7rem;
             height: 42px;
+            /* 强制日期格式为 YYYY-MM-DD */
+            line-height: normal;
+        }
+        /* 修复日期输入框格式显示 */
+        .form-input[type="date"]::-webkit-datetime-edit {
+            padding: 0;
+        }
+        .form-input[type="date"]::-webkit-inner-spin-button,
+        .form-input[type="datetime-local"]::-webkit-inner-spin-button {
+            display: none;
+        }
+        .form-input[type="date"]::-webkit-calendar-picker-indicator {
+            background: transparent;
+            bottom: 0;
+            color: transparent;
+            cursor: pointer;
+            height: auto;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: auto;
         }
         .form-input[type="date"]:focus,
         .form-input[type="datetime-local"]:focus,
@@ -1464,7 +1486,7 @@
             </div>
             <div class="form-group">
                 <label class="form-label">截止日期</label>
-                <input type="date" class="form-input" id="taskDeadline">
+                <input type="date" class="form-input" id="taskDeadline" min="2020-01-01" max="2030-12-31">
             </div>
             <div class="form-group">
                 <label class="form-label">时间节点（可多个，用逗号分隔）</label>
@@ -1500,7 +1522,7 @@
             </div>
             <div class="form-group">
                 <label class="form-label">提醒时间</label>
-                <input type="datetime-local" class="form-input" id="reminderTime">
+                <input type="datetime-local" class="form-input" id="reminderTime" min="2020-01-01T00:00" max="2030-12-31T23:59">
             </div>
             <div class="form-group">
                 <label class="form-label">备注（可选）</label>
