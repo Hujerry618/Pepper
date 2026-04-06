@@ -472,6 +472,276 @@
         .placeholder-title { font-size: 1.3rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-secondary); }
         .placeholder-desc { font-size: 0.9rem; }
         
+        /* ==================== 今日工作安排页面 ==================== */
+        .today-work-page {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+        }
+        .today-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 3px solid var(--accent);
+        }
+        .today-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .today-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+        .today-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            padding: 0.7rem 1.2rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .today-btn:hover {
+            background: var(--accent-hover);
+            transform: scale(1.05);
+        }
+        .today-section {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .must-section {
+            background: linear-gradient(135deg, rgba(245,101,101,0.08), rgba(239,68,68,0.05));
+            border-color: var(--danger);
+        }
+        .must-title {
+            color: var(--danger);
+            border-bottom-color: var(--danger);
+        }
+        .task-list, .priority-list, .reminder-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .task-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .task-item:hover {
+            border-color: var(--accent);
+            box-shadow: 0 2px 8px rgba(102,126,234,0.15);
+            transform: translateX(4px);
+        }
+        .task-item.priority {
+            border-left: 4px solid var(--accent);
+        }
+        .task-item.must {
+            border-left: 4px solid var(--danger);
+            background: linear-gradient(135deg, rgba(245,101,101,0.05), transparent);
+        }
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--accent);
+        }
+        .task-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+        .task-text {
+            font-size: 1rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        .task-meta {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        .task-time {
+            font-size: 0.8rem;
+            color: var(--accent);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .task-tag {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .task-tag.risk { background: rgba(245,101,101,0.15); color: var(--danger); }
+        .task-tag.deadline { background: rgba(249,115,22,0.15); color: #f97316; }
+        .task-tag.meeting { background: rgba(59,130,246,0.15); color: #3b82f6; }
+        .task-actions {
+            display: flex;
+            gap: 0.4rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .task-item:hover .task-actions {
+            opacity: 1;
+        }
+        .task-action-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 0.3rem;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .task-action-btn:hover {
+            background: var(--bg-primary);
+            transform: scale(1.1);
+        }
+        .task-action-btn.delete:hover {
+            background: rgba(245,101,101,0.15);
+        }
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+        .task-item.completed {
+            opacity: 0.7;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.4;
+        }
+        
+        /* 提醒弹窗 */
+        .reminder-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+        .reminder-modal-overlay.active {
+            display: flex;
+        }
+        .reminder-modal {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            border: 3px solid var(--accent);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: reminderPop 0.3s ease-out;
+        }
+        @keyframes reminderPop {
+            from { transform: scale(0.8) translateY(-20px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        .reminder-modal-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .reminder-modal-icon {
+            font-size: 3rem;
+        }
+        .reminder-modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .reminder-modal-content {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        .reminder-modal-time {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        .reminder-modal-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        .reminder-modal-btn {
+            flex: 1;
+            padding: 0.9rem;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .reminder-modal-btn.primary {
+            background: var(--accent);
+            color: white;
+        }
+        .reminder-modal-btn.primary:hover {
+            background: var(--accent-hover);
+        }
+        .reminder-modal-btn.secondary {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+        .reminder-modal-btn.secondary:hover {
+            border-color: var(--accent);
+        }
+        
         .ai-news-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -782,7 +1052,49 @@
             </div>
             
             <div class="center" id="centerContent" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
-                <div class="placeholder" id="placeholder">
+                <!-- 今日工作安排页面 -->
+                <div class="today-work-page" id="todayWorkPage">
+                    <div class="today-header">
+                        <h1 class="today-title">📋 今日工作与重要提醒</h1>
+                        <div class="today-actions">
+                            <button class="today-btn" onclick="openTaskModal()">+ 添加任务</button>
+                            <button class="today-btn" onclick="openReminderModal()">+ 添加提醒</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 今日核心任务 -->
+                    <section class="today-section">
+                        <h2 class="section-title">🎯 今日核心任务（3 项）</h2>
+                        <div class="task-list" id="coreTasks"></div>
+                    </section>
+                    
+                    <!-- 高优工作 -->
+                    <section class="today-section">
+                        <h2 class="section-title">⚡ 高优工作（带时间节点）</h2>
+                        <div class="priority-list" id="priorityTasks"></div>
+                    </section>
+                    
+                    <!-- 常规工作 -->
+                    <section class="today-section">
+                        <h2 class="section-title">📝 常规工作</h2>
+                        <div class="task-list" id="regularTasks"></div>
+                    </section>
+                    
+                    <!-- 今日必须完成事项 -->
+                    <section class="today-section must-section">
+                        <h2 class="section-title must-title">🔥 今日必须完成事项</h2>
+                        <div class="task-list" id="mustTasks"></div>
+                    </section>
+                    
+                    <!-- 重要提醒 -->
+                    <section class="today-section">
+                        <h2 class="section-title">⚠️ 重要提醒（风险/截止/会议）</h2>
+                        <div class="reminder-list" id="reminders"></div>
+                    </section>
+                </div>
+                
+                <!-- 默认占位页面 -->
+                <div class="placeholder" id="placeholder" style="display:none;">
                     <div class="placeholder-icon">🤖</div>
                     <h2 class="placeholder-title">🔥 AI 前沿热点</h2>
                     <p class="placeholder-desc" style="margin-bottom:1.5rem;">点击左侧或右侧的分类卡片查看内容</p>
@@ -790,7 +1102,8 @@
                         <!-- AI 热点新闻将通过 JS 动态加载 -->
                     </div>
                 </div>
-                <div class="detail" id="detailView">
+                
+                <div class="detail" id="detailView" style="display:none;">
                     <div class="detail-header">
                         <h2 class="detail-title"><span id="detailIcon"></span><span id="detailName"></span></h2>
                         <button class="add-web-btn" onclick="openWebModal()">+ 添加网站</button>
@@ -886,6 +1199,88 @@
         </div>
     </div>
     
+    <!-- 任务模态框 -->
+    <div class="modal-overlay" id="taskModal">
+        <div class="modal">
+            <h3 class="modal-title" id="taskModalTitle">添加任务</h3>
+            <input type="hidden" id="taskId">
+            <input type="hidden" id="taskType" value="core">
+            <div class="form-group">
+                <label class="form-label">任务类型</label>
+                <select class="form-select" id="taskCategory" onchange="updateTaskModal()">
+                    <option value="core">🎯 核心任务（3 项）</option>
+                    <option value="priority">⚡ 高优工作（带时间节点）</option>
+                    <option value="regular">📝 常规工作</option>
+                    <option value="must">🔥 今日必须完成</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">任务内容</label>
+                <input type="text" class="form-input" id="taskText" placeholder="如：完成项目方案评审">
+            </div>
+            <div class="form-group" id="taskTimeGroup" style="display:none;">
+                <label class="form-label">时间节点</label>
+                <input type="time" class="form-input" id="taskTime">
+            </div>
+            <div class="form-group">
+                <label class="form-label">备注（可选）</label>
+                <textarea class="form-textarea" id="taskNote" placeholder="补充说明..."></textarea>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal('taskModal')">取消</button>
+                <button class="btn btn-primary" onclick="saveTask()">保存</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 提醒模态框 -->
+    <div class="modal-overlay" id="reminderModal">
+        <div class="modal">
+            <h3 class="modal-title" id="reminderModalTitle">添加提醒</h3>
+            <input type="hidden" id="reminderId">
+            <div class="form-group">
+                <label class="form-label">提醒类型</label>
+                <select class="form-select" id="reminderType">
+                    <option value="risk">⚠️ 风险提示</option>
+                    <option value="deadline">⏰ 截止日期</option>
+                    <option value="meeting">📅 会议提醒</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">提醒内容</label>
+                <input type="text" class="form-input" id="reminderText" placeholder="如：项目方案提交截止">
+            </div>
+            <div class="form-group">
+                <label class="form-label">提醒时间</label>
+                <input type="datetime-local" class="form-input" id="reminderTime">
+            </div>
+            <div class="form-group">
+                <label class="form-label">备注（可选）</label>
+                <textarea class="form-textarea" id="reminderNote" placeholder="补充说明..."></textarea>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal('reminderModal')">取消</button>
+                <button class="btn btn-primary" onclick="saveReminder()">保存</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 提醒弹窗 -->
+    <div class="reminder-modal-overlay" id="reminderAlertOverlay">
+        <div class="reminder-modal">
+            <div class="reminder-modal-header">
+                <span class="reminder-modal-icon" id="alertIcon">⏰</span>
+                <h3 class="reminder-modal-title" id="alertTitle">提醒</h3>
+            </div>
+            <div class="reminder-modal-content" id="alertContent"></div>
+            <div class="reminder-modal-time" id="alertTime"></div>
+            <div class="reminder-modal-actions">
+                <button class="reminder-modal-btn secondary" onclick="snoozeReminder()">⏰ 10 分钟后提醒</button>
+                <button class="reminder-modal-btn primary" onclick="closeAlert()">我知道了</button>
+            </div>
+        </div>
+    </div>
+    
     <!-- 设置模态框 -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal">
@@ -969,6 +1364,9 @@
         let currentCatId = null;
         let editingCatId = null;
         let editingWebId = null;
+        let editingTaskId = null;
+        let editingReminderId = null;
+        let currentAlertId = null;
 
         function saveData() {
             localStorage.setItem('personalPanelData', JSON.stringify(appData));
@@ -1500,6 +1898,365 @@
             }
         }
 
+        // ==================== 今日工作安排 ====================
+        let todayData = {
+            tasks: [],
+            reminders: []
+        };
+        
+        // 加载今日工作数据
+        function loadTodayData() {
+            const saved = localStorage.getItem('today_work_data');
+            if (saved) {
+                try {
+                    todayData = JSON.parse(saved);
+                } catch (e) {
+                    todayData = { tasks: [], reminders: [] };
+                }
+            }
+            renderTodayWork();
+            startReminderCheck();
+        }
+        
+        // 保存今日工作数据
+        function saveTodayData() {
+            localStorage.setItem('today_work_data', JSON.stringify(todayData));
+            renderTodayWork();
+        }
+        
+        // 渲染今日工作页面
+        function renderTodayWork() {
+            const today = new Date().toLocaleDateString('zh-CN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            document.querySelector('.today-title').textContent = `📋 今日工作与重要提醒 · ${today}`;
+            
+            // 分类任务
+            const coreTasks = todayData.tasks.filter(t => t.type === 'core');
+            const priorityTasks = todayData.tasks.filter(t => t.type === 'priority');
+            const regularTasks = todayData.tasks.filter(t => t.type === 'regular');
+            const mustTasks = todayData.tasks.filter(t => t.type === 'must');
+            
+            renderTaskList('coreTasks', coreTasks, 'core');
+            renderTaskList('priorityTasks', priorityTasks, 'priority');
+            renderTaskList('regularTasks', regularTasks, 'regular');
+            renderTaskList('mustTasks', mustTasks, 'must');
+            renderReminders();
+        }
+        
+        // 渲染任务列表
+        function renderTaskList(containerId, tasks, type) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            if (tasks.length === 0) {
+                container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📝</div>暂无任务，点击右上角添加</div>`;
+                return;
+            }
+            
+            container.innerHTML = tasks.map(task => `
+                <div class="task-item ${task.type} ${task.completed ? 'completed' : ''}" data-id="${task.id}">
+                    <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask('${task.id}')">
+                    <div class="task-content">
+                        <div class="task-text">${escapeHtml(task.text)}</div>
+                        ${task.note ? `<div style="font-size:0.8rem;color:var(--text-muted)">${escapeHtml(task.note)}</div>` : ''}
+                        <div class="task-meta">
+                            ${task.time ? `<span class="task-time">⏰ ${task.time}</span>` : ''}
+                            ${type === 'priority' ? `<span class="task-tag">高优</span>` : ''}
+                            ${type === 'must' ? `<span class="task-tag" style="background:rgba(245,101,101,0.15);color:var(--danger)">必须完成</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="task-action-btn" onclick="editTask('${task.id}')" title="编辑">✏️</button>
+                        <button class="task-action-btn delete" onclick="deleteTask('${task.id}')" title="删除">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // 渲染提醒列表
+        function renderReminders() {
+            const container = document.getElementById('reminders');
+            if (!container) return;
+            
+            const now = new Date();
+            const upcomingReminders = todayData.reminders.filter(r => new Date(r.time) > now);
+            
+            if (upcomingReminders.length === 0) {
+                container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">✅</div>暂无待提醒事项</div>`;
+                return;
+            }
+            
+            // 按时间排序
+            upcomingReminders.sort((a, b) => new Date(a.time) - new Date(b.time));
+            
+            container.innerHTML = upcomingReminders.map(reminder => {
+                const time = new Date(reminder.time);
+                const timeStr = time.toLocaleString('zh-CN', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                const typeInfo = {
+                    risk: { icon: '⚠️', label: '风险', class: 'risk' },
+                    deadline: { icon: '⏰', label: '截止', class: 'deadline' },
+                    meeting: { icon: '📅', label: '会议', class: 'meeting' }
+                }[reminder.type] || { icon: '🔔', label: '提醒', class: '' };
+                
+                return `
+                    <div class="task-item" data-id="${reminder.id}">
+                        <div class="task-content">
+                            <div class="task-text">${typeInfo.icon} ${escapeHtml(reminder.text)}</div>
+                            ${reminder.note ? `<div style="font-size:0.8rem;color:var(--text-muted)">${escapeHtml(reminder.note)}</div>` : ''}
+                            <div class="task-meta">
+                                <span class="task-time">⏰ ${timeStr}</span>
+                                <span class="task-tag ${typeInfo.class}">${typeInfo.label}</span>
+                            </div>
+                        </div>
+                        <div class="task-actions">
+                            <button class="task-action-btn" onclick="editReminder('${reminder.id}')" title="编辑">✏️</button>
+                            <button class="task-action-btn delete" onclick="deleteReminder('${reminder.id}')" title="删除">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // 打开任务模态框
+        function openTaskModal(taskId = null) {
+            editingTaskId = taskId;
+            const modal = document.getElementById('taskModal');
+            const title = document.getElementById('taskModalTitle');
+            
+            if (taskId) {
+                const task = todayData.tasks.find(t => t.id === taskId);
+                if (!task) return;
+                title.textContent = '编辑任务';
+                document.getElementById('taskCategory').value = task.type;
+                document.getElementById('taskText').value = task.text;
+                document.getElementById('taskTime').value = task.time || '';
+                document.getElementById('taskNote').value = task.note || '';
+                updateTaskModal();
+            } else {
+                title.textContent = '添加任务';
+                document.getElementById('taskCategory').value = 'core';
+                document.getElementById('taskText').value = '';
+                document.getElementById('taskTime').value = '';
+                document.getElementById('taskNote').value = '';
+                updateTaskModal();
+            }
+            modal.classList.add('active');
+        }
+        
+        // 更新任务模态框
+        function updateTaskModal() {
+            const type = document.getElementById('taskCategory').value;
+            const timeGroup = document.getElementById('taskTimeGroup');
+            timeGroup.style.display = type === 'priority' ? 'block' : 'none';
+        }
+        
+        // 保存任务
+        function saveTask() {
+            const type = document.getElementById('taskCategory').value;
+            const text = document.getElementById('taskText').value.trim();
+            const time = document.getElementById('taskTime').value;
+            const note = document.getElementById('taskNote').value.trim();
+            
+            if (!text) { alert('请输入任务内容'); return; }
+            
+            if (editingTaskId) {
+                const task = todayData.tasks.find(t => t.id === editingTaskId);
+                if (task) {
+                    task.type = type;
+                    task.text = text;
+                    task.time = time;
+                    task.note = note;
+                }
+            } else {
+                todayData.tasks.push({
+                    id: Date.now().toString(),
+                    type,
+                    text,
+                    time,
+                    note,
+                    completed: false
+                });
+            }
+            
+            saveTodayData();
+            closeModal('taskModal');
+        }
+        
+        // 编辑任务
+        function editTask(taskId) {
+            openTaskModal(taskId);
+        }
+        
+        // 删除任务
+        function deleteTask(taskId) {
+            if (!confirm('确定删除此任务？')) return;
+            todayData.tasks = todayData.tasks.filter(t => t.id !== taskId);
+            saveTodayData();
+        }
+        
+        // 切换任务完成状态
+        function toggleTask(taskId) {
+            const task = todayData.tasks.find(t => t.id === taskId);
+            if (task) {
+                task.completed = !task.completed;
+                saveTodayData();
+            }
+        }
+        
+        // 打开提醒模态框
+        function openReminderModal(reminderId = null) {
+            editingReminderId = reminderId;
+            const modal = document.getElementById('reminderModal');
+            const title = document.getElementById('reminderModalTitle');
+            
+            // 默认设置为 30 分钟后
+            const defaultTime = new Date(Date.now() + 30 * 60 * 1000);
+            const defaultTimeStr = defaultTime.toISOString().slice(0, 16);
+            
+            if (reminderId) {
+                const reminder = todayData.reminders.find(r => r.id === reminderId);
+                if (!reminder) return;
+                title.textContent = '编辑提醒';
+                document.getElementById('reminderType').value = reminder.type;
+                document.getElementById('reminderText').value = reminder.text;
+                document.getElementById('reminderTime').value = reminder.time.slice(0, 16);
+                document.getElementById('reminderNote').value = reminder.note || '';
+            } else {
+                title.textContent = '添加提醒';
+                document.getElementById('reminderType').value = 'deadline';
+                document.getElementById('reminderText').value = '';
+                document.getElementById('reminderTime').value = defaultTimeStr;
+                document.getElementById('reminderNote').value = '';
+            }
+            modal.classList.add('active');
+        }
+        
+        // 保存提醒
+        function saveReminder() {
+            const type = document.getElementById('reminderType').value;
+            const text = document.getElementById('reminderText').value.trim();
+            const time = document.getElementById('reminderTime').value;
+            const note = document.getElementById('reminderNote').value.trim();
+            
+            if (!text) { alert('请输入提醒内容'); return; }
+            if (!time) { alert('请选择提醒时间'); return; }
+            
+            if (editingReminderId) {
+                const reminder = todayData.reminders.find(r => r.id === editingReminderId);
+                if (reminder) {
+                    reminder.type = type;
+                    reminder.text = text;
+                    reminder.time = time;
+                    reminder.note = note;
+                }
+            } else {
+                todayData.reminders.push({
+                    id: Date.now().toString(),
+                    type,
+                    text,
+                    time,
+                    note,
+                    alerted: false
+                });
+            }
+            
+            saveTodayData();
+            closeModal('reminderModal');
+        }
+        
+        // 编辑提醒
+        function editReminder(reminderId) {
+            openReminderModal(reminderId);
+        }
+        
+        // 删除提醒
+        function deleteReminder(reminderId) {
+            if (!confirm('确定删除此提醒？')) return;
+            todayData.reminders = todayData.reminders.filter(r => r.id !== reminderId);
+            saveTodayData();
+        }
+        
+        // 开始提醒检查
+        let reminderCheckInterval = null;
+        function startReminderCheck() {
+            if (reminderCheckInterval) clearInterval(reminderCheckInterval);
+            reminderCheckInterval = setInterval(checkReminders, 30000); // 每 30 秒检查一次
+            checkReminders(); // 立即检查一次
+        }
+        
+        // 检查提醒
+        function checkReminders() {
+            const now = new Date();
+            todayData.reminders.forEach(reminder => {
+                if (reminder.alerted) return;
+                
+                const reminderTime = new Date(reminder.time);
+                if (now >= reminderTime) {
+                    showAlert(reminder);
+                    reminder.alerted = true;
+                    saveTodayData();
+                }
+            });
+        }
+        
+        // 显示提醒弹窗
+        function showAlert(reminder) {
+            const typeInfo = {
+                risk: { icon: '⚠️', title: '风险提示' },
+                deadline: { icon: '⏰', title: '截止提醒' },
+                meeting: { icon: '📅', title: '会议提醒' }
+            }[reminder.type] || { icon: '🔔', title: '提醒' };
+            
+            const time = new Date(reminder.time);
+            const timeStr = time.toLocaleString('zh-CN', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+            
+            document.getElementById('alertIcon').textContent = typeInfo.icon;
+            document.getElementById('alertTitle').textContent = typeInfo.title;
+            document.getElementById('alertContent').textContent = reminder.text + (reminder.note ? '\n\n' + reminder.note : '');
+            document.getElementById('alertTime').textContent = `⏰ 设定时间：${timeStr}`;
+            
+            currentAlertId = reminder.id;
+            document.getElementById('reminderAlertOverlay').classList.add('active');
+            
+            // 播放提示音（如果浏览器支持）
+            try {
+                const audio = new AudioContext();
+                const osc = audio.createOscillator();
+                const gain = audio.createGain();
+                osc.connect(gain);
+                gain.connect(audio.destination);
+                osc.frequency.value = 800;
+                gain.gain.value = 0.1;
+                osc.start();
+                setTimeout(() => osc.stop(), 200);
+            } catch (e) {}
+        }
+        
+        // 关闭提醒弹窗
+        function closeAlert() {
+            document.getElementById('reminderAlertOverlay').classList.remove('active');
+            currentAlertId = null;
+        }
+        
+        // 稍后提醒
+        function snoozeReminder() {
+            if (currentAlertId) {
+                const reminder = todayData.reminders.find(r => r.id === currentAlertId);
+                if (reminder) {
+                    reminder.time = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+                    reminder.alerted = false;
+                    saveTodayData();
+                }
+            }
+            closeAlert();
+        }
+        
+        // HTML 转义
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
         // ==================== AI 热点新闻 ====================
         const aiNewsData = [
             { title: '2026 AI 大模型最新进展：GPT-5、Claude 4 谁更强？', source: '机器之心', tag: '大模型', url: 'https://www.jiqizhixin.com' },
@@ -1555,9 +2312,11 @@
             initCatDrag();
             initLocks();
             loadAiNews();
+            loadTodayData();  // 加载今日工作安排
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+                    document.getElementById('reminderAlertOverlay').classList.remove('active');
                 }
             });
         }
