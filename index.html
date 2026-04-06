@@ -967,8 +967,18 @@
             border-color: var(--accent);
         }
         
-        .detail { display: none; }
-        .detail.active { display: block; }
+        .detail {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .detail.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         .detail-header {
             display: flex;
             justify-content: space-between;
@@ -1800,8 +1810,16 @@
             currentCatId = cat.id;
             // 收起今日工作区域
             collapseTodayWork();
-            document.getElementById('placeholder').style.display = 'none';
-            document.getElementById('detailView').classList.add('active');
+            // 显示详情视图
+            const detailView = document.getElementById('detailView');
+            const todayWorkPage = document.getElementById('todayWorkPage');
+            if (detailView) {
+                detailView.classList.add('active');
+                detailView.style.display = 'block';
+            }
+            if (todayWorkPage) {
+                todayWorkPage.style.display = 'none';
+            }
             document.getElementById('detailIcon').textContent = cat.icon;
             document.getElementById('detailName').textContent = getI18nText(cat.id, cat.name);
             renderWebsites(cat);
@@ -1823,16 +1841,21 @@
         function expandTodayWork() {
             const todayWorkPage = document.getElementById('todayWorkPage');
             const centerContent = document.getElementById('centerContent');
+            const detailView = document.getElementById('detailView');
             if (todayWorkPage) {
                 todayWorkPage.classList.remove('collapsed');
+                todayWorkPage.style.display = 'block';
                 isTodayWorkCollapsed = false;
             }
             if (centerContent) {
                 centerContent.classList.remove('today-work-collapsed');
             }
+            if (detailView) {
+                detailView.classList.remove('active');
+                detailView.style.display = 'none';
+            }
             currentCatId = null;
             currentZone = null;
-            document.getElementById('detailView').classList.remove('active');
             renderCats();
         }
 
@@ -3065,8 +3088,14 @@
             initLocks();
             loadTodayData();  // 加载今日工作安排
             initLanguage();   // 初始化语言设置
-            // 初始化时隐藏详情页面
-            document.getElementById('detailView').classList.remove('active');
+            // 初始化时显示今日工作页面，隐藏详情页面
+            const todayWorkPage = document.getElementById('todayWorkPage');
+            const detailView = document.getElementById('detailView');
+            if (todayWorkPage) todayWorkPage.style.display = 'block';
+            if (detailView) {
+                detailView.classList.remove('active');
+                detailView.style.display = 'none';
+            }
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
