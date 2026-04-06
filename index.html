@@ -499,7 +499,7 @@
             min-width: 400px;
         }
         .center.today-work-collapsed {
-            margin-top: 4rem;
+            margin-top: 6rem;
         }
         .center.sidebar-left-visible {
             margin-left: 320px;
@@ -507,19 +507,6 @@
         .center.sidebar-right-visible {
             margin-right: 320px;
         }
-        .placeholder {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 50vh;
-            color: var(--text-muted);
-            text-align: center;
-        }
-        .placeholder-icon { font-size: 5rem; margin-bottom: 1rem; opacity: 0.5; }
-        .placeholder-title { font-size: 1.3rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-secondary); }
-        .placeholder-desc { font-size: 0.9rem; }
-        
         /* ==================== 今日工作安排页面 ==================== */
         .today-work-page {
             max-width: 1400px;
@@ -533,13 +520,16 @@
         }
         .today-work-page.collapsed {
             position: fixed;
-            top: 0;
+            top: 60px;
             left: 50%;
             transform: translateX(-50%);
             width: calc(100% - 640px);
             max-width: 1200px;
-            padding: 0.4rem 1rem;
+            padding: 0.5rem 1rem;
             margin: 0;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             z-index: 1000;
         }
@@ -977,59 +967,6 @@
             border-color: var(--accent);
         }
         
-        .ai-news-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 0.75rem;
-            width: 100%;
-            max-width: 800px;
-            margin-top: 1rem;
-        }
-        .ai-news-card {
-            background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 0.9rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        .ai-news-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102,126,234,0.15);
-            border-color: var(--accent);
-        }
-        .ai-news-tag {
-            display: inline-block;
-            background: var(--accent-light);
-            color: var(--accent);
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            width: fit-content;
-        }
-        .ai-news-title {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        .ai-news-source {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-        
         .detail { display: none; }
         .detail.active { display: block; }
         .detail-header {
@@ -1345,16 +1282,7 @@
                     </div>
                 </div>
                 
-                <!-- 默认占位页面 -->
-                <div class="placeholder" id="placeholder" style="display:none;">
-                    <div class="placeholder-icon">🤖</div>
-                    <h2 class="placeholder-title">🔥 AI 前沿热点</h2>
-                    <p class="placeholder-desc" style="margin-bottom:1.5rem;">点击左侧或右侧的分类卡片查看内容</p>
-                    <div class="ai-news-grid" id="aiNewsGrid">
-                        <!-- AI 热点新闻将通过 JS 动态加载 -->
-                    </div>
-                </div>
-                
+                <!-- 分类详情页面 -->
                 <div class="detail" id="detailView" style="display:none;">
                     <div class="detail-header">
                         <h2 class="detail-title"><span id="detailIcon"></span><span id="detailName"></span></h2>
@@ -1905,7 +1833,6 @@
             currentCatId = null;
             currentZone = null;
             document.getElementById('detailView').classList.remove('active');
-            document.getElementById('placeholder').style.display = 'flex';
             renderCats();
         }
 
@@ -3107,31 +3034,6 @@
             return div.innerHTML;
         }
         
-        // ==================== AI 热点新闻 ====================
-        const aiNewsData = [
-            { title: '2026 AI 大模型最新进展：GPT-5、Claude 4 谁更强？', source: '机器之心', tag: '大模型', url: 'https://www.jiqizhixin.com' },
-            { title: 'Anthropic Claude 4 深度评测：500K 上下文实战表现', source: '量子位', tag: 'AI 助手', url: 'https://www.qbitai.com' },
-            { title: '谷歌 DeepMind 新突破：AI 预测蛋白质结构准确率达 98%', source: 'DeepTech', tag: '生物 AI', url: 'https://www.deeptechchina.com' },
-            { title: 'Meta Llama 4 开源：商用限制放宽，性能对标 GPT-5', source: '新智元', tag: '开源', url: 'https://www.newapi.com' },
-            { title: '英伟达 B200 芯片发布：AI 训练速度提升 30 倍', source: '钛媒体', tag: '硬件', url: 'https://www.tmtpost.com' },
-            { title: '微软 Copilot 全面集成 Office 365，AI 办公新时代', source: '36 氪', tag: '应用', url: 'https://www.36kr.com' },
-            { title: '阿里云通义千问 3.0 发布：中文能力全面升级', source: '界面新闻', tag: '国产', url: 'https://www.jiemian.com' },
-            { title: 'OpenAI Sora 视频生成公测：AI 创作新纪元', source: '少数派', tag: '多模态', url: 'https://sspai.com' }
-        ];
-
-        function loadAiNews() {
-            const grid = document.getElementById('aiNewsGrid');
-            if (!grid) return;
-            
-            grid.innerHTML = aiNewsData.map(news => `
-                <div class="ai-news-card" onclick="window.open('${news.url}', '_blank')">
-                    <span class="ai-news-tag">${news.tag}</span>
-                    <div class="ai-news-title">${news.title}</div>
-                    <div class="ai-news-source">📰 ${news.source}</div>
-                </div>
-            `).join('');
-        }
-
         // ==================== 数据修复 ====================
         function fixLegacyData() {
             let modified = false;
@@ -3161,11 +3063,9 @@
             renderCats();
             initCatDrag();
             initLocks();
-            loadAiNews();
             loadTodayData();  // 加载今日工作安排
             initLanguage();   // 初始化语言设置
-            // 初始化时显示占位页面
-            document.getElementById('placeholder').style.display = 'flex';
+            // 初始化时隐藏详情页面
             document.getElementById('detailView').classList.remove('active');
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
