@@ -1,0 +1,13 @@
+Windows Registry Editor Version 5.00
+
+; 注册 mypanel 协议处理器
+[HKEY_CLASSES_ROOT\mypanel]
+@="URL:mypanel Protocol"
+"URL Protocol"=""
+
+[HKEY_CLASSES_ROOT\mypanel\shell]
+
+[HKEY_CLASSES_ROOT\mypanel\shell\open]
+
+[HKEY_CLASSES_ROOT\mypanel\shell\open\command]
+@="\"%~dp0launcher.vbs\" \"%1\""

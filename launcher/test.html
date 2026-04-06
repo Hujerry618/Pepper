@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>协议处理器测试</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #eee;
+        }
+        h1 { color: #667eea; }
+        .test-item {
+            background: #16213e;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #0f3460;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover { background: #764ba2; }
+        .success { color: #4ade80; }
+        .error { color: #f87171; }
+        code {
+            background: #0f3460;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 mypanel:// 协议处理器测试</h1>
+    
+    <div class="test-item">
+        <h3>测试 1：打开记事本</h3>
+        <p>点击按钮应启动 Windows 记事本程序</p>
+        <button onclick="testNotepad()">📝 测试记事本</button>
+        <p id="result1"></p>
+    </div>
+
+    <div class="test-item">
+        <h3>测试 2：打开计算器</h3>
+        <p>点击按钮应启动 Windows 计算器</p>
+        <button onclick="testCalculator()">🔢 测试计算器</button>
+        <p id="result2"></p>
+    </div>
+
+    <div class="test-item">
+        <h3>测试 3：打开 C 盘根目录</h3>
+        <p>点击按钮应打开资源管理器显示 C 盘</p>
+        <button onclick="testDrive()">📁 测试目录</button>
+        <p id="result3"></p>
+    </div>
+
+    <div class="test-item">
+        <h3>📖 使用说明</h3>
+        <ul>
+            <li>如果点击按钮后浏览器提示「此网站试图打开 xxx」，选择<strong>允许</strong></li>
+            <li>如果没有任何反应，说明协议未正确注册，请运行 <code>install.bat</code></li>
+            <li>所有测试都不会对系统造成影响，放心测试</li>
+        </ul>
+    </div>
+
+    <script>
+        function testNotepad() {
+            try {
+                window.location.href = 'mypanel://file:///C:/Windows/System32/notepad.exe';
+                document.getElementById('result1').innerHTML = '<span class="success">✅ 已发送启动命令</span>';
+            } catch(e) {
+                document.getElementById('result1').innerHTML = '<span class="error">❌ 失败：' + e.message + '</span>';
+            }
+        }
+
+        function testCalculator() {
+            try {
+                window.location.href = 'mypanel://file:///C:/Windows/System32/Calculator.exe';
+                document.getElementById('result2').innerHTML = '<span class="success">✅ 已发送启动命令</span>';
+            } catch(e) {
+                document.getElementById('result2').innerHTML = '<span class="error">❌ 失败：' + e.message + '</span>';
+            }
+        }
+
+        function testDrive() {
+            try {
+                window.location.href = 'mypanel://file:///C:/';
+                document.getElementById('result3').innerHTML = '<span class="success">✅ 已发送打开命令</span>';
+            } catch(e) {
+                document.getElementById('result3').innerHTML = '<span class="error">❌ 失败：' + e.message + '</span>';
+            }
+        }
+    </script>
+</body>
+</html>

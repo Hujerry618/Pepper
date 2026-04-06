@@ -1,0 +1,8 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Software\Classes\mypanel]
+@="URL:mypanel Protocol"
+"URL Protocol"=""
+
+[HKEY_CURRENT_USER\Software\Classes\mypanel\shell\open\command]
+@="wscript.exe \"C:\\Users\\Administrator\\.openclaw\\workspace\\apps\\personal-panel\\launcher\\launcher-fixed.vbs\" \"%1\""

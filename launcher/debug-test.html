@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>协议调试</title>
+    <style>
+        body { font-family: 'Microsoft YaHei', sans-serif; padding: 2rem; background: #1a1a2e; color: #eee; }
+        .log { background: #0f0f1a; padding: 1rem; border-radius: 8px; font-family: monospace; white-space: pre-wrap; margin: 1rem 0; }
+        button { padding: 12px 24px; font-size: 16px; margin: 10px 5px; cursor: pointer; border: none; border-radius: 6px; }
+        .btn1 { background: #667eea; color: white; }
+        .btn2 { background: #48bb78; color: white; }
+        .btn3 { background: #f56565; color: white; }
+    </style>
+</head>
+<body>
+    <h1>🌶️ 协议调试</h1>
+    <div id="log" class="log">准备测试...</div>
+    
+    <button class="btn1" onclick="test1()">测试 1: 直接路径</button>
+    <button class="btn2" onclick="test2()">测试 2: file:/// 格式</button>
+    <button class="btn3" onclick="test3()">测试 3: 微信路径</button>
+    
+    <script>
+        const log = document.getElementById('log');
+        
+        function logMsg(msg) {
+            log.textContent = msg;
+            console.log(msg);
+        }
+        
+        function test1() {
+            // 直接 Windows 路径（不应该这样用）
+            const url = 'mypanel://C:/Windows/System32/notepad.exe';
+            logMsg('测试 1: ' + url);
+            setTimeout(() => { window.location.href = url; }, 100);
+        }
+        
+        function test2() {
+            // file:/// 格式
+            const url = 'mypanel://file:///C:/Windows/System32/notepad.exe';
+            logMsg('测试 2: ' + url);
+            setTimeout(() => { window.location.href = url; }, 100);
+        }
+        
+        function test3() {
+            // 微信路径（带空格）
+            const url = 'mypanel://file:///D:/Program Files/Tencent/Weixin/Weixin.exe';
+            logMsg('测试 3: ' + url);
+            logMsg('如果失败，检查路径是否存在');
+            setTimeout(() => { window.location.href = url; }, 100);
+        }
+    </script>
+</body>
+</html>

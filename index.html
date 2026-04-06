@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌶️APP - 个人定制面板</title>
+    <style>
+        :root {
+            --bg-primary: #f5f7fa;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --text-primary: #2c3e50;
+            --text-secondary: #5a6c7d;
+            --text-muted: #95a5b6;
+            --border-color: #e1e8ed;
+            --shadow: 0 4px 16px rgba(0,0,0,0.1);
+            --accent: #667eea;
+            --accent-hover: #5a6fd6;
+            --accent-light: rgba(102,126,234,0.1);
+            --danger: #f56565;
+            --success: #48bb78;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+        }
+        [data-color="blue"] { --accent: #3b82f6; --accent-hover: #2563eb; --accent-light: rgba(59,130,246,0.1); }
+        [data-color="green"] { --accent: #10b981; --accent-hover: #059669; --accent-light: rgba(16,185,129,0.1); }
+        [data-color="purple"] { --accent: #8b5cf6; --accent-hover: #7c3aed; --accent-light: rgba(139,92,246,0.1); }
+        [data-color="gray"] { --accent: #6b7280; --accent-hover: #4b5563; --accent-light: rgba(107,114,128,0.1); }
+        [data-color="pink"] { --accent: #ec4899; --accent-hover: #db2777; --accent-light: rgba(236,72,153,0.1); }
+        [data-color="orange"] { --accent: #f97316; --accent-hover: #ea580c; --accent-light: rgba(249,115,22,0.1); }
+        [data-color="rose"] { --accent: #f43f5e; --accent-hover: #e11d48; --accent-light: rgba(244,63,94,0.1); }
+        [data-theme="dark"] {
+            --bg-primary: #1a202c;
+            --bg-secondary: #2d3748;
+            --bg-card: #2d3748;
+            --text-primary: #f7fafc;
+            --text-secondary: #a0aec0;
+            --text-muted: #718096;
+            --border-color: #4a5568;
+            --shadow: 0 4px 16px rgba(0,0,0,0.4);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background 0.3s, color 0.3s;
+            overflow-x: hidden;
+        }
+        .app-container { display: flex; flex-direction: column; min-height: 100vh; }
+        
+        /* Header */
+        .header {
+            background: var(--bg-secondary);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 200;
+        }
+        .header-left { display: flex; align-items: center; gap: 1rem; }
+        .logo { font-size: 2rem; }
+        .brand-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .slogan { color: var(--text-secondary); font-size: 0.85rem; }
+        .theme-btn {
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .theme-btn:hover { border-color: var(--accent); transform: scale(1.05); }
+        .settings-btn {
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            padding: 0.5rem 0.85rem;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .settings-btn:hover { border-color: var(--accent); transform: rotate(30deg) scale(1.05); }
+        
+        .settings-group {
+            margin-bottom: 1.2rem;
+            padding: 1rem;
+            background: var(--bg-primary);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+        }
+        .settings-action-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+            color: var(--text-primary);
+            text-align: left;
+        }
+        .settings-action-btn:hover {
+            border-color: var(--accent);
+            background: var(--accent-light);
+            transform: translateX(4px);
+        }
+        .settings-action-btn.danger:hover {
+            border-color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+        .settings-action-icon {
+            font-size: 1.3rem;
+        }
+        .settings-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            padding-left: 0.5rem;
+        }
+        
+        .color-picker {
+            display: flex;
+            gap: 0.4rem;
+            align-items: center;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            padding: 0.4rem 0.8rem;
+            transition: border-color 0.2s;
+        }
+        .color-picker:hover { border-color: var(--accent); }
+        .color-option {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .color-option:hover { transform: scale(1.2); }
+        .color-option.active { border-color: var(--text-primary); box-shadow: 0 0 0 2px var(--bg-secondary); }
+        .color-blue { background: #3b82f6; }
+        .color-green { background: #10b981; }
+        .color-purple { background: #8b5cf6; }
+        .color-gray { background: #6b7280; }
+        .color-pink { background: #ec4899; }
+        .color-orange { background: #f97316; }
+        .color-rose { background: #f43f5e; }
+        
+        /* Main Content */
+        .main {
+            display: flex;
+            flex: 1;
+            position: relative;
+            min-height: calc(100vh - 140px);
+        }
+        .trigger {
+            position: fixed;
+            top: 73px;
+            bottom: 35px;
+            width: 30px;
+            z-index: 90;
+            background: var(--bg-primary);
+            transition: background 0.3s;
+        }
+        .trigger.left { left: 0; }
+        .trigger.right { right: 0; }
+        .trigger.locked {
+            background: var(--accent-light);
+        }
+        .lock-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+            opacity: 0;
+            transition: all 0.2s;
+            z-index: 95;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .trigger:hover .lock-btn { opacity: 1; }
+        .lock-btn.locked {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+        .trigger.left .lock-btn { right: 2px; }
+        .trigger.right .lock-btn { left: 2px; }
+        
+        .sidebar {
+            position: fixed;
+            top: 73px;
+            bottom: 35px;
+            width: 300px;
+            background: var(--bg-secondary);
+            border: none;
+            margin: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            transition: transform 0.3s, opacity 0.3s;
+            z-index: 50;
+        }
+        .sidebar.left {
+            left: 0;
+        }
+        .sidebar.right {
+            right: 0;
+        }
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+            margin: 8px 0;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+            transition: background 0.2s;
+        }
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+        .sidebar-content {
+            padding: 0.75rem;
+        }
+        .sidebar.left {
+            left: 0;
+            transform: translateX(-250px);
+            opacity: 0;
+        }
+        .sidebar.right {
+            right: 0;
+            transform: translateX(250px);
+            opacity: 0;
+        }
+        .sidebar.left.show,
+        .sidebar.right.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .sidebar-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: var(--bg-secondary);
+            z-index: 10;
+        }
+        .sidebar-title { font-weight: 600; font-size: 1rem; }
+        .add-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            flex-shrink: 0;
+            margin-top: 8px;
+        }
+        .add-btn:hover { background: var(--accent-hover); transform: scale(1.15); }
+        
+
+        
+        .cat-card {
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 0.9rem;
+            margin: 0.5rem;
+            cursor: grab;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .cat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), #a855f7);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .cat-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+            border-color: var(--accent);
+        }
+        .cat-card:hover::before { opacity: 1; }
+        .cat-card.active {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, var(--accent-light), var(--bg-card));
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);
+        }
+        .cat-card.active::before { opacity: 1; }
+        .cat-card.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+            transform: scale(1.05);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+        }
+        .cat-card.drag-over {
+            border-color: var(--accent);
+            border-style: dashed;
+            background: var(--accent-light);
+        }
+        .cat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.6rem;
+        }
+        .cat-name {
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .cat-icon {
+            font-size: 1.3rem;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+        .cat-actions {
+            display: flex;
+            gap: 0.25rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .cat-card:hover .cat-actions { opacity: 1; }
+        .cat-action {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            padding: 0.25rem 0.4rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+        .cat-action:hover { 
+            background: var(--bg-primary); 
+            border-color: var(--accent);
+            transform: scale(1.1);
+        }
+        .cat-action.edit { color: var(--accent); }
+        .cat-action.delete { color: var(--danger); }
+        
+        .web-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+        .web-item {
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+        }
+        .web-item:hover { 
+            transform: translateX(3px); 
+            border-color: var(--accent);
+            box-shadow: 0 2px 8px rgba(102,126,234,0.15);
+        }
+        .web-icon {
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, var(--accent-light), var(--bg-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        .web-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+            font-weight: 500;
+        }
+        .cat-count {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            text-align: right;
+            padding-top: 0.4rem;
+            border-top: 1px dashed var(--border-color);
+        }
+        
+        /* Center Content */
+        .center {
+            flex: 1;
+            margin: 1.5rem 320px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            overflow-y: auto;
+            overflow-x: hidden;
+            transition: all 0.3s;
+            min-width: 400px;
+        }
+        .center.sidebar-left-visible {
+            margin-left: 320px;
+        }
+        .center.sidebar-right-visible {
+            margin-right: 320px;
+        }
+        .placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 50vh;
+            color: var(--text-muted);
+            text-align: center;
+        }
+        .placeholder-icon { font-size: 5rem; margin-bottom: 1rem; opacity: 0.5; }
+        .placeholder-title { font-size: 1.3rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-secondary); }
+        .placeholder-desc { font-size: 0.9rem; }
+        
+        .ai-news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.75rem;
+            width: 100%;
+            max-width: 800px;
+            margin-top: 1rem;
+        }
+        .ai-news-card {
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .ai-news-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102,126,234,0.15);
+            border-color: var(--accent);
+        }
+        .ai-news-tag {
+            display: inline-block;
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            width: fit-content;
+        }
+        .ai-news-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .ai-news-source {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        .detail { display: none; }
+        .detail.active { display: block; }
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .detail-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .add-web-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            padding: 0.6rem 1.2rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .add-web-btn:hover { background: var(--accent-hover); transform: scale(1.05); }
+        
+        .web-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1rem;
+        }
+        .web-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 0.6rem;
+            position: relative;
+            min-height: 140px;
+            justify-content: center;
+        }
+        .web-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow);
+            border-color: var(--accent);
+        }
+        .web-card .web-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(168,85,247,0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        .web-card .web-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+        .web-card .web-desc {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
+        }
+        .web-actions {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            display: flex;
+            gap: 0.25rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .web-card:hover .web-actions { opacity: 1; }
+        .web-action {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+        }
+        .web-action:hover { background: var(--bg-primary); border-color: var(--accent); }
+        
+        /* Footer */
+        .footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 0.5rem 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            position: relative;
+            z-index: 200;
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+            backdrop-filter: blur(2px);
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            width: 90%;
+            max-width: 450px;
+            transform: scale(0.9);
+            transition: transform 0.2s;
+            box-shadow: var(--shadow);
+        }
+        .modal-overlay.active .modal { transform: scale(1); }
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            color: var(--text-primary);
+        }
+        .form-group { margin-bottom: 1rem; }
+        .form-label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 0.7rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        .form-textarea { resize: vertical; min-height: 70px; }
+        .modal-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+            margin-top: 1.2rem;
+        }
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border: none;
+        }
+        .btn-primary:hover { background: var(--accent-hover); }
+        .btn-secondary {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        .btn-secondary:hover { background: var(--border-color); }
+        
+        /* Drag & Drop */
+        .drag-over {
+            border-color: var(--accent) !important;
+            background: rgba(102,126,234,0.1) !important;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar { display: none; }
+            .center { margin: 1rem; }
+        }
+        @media (max-width: 768px) {
+            .header { flex-direction: column; gap: 0.5rem; text-align: center; }
+            .header-left { flex-direction: column; }
+            .detail-header { flex-direction: column; align-items: stretch; }
+            .web-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="header-left">
+                <span class="logo">🌶️</span>
+                <div>
+                    <h1 class="brand-title">Advanced Personal Panel</h1>
+                    <p class="slogan">你的专属导航中心 · 高效从这里开始</p>
+                </div>
+            </div>
+            <div style="display:flex;gap:0.5rem;align-items:center;">
+                <div class="color-picker" id="colorPicker">
+                    <div class="color-option color-blue" data-color="blue" title="蓝色"></div>
+                    <div class="color-option color-green" data-color="green" title="绿色"></div>
+                    <div class="color-option color-purple" data-color="purple" title="紫色"></div>
+                    <div class="color-option color-gray" data-color="gray" title="灰色"></div>
+                    <div class="color-option color-pink" data-color="pink" title="粉色"></div>
+                    <div class="color-option color-orange" data-color="orange" title="橙色"></div>
+                    <div class="color-option color-rose" data-color="rose" title="玫红色"></div>
+                </div>
+                <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+                <button class="settings-btn" onclick="openSettingsModal()" id="settingsBtn" title="设置">⚙️</button>
+            </div>
+        </header>
+        
+        <div class="main">
+            <div class="trigger left" id="triggerLeft">
+                <div class="lock-btn" id="lockLeft" onclick="toggleLock('left')" title="锁定侧边栏">🔓</div>
+            </div>
+            <div class="sidebar left" id="sidebarLeft">
+                <div class="sidebar-header">
+                    <span class="sidebar-title">🖥️ 办公场景</span>
+                    <button class="add-btn" onclick="openCatModal('left')">➕</button>
+                </div>
+                <div class="sidebar-content" id="leftCats"></div>
+            </div>
+            
+            <div class="center" id="centerContent" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+                <div class="placeholder" id="placeholder">
+                    <div class="placeholder-icon">🤖</div>
+                    <h2 class="placeholder-title">🔥 AI 前沿热点</h2>
+                    <p class="placeholder-desc" style="margin-bottom:1.5rem;">点击左侧或右侧的分类卡片查看内容</p>
+                    <div class="ai-news-grid" id="aiNewsGrid">
+                        <!-- AI 热点新闻将通过 JS 动态加载 -->
+                    </div>
+                </div>
+                <div class="detail" id="detailView">
+                    <div class="detail-header">
+                        <h2 class="detail-title"><span id="detailIcon"></span><span id="detailName"></span></h2>
+                        <button class="add-web-btn" onclick="openWebModal()">+ 添加网站</button>
+                    </div>
+                    <div class="web-grid" id="webGrid"></div>
+                </div>
+            </div>
+            
+            <div class="sidebar right" id="sidebarRight">
+                <div class="sidebar-header">
+                    <span class="sidebar-title">🎮 休闲场景</span>
+                    <button class="add-btn" onclick="openCatModal('right')">➕</button>
+                </div>
+                <div class="sidebar-content" id="rightCats"></div>
+            </div>
+            <div class="trigger right" id="triggerRight">
+                <div class="lock-btn" id="lockRight" onclick="toggleLock('right')" title="锁定侧边栏">🔓</div>
+            </div>
+        </div>
+        
+        <footer class="footer">
+            <p>🌶️APP Copyright © 2026 Jerry.h | 更新日期：<span id="updateTime"></span></p>
+        </footer>
+    </div>
+    
+    <!-- 分类模态框 -->
+    <div class="modal-overlay" id="catModal">
+        <div class="modal">
+            <h3 class="modal-title" id="catModalTitle">添加分类</h3>
+            <div class="form-group">
+                <label class="form-label">分类名称</label>
+                <input type="text" class="form-input" id="catName" placeholder="如：工作工具">
+            </div>
+            <div class="form-group">
+                <label class="form-label">图标</label>
+                <input type="text" class="form-input" id="catIcon" placeholder="如：💼 或 emoji">
+            </div>
+            <div class="form-group">
+                <label class="form-label">区域</label>
+                <select class="form-select" id="catZone">
+                    <option value="left">工作区</option>
+                    <option value="right">休闲区</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal('catModal')">取消</button>
+                <button class="btn btn-primary" onclick="saveCat()">保存</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 网站模态框 -->
+    <div class="modal-overlay" id="webModal">
+        <div class="modal">
+            <h3 class="modal-title" id="webModalTitle">添加项目</h3>
+            <input type="hidden" id="webCatId">
+            <input type="hidden" id="webId">
+            <div class="form-group">
+                <label class="form-label">类型</label>
+                <select class="form-select" id="webType" onchange="toggleWebType()">
+                    <option value="url">🌐 网址</option>
+                    <option value="app">🖥️ 程序</option>
+                    <option value="dir">📁 目录</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">分类</label>
+                <select class="form-select" id="webCatSelect">
+                    <!-- 动态加载所有分类 -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">名称</label>
+                <input type="text" class="form-input" id="webName" placeholder="如：GitHub">
+            </div>
+            <div class="form-group">
+                <label class="form-label" id="webUrlLabel">网址</label>
+                <input type="text" class="form-input" id="webUrl" placeholder="https://github.com">
+                <p class="settings-desc" id="webUrlHint">输入完整的网址</p>
+            </div>
+            <div class="form-group">
+                <label class="form-label">图标</label>
+                <input type="text" class="form-input" id="webIcon" placeholder="如：🐙 或 emoji">
+            </div>
+            <div class="form-group">
+                <label class="form-label">简介</label>
+                <textarea class="form-textarea" id="webDesc" placeholder="简短描述..."></textarea>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal('webModal')">取消</button>
+                <button class="btn btn-primary" onclick="saveWeb()">保存</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 设置模态框 -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal">
+            <h3 class="modal-title">⚙️ 设置</h3>
+            <div class="settings-group">
+                <button class="settings-action-btn" onclick="exportData()">
+                    <span class="settings-action-icon">📤</span>
+                    <span>导出数据</span>
+                </button>
+                <p class="settings-desc">将当前所有数据导出为 JSON 文件</p>
+            </div>
+            <div class="settings-group">
+                <label class="settings-action-btn" for="importFile">
+                    <span class="settings-action-icon">📥</span>
+                    <span>导入数据</span>
+                </label>
+                <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)">
+                <p class="settings-desc">从 JSON 文件导入数据（会覆盖当前数据）</p>
+            </div>
+            <div class="settings-group">
+                <button class="settings-action-btn danger" onclick="resetData()">
+                    <span class="settings-action-icon">🔄</span>
+                    <span>恢复初始数据</span>
+                </button>
+                <p class="settings-desc">清空所有自定义数据，恢复默认分类和网站</p>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal('settingsModal')">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== 默认数据 ====================
+        const defaultData = {
+            left: [
+                { id: 'work', name: '工作类', icon: '💼', websites: [
+                    { id: 'w1', name: '企业邮箱', url: 'https://mail.google.com', icon: '📧', desc: '日常工作邮件' },
+                    { id: 'w2', name: '钉钉', url: 'https://dingtalk.com', icon: '💬', desc: '团队沟通协作' },
+                    { id: 'w3', name: '腾讯文档', url: 'https://docs.qq.com', icon: '📄', desc: '在线协作文档' }
+                ]},
+                { id: 'tools', name: '工具类', icon: '🔧', websites: [
+                    { id: 't1', name: 'ProcessOn', url: 'https://processon.com', icon: '🔷', desc: '在线作图工具' },
+                    { id: 't2', name: 'TinyPNG', url: 'https://tinypng.com', icon: '🖼️', desc: '图片压缩工具' }
+                ]},
+                { id: 'learn', name: '学习类', icon: '📚', websites: [
+                    { id: 'l1', name: 'B 站学习', url: 'https://bilibili.com', icon: '📺', desc: '视频教程平台' },
+                    { id: 'l2', name: '知乎', url: 'https://zhihu.com', icon: '📖', desc: '知识分享社区' }
+                ]},
+                { id: 'design', name: '设计类', icon: '🎨', websites: [
+                    { id: 'd1', name: '站酷', url: 'https://zcool.com.cn', icon: '✨', desc: '设计师平台' },
+                    { id: 'd2', name: '花瓣网', url: 'https://huaban.com', icon: '🌸', desc: '灵感收集' }
+                ]},
+                { id: 'dev', name: '开发类', icon: '💻', websites: [
+                    { id: 'c1', name: 'GitHub', url: 'https://github.com', icon: '🐙', desc: '代码托管平台' },
+                    { id: 'c2', name: 'Stack Overflow', url: 'https://stackoverflow.com', icon: '📝', desc: '技术问答' }
+                ]}
+            ],
+            right: [
+                { id: 'fun', name: '娱乐类', icon: '🎮', websites: [
+                    { id: 'f1', name: '哔哩哔哩', url: 'https://bilibili.com', icon: '📺', desc: '视频娱乐' },
+                    { id: 'f2', name: '网易云音乐', url: 'https://music.163.com', icon: '🎵', desc: '在线音乐' }
+                ]},
+                { id: 'life', name: '生活类', icon: '🏠', websites: [
+                    { id: 'lf1', name: '下厨房', url: 'https://xiachufang.com', icon: '🍳', desc: '美食菜谱' },
+                    { id: 'lf2', name: '什么值得买', url: 'https://smzdm.com', icon: '🛒', desc: '购物指南' }
+                ]},
+                { id: 'social', name: '社交类', icon: '👥', websites: [
+                    { id: 's1', name: '微博', url: 'https://weibo.com', icon: '🔴', desc: '社交媒体' },
+                    { id: 's2', name: '小红书', url: 'https://xiaohongshu.com', icon: '📕', desc: '生活分享' }
+                ]},
+                { id: 'news', name: '新闻类', icon: '📰', websites: [
+                    { id: 'n1', name: '今日头条', url: 'https://toutiao.com', icon: '🔵', desc: '新闻资讯' },
+                    { id: 'n2', name: '澎湃新闻', url: 'https://thepaper.cn', icon: '📱', desc: '时事新闻' }
+                ]}
+            ]
+        };
+
+        let appData = JSON.parse(localStorage.getItem('personalPanelData')) || JSON.parse(JSON.stringify(defaultData));
+        let currentZone = null;
+        let currentCatId = null;
+        let editingCatId = null;
+        let editingWebId = null;
+
+        function saveData() {
+            localStorage.setItem('personalPanelData', JSON.stringify(appData));
+            document.getElementById('updateTime').textContent = new Date().toLocaleString('zh-CN');
+        }
+
+        // ==================== 主题切换 ====================
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+        }
+
+        // ==================== 颜色切换 ====================
+        function setColor(color) {
+            document.documentElement.setAttribute('data-color', color);
+            localStorage.setItem('color', color);
+            document.querySelectorAll('.color-option').forEach(opt => {
+                opt.classList.toggle('active', opt.dataset.color === color);
+            });
+        }
+
+        document.getElementById('colorPicker').addEventListener('click', (e) => {
+            if (e.target.classList.contains('color-option')) {
+                setColor(e.target.dataset.color);
+            }
+        });
+
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        document.getElementById('themeBtn').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+        const savedColor = localStorage.getItem('color') || 'blue';
+        setColor(savedColor);
+
+        // ==================== 网站类型切换 ====================
+        function toggleWebType() {
+            const type = document.getElementById('webType').value;
+            const label = document.getElementById('webUrlLabel');
+            const input = document.getElementById('webUrl');
+            const hint = document.getElementById('webUrlHint');
+            if (type === 'url') {
+                label.textContent = '网址';
+                input.placeholder = 'https://github.com';
+                input.type = 'url';
+                hint.textContent = '输入完整的网址';
+            } else if (type === 'app') {
+                label.textContent = '程序路径';
+                input.placeholder = 'C:\\Program Files\\App\\app.exe';
+                input.type = 'text';
+                hint.textContent = '输入程序的完整路径';
+            } else if (type === 'dir') {
+                label.textContent = '目录路径';
+                input.placeholder = 'D:\\Projects\\MyProject';
+                input.type = 'text';
+                hint.textContent = '输入目录的完整路径';
+            }
+        }
+
+        // ==================== 侧边栏锁定功能 ====================
+        let leftLocked = localStorage.getItem('leftLocked') === 'true';
+        let rightLocked = localStorage.getItem('rightLocked') === 'true';
+
+        function toggleLock(side) {
+            if (side === 'left') {
+                leftLocked = !leftLocked;
+                localStorage.setItem('leftLocked', leftLocked);
+                document.getElementById('lockLeft').textContent = leftLocked ? '🔒' : '🔓';
+                document.getElementById('lockLeft').classList.toggle('locked', leftLocked);
+                document.getElementById('triggerLeft').classList.toggle('locked', leftLocked);
+                if (leftLocked) {
+                    document.getElementById('sidebarLeft').classList.add('show');
+                } else {
+                    document.getElementById('sidebarLeft').classList.remove('show');
+                }
+            } else {
+                rightLocked = !rightLocked;
+                localStorage.setItem('rightLocked', rightLocked);
+                document.getElementById('lockRight').textContent = rightLocked ? '🔒' : '🔓';
+                document.getElementById('lockRight').classList.toggle('locked', rightLocked);
+                document.getElementById('triggerRight').classList.toggle('locked', rightLocked);
+                if (rightLocked) {
+                    document.getElementById('sidebarRight').classList.add('show');
+                } else {
+                    document.getElementById('sidebarRight').classList.remove('show');
+                }
+            }
+        }
+
+        // 初始化锁定状态
+        function initLocks() {
+            document.getElementById('lockLeft').textContent = leftLocked ? '🔒' : '🔓';
+            document.getElementById('lockLeft').classList.toggle('locked', leftLocked);
+            document.getElementById('triggerLeft').classList.toggle('locked', leftLocked);
+            document.getElementById('lockRight').textContent = rightLocked ? '🔒' : '🔓';
+            document.getElementById('lockRight').classList.toggle('locked', rightLocked);
+            document.getElementById('triggerRight').classList.toggle('locked', rightLocked);
+            if (leftLocked) {
+                document.getElementById('sidebarLeft').classList.add('show');
+                document.querySelector('.center').classList.add('sidebar-left-visible');
+            }
+            if (rightLocked) {
+                document.getElementById('sidebarRight').classList.add('show');
+                document.querySelector('.center').classList.add('sidebar-right-visible');
+            }
+        }
+        initLocks();
+
+        // 鼠标悬停显示侧边栏（未锁定时）
+        const centerEl = document.querySelector('.center');
+        
+        document.getElementById('triggerLeft').addEventListener('mouseenter', () => {
+            if (!leftLocked) {
+                document.getElementById('sidebarLeft').classList.add('show');
+                centerEl.classList.add('sidebar-left-visible');
+            }
+        });
+        document.getElementById('sidebarLeft').addEventListener('mouseenter', () => {
+            if (!leftLocked) {
+                document.getElementById('sidebarLeft').classList.add('show');
+                centerEl.classList.add('sidebar-left-visible');
+            }
+        });
+        document.getElementById('triggerLeft').addEventListener('mouseleave', () => {
+            if (!leftLocked) {
+                document.getElementById('sidebarLeft').classList.remove('show');
+                centerEl.classList.remove('sidebar-left-visible');
+            }
+        });
+        document.getElementById('sidebarLeft').addEventListener('mouseleave', () => {
+            if (!leftLocked) {
+                document.getElementById('sidebarLeft').classList.remove('show');
+                centerEl.classList.remove('sidebar-left-visible');
+            }
+        });
+
+        document.getElementById('triggerRight').addEventListener('mouseenter', () => {
+            if (!rightLocked) {
+                document.getElementById('sidebarRight').classList.add('show');
+                centerEl.classList.add('sidebar-right-visible');
+            }
+        });
+        document.getElementById('sidebarRight').addEventListener('mouseenter', () => {
+            if (!rightLocked) {
+                document.getElementById('sidebarRight').classList.add('show');
+                centerEl.classList.add('sidebar-right-visible');
+            }
+        });
+        document.getElementById('triggerRight').addEventListener('mouseleave', () => {
+            if (!rightLocked) {
+                document.getElementById('sidebarRight').classList.remove('show');
+                centerEl.classList.remove('sidebar-right-visible');
+            }
+        });
+        document.getElementById('sidebarRight').addEventListener('mouseleave', () => {
+            if (!rightLocked) {
+                document.getElementById('sidebarRight').classList.remove('show');
+                centerEl.classList.remove('sidebar-right-visible');
+            }
+        });
+
+        // ==================== 渲染分类 ====================
+        function renderCats() {
+            const leftContainer = document.getElementById('leftCats');
+            const rightContainer = document.getElementById('rightCats');
+            leftContainer.innerHTML = '';
+            rightContainer.innerHTML = '';
+            appData.left.forEach(cat => leftContainer.appendChild(createCatCard(cat, 'left')));
+            appData.right.forEach(cat => rightContainer.appendChild(createCatCard(cat, 'right')));
+            initCatDrag();
+        }
+
+        function createCatCard(cat, zone) {
+            const div = document.createElement('div');
+            div.className = 'cat-card' + (currentCatId === cat.id ? ' active' : '');
+            div.dataset.zone = zone;
+            div.dataset.catId = cat.id;
+            div.onclick = (e) => { if (!e.target.closest('.cat-action')) selectCat(cat, zone); };
+            div.innerHTML = `
+                <div class="cat-header">
+                    <span class="cat-name"><span class="cat-icon">${cat.icon}</span>${cat.name}</span>
+                    <div class="cat-actions">
+                        <button class="cat-action edit" onclick="event.stopPropagation();editCat('${cat.id}','${zone}')">✏️</button>
+                        <button class="cat-action delete" onclick="event.stopPropagation();deleteCat('${cat.id}','${zone}')">🗑️</button>
+                    </div>
+                </div>
+                <div class="web-list">
+                    ${cat.websites.slice(0, 6).map(w => `<div class="web-item"><span class="web-icon">${w.icon}</span><span class="web-name">${w.name}</span></div>`).join('')}
+                </div>
+                <div class="cat-count">${cat.websites.length} 个网站</div>
+            `;
+            return div;
+        }
+
+        function selectCat(cat, zone) {
+            currentZone = zone;
+            currentCatId = cat.id;
+            document.getElementById('placeholder').style.display = 'none';
+            document.getElementById('detailView').classList.add('active');
+            document.getElementById('detailIcon').textContent = cat.icon;
+            document.getElementById('detailName').textContent = cat.name;
+            renderWebsites(cat);
+            renderCats();
+        }
+
+        function renderWebsites(cat) {
+            const grid = document.getElementById('webGrid');
+            grid.innerHTML = cat.websites.map(w => {
+                const type = w.type || 'url';
+                const typeIcon = type === 'app' ? '🖥️' : type === 'dir' ? '📁' : '🌐';
+                let clickHandler = `openUrl('${w.url.replace(/\\/g, '\\\\')}', '${type}')`;
+                return `
+                <div class="web-card" onclick="${clickHandler}">
+                    <div class="web-type-badge">${typeIcon}</div>
+                    <div class="web-actions">
+                        <button class="web-action" onclick="event.stopPropagation();editWeb('${w.id}')">✏️</button>
+                        <button class="web-action" onclick="event.stopPropagation();deleteWeb('${w.id}')">🗑️</button>
+                    </div>
+                    <span class="web-icon">${w.icon}</span>
+                    <span class="web-name">${w.name}</span>
+                    <span class="web-desc">${w.desc || ''}</span>
+                </div>
+            `;
+            }).join('');
+        }
+
+        function openUrl(url, type = 'url') {
+            console.log('[openUrl] 调用参数:', { url, type });
+            
+            // 自动检测：如果是 Windows 路径但没有 type，当作程序处理
+            if ((!type || type === 'url') && url.match(/^[A-Za-z]:\\/)) {
+                console.log('[openUrl] 检测到 Windows 路径，自动识别为程序');
+                type = 'app';
+            }
+            
+            if (type === 'url' || !type) {
+                console.log('[openUrl] 打开网址:', url);
+                window.open(url, '_blank');
+            } else if (type === 'app') {
+                console.log('[openUrl] 启动程序:', url);
+                // 程序路径 - 使用自定义协议 mypanel:// 直接启动
+                // 将 Windows 路径转换为 file:/// 格式
+                let protocolUrl = url;
+                if (url.match(/^[A-Za-z]:\\/)) {
+                    protocolUrl = 'file:///' + url.replace(/\\/g, '/');
+                }
+                console.log('[openUrl] 协议 URL:', 'mypanel://' + protocolUrl);
+                window.location.href = 'mypanel://' + protocolUrl;
+            } else if (type === 'dir') {
+                console.log('[openUrl] 打开目录:', url);
+                // 目录路径 - 使用自定义协议 mypanel:// 打开文件夹
+                let protocolUrl = url;
+                if (url.match(/^[A-Za-z]:\\/)) {
+                    protocolUrl = 'file:///' + url.replace(/\\/g, '/');
+                }
+                window.location.href = 'mypanel://' + protocolUrl;
+            }
+        }
+
+        // ==================== 分类操作 ====================
+        function openCatModal(zone) {
+            editingCatId = null;
+            currentZone = zone;
+            document.getElementById('catModalTitle').textContent = '添加分类';
+            document.getElementById('catName').value = '';
+            document.getElementById('catIcon').value = '';
+            document.getElementById('catZone').value = zone;
+            document.getElementById('catModal').classList.add('active');
+        }
+
+        function editCat(catId, zone) {
+            editingCatId = catId;
+            currentZone = zone;
+            const cat = appData[zone].find(c => c.id === catId);
+            document.getElementById('catModalTitle').textContent = '编辑分类';
+            document.getElementById('catName').value = cat.name;
+            document.getElementById('catIcon').value = cat.icon;
+            document.getElementById('catZone').value = zone;
+            document.getElementById('catModal').classList.add('active');
+        }
+
+        function saveCat() {
+            const name = document.getElementById('catName').value.trim();
+            const icon = document.getElementById('catIcon').value.trim() || '📁';
+            const zone = document.getElementById('catZone').value;
+            if (!name) { alert('请输入分类名称'); return; }
+            if (editingCatId) {
+                const cat = appData[zone].find(c => c.id === editingCatId);
+                cat.name = name; cat.icon = icon;
+            } else {
+                appData[zone].push({ id: Date.now().toString(), name, icon, websites: [] });
+            }
+            saveData();
+            renderCats();
+            closeModal('catModal');
+        }
+
+        function deleteCat(catId, zone) {
+            if (!confirm('确定删除此分类及其所有网站？')) return;
+            appData[zone] = appData[zone].filter(c => c.id !== catId);
+            if (currentCatId === catId) {
+                document.getElementById('placeholder').style.display = 'flex';
+                document.getElementById('detailView').classList.remove('active');
+                currentCatId = null;
+            }
+            saveData();
+            renderCats();
+        }
+
+        // ==================== 网站操作 ====================
+        function openWebModal() {
+            if (!currentCatId) return;
+            editingWebId = null;
+            document.getElementById('webModalTitle').textContent = '添加项目';
+            
+            // 动态加载所有分类到选择器
+            const catSelect = document.getElementById('webCatSelect');
+            catSelect.innerHTML = '';
+            const allCats = [...appData.left, ...appData.right];
+            allCats.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat.id;
+                option.textContent = cat.icon + ' ' + cat.name;
+                if (cat.id === currentCatId) option.selected = true;
+                catSelect.appendChild(option);
+            });
+            
+            document.getElementById('webCatId').value = currentCatId;
+            document.getElementById('webType').value = 'url';
+            document.getElementById('webName').value = '';
+            document.getElementById('webUrl').value = '';
+            document.getElementById('webIcon').value = '';
+            document.getElementById('webDesc').value = '';
+            toggleWebType();
+            document.getElementById('webModal').classList.add('active');
+        }
+
+        function editWeb(webId) {
+            const cat = appData[currentZone].find(c => c.id === currentCatId);
+            const web = cat.websites.find(w => w.id === webId);
+            editingWebId = webId;
+            document.getElementById('webModalTitle').textContent = '编辑项目';
+            document.getElementById('webCatId').value = currentCatId;
+            document.getElementById('webType').value = web.type || 'url';
+            document.getElementById('webName').value = web.name;
+            document.getElementById('webUrl').value = web.url;
+            document.getElementById('webIcon').value = web.icon;
+            document.getElementById('webDesc').value = web.desc || '';
+            toggleWebType();
+            document.getElementById('webModal').classList.add('active');
+        }
+
+        function saveWeb() {
+            const catId = document.getElementById('webCatId').value;
+            const type = document.getElementById('webType').value;
+            const name = document.getElementById('webName').value.trim();
+            const url = document.getElementById('webUrl').value.trim();
+            const icon = document.getElementById('webIcon').value.trim() || '🌐';
+            const desc = document.getElementById('webDesc').value.trim();
+            if (!name || !url) { alert('请填写名称和路径/网址'); return; }
+            const cat = appData[currentZone].find(c => c.id === catId);
+            if (editingWebId) {
+                const web = cat.websites.find(w => w.id === editingWebId);
+                web.name = name; web.url = url; web.icon = icon; web.desc = desc; web.type = type;
+            } else {
+                cat.websites.push({ id: Date.now().toString(), name, url, icon, desc, type });
+            }
+            saveData();
+            renderWebsites(cat);
+            renderCats();
+            closeModal('webModal');
+        }
+
+        function deleteWeb(webId) {
+            if (!confirm('确定删除此网站？')) return;
+            const cat = appData[currentZone].find(c => c.id === currentCatId);
+            cat.websites = cat.websites.filter(w => w.id !== webId);
+            saveData();
+            renderWebsites(cat);
+            renderCats();
+        }
+
+        // ==================== 拖拽功能 ====================
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+        }
+        function handleDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            const data = e.dataTransfer.getData('text/uri-list') || e.dataTransfer.getData('text/plain');
+            if (data && currentCatId) {
+                const url = data.split('\n')[0].trim();
+                if (url.startsWith('http')) {
+                    let name = '新网站';
+                    try { name = new URL(url).hostname.replace('www.', ''); } catch(err) {}
+                    const cat = appData[currentZone].find(c => c.id === currentCatId);
+                    cat.websites.push({ id: Date.now().toString(), name, url, icon: '🌐', desc: '拖拽添加' });
+                    saveData();
+                    renderWebsites(cat);
+                    renderCats();
+                }
+            }
+        }
+
+        // ==================== 通用函数 ====================
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        document.querySelectorAll('.modal-overlay').forEach(m => {
+            m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('active'); });
+        });
+
+        // ==================== 分类卡片拖拽功能 ====================
+        let draggedCat = null;
+        let draggedCatZone = null;
+
+        function initCatDrag() {
+            document.querySelectorAll('.cat-card').forEach(card => {
+                card.setAttribute('draggable', 'true');
+                card.addEventListener('dragstart', handleCatDragStart);
+                card.addEventListener('dragend', handleCatDragEnd);
+                card.addEventListener('dragover', handleCatDragOver);
+                card.addEventListener('dragleave', handleCatDragLeave);
+                card.addEventListener('drop', handleCatDrop);
+            });
+        }
+
+        function handleCatDragStart(e) {
+            draggedCat = this;
+            draggedCatZone = this.dataset.zone;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', this.dataset.catId);
+        }
+
+        function handleCatDragEnd(e) {
+            this.classList.remove('dragging');
+            document.querySelectorAll('.cat-card').forEach(card => {
+                card.classList.remove('drag-over');
+            });
+            draggedCat = null;
+            draggedCatZone = null;
+        }
+
+        function handleCatDragOver(e) {
+            e.preventDefault();
+            if (this !== draggedCat) {
+                e.dataTransfer.dropEffect = 'move';
+                this.classList.add('drag-over');
+            }
+        }
+
+        function handleCatDragLeave(e) {
+            this.classList.remove('drag-over');
+        }
+
+        function handleCatDrop(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+            if (this === draggedCat) return;
+
+            const targetCatId = this.dataset.catId;
+            const targetZone = this.dataset.zone;
+            const catId = draggedCat.dataset.catId;
+
+            // 从原区域移除
+            const sourceList = appData[draggedCatZone];
+            const catIndex = sourceList.findIndex(c => c.id === catId);
+            const [cat] = sourceList.splice(catIndex, 1);
+
+            // 添加到目标区域
+            const targetList = appData[targetZone];
+            const targetIndex = targetList.findIndex(c => c.id === targetCatId);
+            targetList.splice(targetIndex + 1, 0, cat);
+
+            saveData();
+            renderCats();
+        }
+
+        // ==================== 设置功能 ====================
+        function openSettingsModal() {
+            document.getElementById('settingsModal').classList.add('active');
+        }
+
+        function exportData() {
+            const dataStr = JSON.stringify(appData, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `personal-panel-backup-${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            closeModal('settingsModal');
+        }
+
+        function importData(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (imported.left && imported.right) {
+                        appData = imported;
+                        saveData();
+                        renderCats();
+                        alert('✅ 数据导入成功！');
+                        closeModal('settingsModal');
+                    } else {
+                        alert('❌ 数据格式不正确！');
+                    }
+                } catch (err) {
+                    alert('❌ 文件解析失败：' + err.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function resetData() {
+            if (confirm('⚠️ 确定要恢复初始数据吗？所有自定义分类和网站将被清空！')) {
+                appData = JSON.parse(JSON.stringify(defaultData));
+                saveData();
+                renderCats();
+                alert('✅ 已恢复初始数据！');
+                closeModal('settingsModal');
+            }
+        }
+
+        // ==================== AI 热点新闻 ====================
+        const aiNewsData = [
+            { title: 'OpenAI 发布 GPT-5 预览版，推理能力大幅提升', source: '机器之心', tag: '大模型', url: 'https://jiqizhixin.com' },
+            { title: 'Anthropic 推出 Claude 4，支持 500K 上下文窗口', source: '量子位', tag: 'AI 助手', url: 'https://qbitai.com' },
+            { title: '谷歌 DeepMind 新突破：AI 预测蛋白质结构准确率达 98%', source: 'DeepTech', tag: '生物 AI', url: 'https://deeptechchina.com' },
+            { title: 'Meta 开源 Llama 4 系列模型，商用限制进一步放宽', source: '新智元', tag: '开源', url: 'https://arthury.com' },
+            { title: '英伟达发布新一代 AI 芯片 B200，性能提升 30 倍', source: '钛媒体', tag: '硬件', url: 'https://tmtpost.com' },
+            { title: '微软 Copilot 全面集成 Office，AI 办公时代来临', source: '36 氪', tag: '应用', url: 'https://36kr.com' },
+            { title: '中国发布新一代 AI 大模型「通义千问 3.0」', source: '界面新闻', tag: '国产', url: 'https://jiemian.com' },
+            { title: 'AI 视频生成工具 Sora 正式开放公测', source: '少数派', tag: '多模态', url: 'https://sspai.com' }
+        ];
+
+        function loadAiNews() {
+            const grid = document.getElementById('aiNewsGrid');
+            if (!grid) return;
+            
+            grid.innerHTML = aiNewsData.map(news => `
+                <div class="ai-news-card" onclick="window.open('${news.url}', '_blank')">
+                    <span class="ai-news-tag">${news.tag}</span>
+                    <div class="ai-news-title">${news.title}</div>
+                    <div class="ai-news-source">📰 ${news.source}</div>
+                </div>
+            `).join('');
+        }
+
+        // ==================== 数据修复 ====================
+        function fixLegacyData() {
+            let modified = false;
+            
+            // 修复旧数据：Windows 路径但没有 type 字段
+            [...appData.left, ...appData.right].forEach(cat => {
+                cat.websites.forEach(w => {
+                    if (!w.type && w.url && w.url.match(/^[A-Za-z]:\\/)) {
+                        console.log('[fixLegacyData] 修复旧数据:', w.name, w.url);
+                        w.type = 'app';
+                        modified = true;
+                    }
+                });
+            });
+            
+            if (modified) {
+                console.log('[fixLegacyData] 数据已修复，保存');
+                saveData();
+                alert('✅ 检测到旧格式数据，已自动修复为程序类型。\n\n现在可以点击程序卡片直接启动了！');
+            }
+        }
+
+        // ==================== 初始化 ====================
+        function init() {
+            saveData();
+            fixLegacyData();  // 修复旧数据
+            renderCats();
+            initCatDrag();
+            initLocks();
+            loadAiNews();
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+                }
+            });
+        }
+        init();
+    </script>
+</body>
+</html>
