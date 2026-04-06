@@ -484,33 +484,31 @@
             z-index: 100;
         }
         .today-header {
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
+            gap: 1rem;
             margin-bottom: 1.5rem;
             padding-bottom: 1rem;
             border-bottom: 3px solid var(--accent);
-            position: relative;
         }
         .today-title {
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--text-primary);
+            justify-self: start;
         }
         .today-datetime {
-            position: absolute;
-            right: 160px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: var(--text-muted);
             font-weight: 500;
             white-space: nowrap;
+            justify-self: center;
         }
         .today-actions {
             display: flex;
             gap: 0.5rem;
-            flex-shrink: 0;
+            justify-self: end;
         }
         .today-btn {
             background: var(--accent);
@@ -1953,12 +1951,15 @@
         // 更新时间显示（每分钟）
         function updateTimeDisplay() {
             const now = new Date();
-            const today = now.toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' });
-            const weekday = now.toLocaleDateString('zh-CN', { weekday: 'short' });
-            const time = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const weekday = now.toLocaleDateString('zh-CN', { weekday: 'long' });
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
             const datetimeEl = document.getElementById('todayDatetime');
             if (datetimeEl) {
-                datetimeEl.textContent = `${today} ${weekday} ${time}`;
+                datetimeEl.textContent = `${year}年${month}月${day}日 ${hours}:${minutes} (${weekday})`;
             }
         }
         setInterval(updateTimeDisplay, 60000); // 每分钟更新
@@ -1966,12 +1967,15 @@
         // 渲染今日工作页面
         function renderTodayWork() {
             const now = new Date();
-            const today = now.toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' });
-            const weekday = now.toLocaleDateString('zh-CN', { weekday: 'short' });
-            const time = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const weekday = now.toLocaleDateString('zh-CN', { weekday: 'long' });
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
             const datetimeEl = document.getElementById('todayDatetime');
             if (datetimeEl) {
-                datetimeEl.textContent = `${today} ${weekday} ${time}`;
+                datetimeEl.textContent = `${year}年${month}月${day}日 ${hours}:${minutes} (${weekday})`;
             }
             
             // 分类任务
