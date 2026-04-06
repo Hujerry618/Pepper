@@ -576,6 +576,73 @@
             gap: 0.75rem;
             margin-bottom: 0.75rem;
         }
+        
+        /* 四象限布局 - 艾森豪威尔矩阵 */
+        .eisenhower-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, minmax(200px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .quadrant {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .quadrant-badge {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.2rem 0.5rem;
+            border-radius: var(--radius-sm);
+            background: var(--bg-secondary);
+            color: var(--text-muted);
+        }
+        /* 重要且紧急（右上）- 红色系 */
+        .quadrant-important-urgent {
+            background: linear-gradient(135deg, rgba(245,101,101,0.08), rgba(239,68,68,0.05));
+            border-color: var(--danger);
+        }
+        .quadrant-important-urgent .quadrant-badge {
+            background: rgba(245,101,101,0.15);
+            color: var(--danger);
+        }
+        /* 重要但不紧急（右下）- 蓝色系 */
+        .quadrant-important-not-urgent {
+            background: linear-gradient(135deg, rgba(102,126,234,0.06), rgba(66,99,235,0.04));
+            border-color: var(--accent);
+        }
+        .quadrant-important-not-urgent .quadrant-badge {
+            background: rgba(102,126,234,0.15);
+            color: var(--accent);
+        }
+        /* 紧急但不重要（左上）- 橙色系 */
+        .quadrant-urgent-not-important {
+            background: linear-gradient(135deg, rgba(251,146,60,0.06), rgba(249,115,22,0.04));
+            border-color: #fb923c;
+        }
+        .quadrant-urgent-not-important .quadrant-badge {
+            background: rgba(251,146,60,0.15);
+            color: #fb923c;
+        }
+        /* 不重要且不紧急（左下）- 灰色系 */
+        .quadrant-not-important-not-urgent {
+            background: linear-gradient(135deg, rgba(156,163,175,0.06), rgba(107,114,128,0.04));
+            border-color: #9ca3af;
+        }
+        .quadrant-not-important-not-urgent .quadrant-badge {
+            background: rgba(156,163,175,0.15);
+            color: #6b7280;
+        }
+        
         .today-section {
             background: var(--bg-card);
             border-radius: var(--radius-lg);
@@ -1138,36 +1205,40 @@
                         </div>
                     </div>
                     
-                    <!-- 横版布局：三列并排 -->
-                    <div class="today-grid">
-                        <!-- 今日核心任务 -->
-                        <section class="today-section">
+                    <!-- 四象限布局：轻重缓急矩阵 -->
+                    <!-- 纵坐标：上=急，下=缓；横坐标：左=轻，右=重 -->
+                    <div class="eisenhower-grid">
+                        <!-- 左上：紧急但不重要 -->
+                        <section class="quadrant quadrant-urgent-not-important">
+                            <div class="quadrant-badge">📌 紧急·轻</div>
                             <h2 class="section-title">🎯 <span data-i18n="coreTasks">今日核心任务</span></h2>
                             <div class="task-list" id="coreTasks"></div>
                         </section>
                         
-                        <!-- 高优工作 -->
-                        <section class="today-section">
-                            <h2 class="section-title">⚡ <span data-i18n="priorityTasks">高优工作</span></h2>
-                            <div class="priority-list" id="priorityTasks"></div>
-                        </section>
-                        
-                        <!-- 常规工作 -->
-                        <section class="today-section">
-                            <h2 class="section-title">📝 <span data-i18n="regularTasks">常规工作</span></h2>
-                            <div class="task-list" id="regularTasks"></div>
-                        </section>
-                    </div>
-                    
-                    <!-- 第二行：全宽布局 -->
-                    <div class="today-grid">
-                        <!-- 今日必须完成事项 -->
-                        <section class="today-section must-section full-width">
+                        <!-- 右上：重要且紧急 -->
+                        <section class="quadrant quadrant-important-urgent">
+                            <div class="quadrant-badge">🔥 重要·急</div>
                             <h2 class="section-title must-title">🔥 <span data-i18n="mustTasks">今日必须完成</span></h2>
                             <div class="task-list" id="mustTasks"></div>
                         </section>
                         
-                        <!-- 重要提醒 -->
+                        <!-- 左下：不重要且不紧急 -->
+                        <section class="quadrant quadrant-not-important-not-urgent">
+                            <div class="quadrant-badge">📝 轻·缓</div>
+                            <h2 class="section-title">📝 <span data-i18n="regularTasks">常规工作</span></h2>
+                            <div class="task-list" id="regularTasks"></div>
+                        </section>
+                        
+                        <!-- 右下：重要但不紧急 -->
+                        <section class="quadrant quadrant-important-not-urgent">
+                            <div class="quadrant-badge">⭐ 重要·缓</div>
+                            <h2 class="section-title">⚡ <span data-i18n="priorityTasks">高优工作</span></h2>
+                            <div class="priority-list" id="priorityTasks"></div>
+                        </section>
+                    </div>
+                    
+                    <!-- 重要提醒（全宽） -->
+                    <div class="today-grid">
                         <section class="today-section full-width">
                             <h2 class="section-title">⚠️ <span data-i18n="reminders">重要提醒</span></h2>
                             <div class="reminder-list" id="reminders"></div>
