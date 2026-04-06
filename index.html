@@ -1257,28 +1257,28 @@
                     <div class="eisenhower-grid">
                         <!-- 左上：紧急但不重要 -->
                         <section class="quadrant quadrant-urgent-not-important">
-                            <div class="quadrant-badge">📌 紧急·轻</div>
+                            <div class="quadrant-badge" data-i18n="quadrantUrgentLight">📌 紧急·轻</div>
                             <h2 class="section-title">⚡ <span data-i18n="priorityTasks">高优工作</span></h2>
                             <div class="priority-list" id="priorityTasks"></div>
                         </section>
                         
                         <!-- 右上：重要且紧急 -->
                         <section class="quadrant quadrant-important-urgent">
-                            <div class="quadrant-badge">🔥 重要·急</div>
+                            <div class="quadrant-badge" data-i18n="quadrantImportantUrgent">🔥 重要·急</div>
                             <h2 class="section-title must-title">🔥 <span data-i18n="mustTasks">今日必须完成</span></h2>
                             <div class="task-list" id="mustTasks"></div>
                         </section>
                         
                         <!-- 左下：不重要且不紧急 -->
                         <section class="quadrant quadrant-not-important-not-urgent">
-                            <div class="quadrant-badge">📝 轻·缓</div>
+                            <div class="quadrant-badge" data-i18n="quadrantNotImportantNotUrgent">📝 轻·缓</div>
                             <h2 class="section-title">📝 <span data-i18n="regularTasks">常规工作</span></h2>
                             <div class="task-list" id="regularTasks"></div>
                         </section>
                         
                         <!-- 右下：重要但不紧急 -->
                         <section class="quadrant quadrant-important-not-urgent">
-                            <div class="quadrant-badge">⭐ 重要·缓</div>
+                            <div class="quadrant-badge" data-i18n="quadrantImportantNotUrgent">⭐ 重要·缓</div>
                             <h2 class="section-title">🎯 <span data-i18n="coreTasks">今日核心任务</span></h2>
                             <div class="task-list" id="coreTasks"></div>
                         </section>
@@ -2147,6 +2147,11 @@
                 exportBtn: '导出',
                 importBtn: '导入',
                 resetBtn: '重置',
+                // 四象限标签
+                quadrantUrgentLight: '📌 紧急·轻',
+                quadrantImportantUrgent: '🔥 重要·急',
+                quadrantNotImportantNotUrgent: '📝 轻·缓',
+                quadrantImportantNotUrgent: '⭐ 重要·缓',
                 // 网站名称
                 webMail: '企业邮箱',
                 webDingTalk: '钉钉',
@@ -2237,6 +2242,11 @@
                 exportBtn: 'Export',
                 importBtn: 'Import',
                 resetBtn: 'Reset',
+                // Quadrant badges
+                quadrantUrgentLight: '📌 Urgent·Light',
+                quadrantImportantUrgent: '🔥 Important·Urgent',
+                quadrantNotImportantNotUrgent: '📝 Light·Slow',
+                quadrantImportantNotUrgent: '⭐ Important·Slow',
                 // Website names
                 webMail: 'Work Email',
                 webDingTalk: 'DingTalk',
