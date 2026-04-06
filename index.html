@@ -660,9 +660,60 @@
             margin-bottom: 0.6rem;
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 0.4rem;
             padding-bottom: 0.5rem;
             border-bottom: 2px solid var(--border-color);
+        }
+        .section-title > span:first-child {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .section-time-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 0.2rem 0.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            opacity: 0.7;
+        }
+        .section-time-btn:hover {
+            opacity: 1;
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+        .section-time-display {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .time-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.15rem 0.4rem;
+            background: var(--bg-primary);
+            border-radius: var(--radius-xs);
+            border: 1px solid var(--border-color);
+        }
+        .time-badge .remove-time {
+            cursor: pointer;
+            opacity: 0.6;
+            font-size: 0.9rem;
+        }
+        .time-badge .remove-time:hover {
+            opacity: 1;
+            color: var(--danger);
         }
         .must-section {
             background: linear-gradient(135deg, rgba(245,101,101,0.08), rgba(239,68,68,0.05));
@@ -1211,28 +1262,44 @@
                         <!-- 左上：紧急但不重要 -->
                         <section class="quadrant quadrant-urgent-not-important">
                             <div class="quadrant-badge">📌 紧急·轻</div>
-                            <h2 class="section-title">⚡ <span data-i18n="priorityTasks">高优工作</span></h2>
+                            <h2 class="section-title">
+                                <span>⚡ <span data-i18n="priorityTasks">高优工作</span></span>
+                                <button class="section-time-btn" onclick="openQuadrantTimeModal('priorityTasks')" title="设置时间节点">⏰</button>
+                            </h2>
+                            <div class="section-time-display" id="priorityTasksTime"></div>
                             <div class="priority-list" id="priorityTasks"></div>
                         </section>
                         
                         <!-- 右上：重要且紧急 -->
                         <section class="quadrant quadrant-important-urgent">
                             <div class="quadrant-badge">🔥 重要·急</div>
-                            <h2 class="section-title must-title">🔥 <span data-i18n="mustTasks">今日必须完成</span></h2>
+                            <h2 class="section-title must-title">
+                                <span>🔥 <span data-i18n="mustTasks">今日必须完成</span></span>
+                                <button class="section-time-btn" onclick="openQuadrantTimeModal('mustTasks')" title="设置时间节点">⏰</button>
+                            </h2>
+                            <div class="section-time-display" id="mustTasksTime"></div>
                             <div class="task-list" id="mustTasks"></div>
                         </section>
                         
                         <!-- 左下：不重要且不紧急 -->
                         <section class="quadrant quadrant-not-important-not-urgent">
                             <div class="quadrant-badge">📝 轻·缓</div>
-                            <h2 class="section-title">📝 <span data-i18n="regularTasks">常规工作</span></h2>
+                            <h2 class="section-title">
+                                <span>📝 <span data-i18n="regularTasks">常规工作</span></span>
+                                <button class="section-time-btn" onclick="openQuadrantTimeModal('regularTasks')" title="设置时间节点">⏰</button>
+                            </h2>
+                            <div class="section-time-display" id="regularTasksTime"></div>
                             <div class="task-list" id="regularTasks"></div>
                         </section>
                         
                         <!-- 右下：重要但不紧急 -->
                         <section class="quadrant quadrant-important-not-urgent">
                             <div class="quadrant-badge">⭐ 重要·缓</div>
-                            <h2 class="section-title">🎯 <span data-i18n="coreTasks">今日核心任务</span></h2>
+                            <h2 class="section-title">
+                                <span>🎯 <span data-i18n="coreTasks">今日核心任务</span></span>
+                                <button class="section-time-btn" onclick="openQuadrantTimeModal('coreTasks')" title="设置时间节点">⏰</button>
+                            </h2>
+                            <div class="section-time-display" id="coreTasksTime"></div>
                             <div class="task-list" id="coreTasks"></div>
                         </section>
                     </div>
@@ -1434,6 +1501,30 @@
         </div>
     </div>
     
+    <!-- 四象限时间设置模态框 -->
+    <div class="modal-overlay" id="quadrantTimeModal">
+        <div class="modal">
+            <h3 class="modal-title">⏰ 设置时间节点</h3>
+            <div class="form-group">
+                <label class="form-label">模块</label>
+                <input type="text" class="form-input" id="quadrantModuleName" readonly disabled>
+            </div>
+            <div class="form-group">
+                <label class="form-label">截止日期</label>
+                <input type="date" class="form-input" id="quadrantDeadline">
+            </div>
+            <div class="form-group">
+                <label class="form-label">时间节点（可多个，用逗号分隔）</label>
+                <input type="text" class="form-input" id="quadrantTimeNodes" placeholder="如：09:00, 14:00, 17:00">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal('quadrantTimeModal')">取消</button>
+                <button class="btn btn-primary" onclick="saveQuadrantTime()">保存</button>
+                <button class="btn btn-danger" onclick="clearQuadrantTime()">清除</button>
+            </div>
+        </div>
+    </div>
+    
     <!-- 设置模态框 -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal">
@@ -1553,6 +1644,10 @@
         let editingTaskId = null;
         let editingReminderId = null;
         let currentAlertId = null;
+        let currentQuadrantId = null;
+        
+        // 四象限时间设置
+        let quadrantTimeSettings = JSON.parse(localStorage.getItem('quadrantTimeSettings')) || {};
 
         function saveData() {
             localStorage.setItem('personalPanelData', JSON.stringify(appData));
@@ -1980,6 +2075,75 @@
         document.querySelectorAll('.modal-overlay').forEach(m => {
             m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('active'); });
         });
+        
+        // ==================== 四象限时间设置 ====================
+        function openQuadrantTimeModal(quadrantId) {
+            currentQuadrantId = quadrantId;
+            const names = {
+                priorityTasks: '高优工作',
+                mustTasks: '今日必须完成',
+                regularTasks: '常规工作',
+                coreTasks: '今日核心任务'
+            };
+            document.getElementById('quadrantModuleName').value = names[quadrantId] || quadrantId;
+            
+            const settings = quadrantTimeSettings[quadrantId] || {};
+            document.getElementById('quadrantDeadline').value = settings.deadline || '';
+            document.getElementById('quadrantTimeNodes').value = settings.timeNodes || '';
+            
+            document.getElementById('quadrantTimeModal').classList.add('active');
+        }
+        
+        function saveQuadrantTime() {
+            const deadline = document.getElementById('quadrantDeadline').value;
+            const timeNodes = document.getElementById('quadrantTimeNodes').value;
+            
+            quadrantTimeSettings[currentQuadrantId] = {
+                deadline: deadline,
+                timeNodes: timeNodes
+            };
+            localStorage.setItem('quadrantTimeSettings', JSON.stringify(quadrantTimeSettings));
+            
+            updateQuadrantTimeDisplay(currentQuadrantId);
+            closeModal('quadrantTimeModal');
+        }
+        
+        function clearQuadrantTime() {
+            delete quadrantTimeSettings[currentQuadrantId];
+            localStorage.setItem('quadrantTimeSettings', JSON.stringify(quadrantTimeSettings));
+            
+            updateQuadrantTimeDisplay(currentQuadrantId);
+            closeModal('quadrantTimeModal');
+        }
+        
+        function updateQuadrantTimeDisplay(quadrantId) {
+            const displayEl = document.getElementById(quadrantId + 'Time');
+            if (!displayEl) return;
+            
+            const settings = quadrantTimeSettings[quadrantId] || {};
+            if (!settings.deadline && !settings.timeNodes) {
+                displayEl.innerHTML = '';
+                return;
+            }
+            
+            let html = '';
+            if (settings.deadline) {
+                html += `<span class="time-badge">📅 ${settings.deadline}</span>`;
+            }
+            if (settings.timeNodes) {
+                const nodes = settings.timeNodes.split(',').map(t => t.trim()).filter(t => t);
+                nodes.forEach(node => {
+                    html += `<span class="time-badge">⏰ ${node}</span>`;
+                });
+            }
+            displayEl.innerHTML = html;
+        }
+        
+        function initQuadrantTimeDisplay() {
+            ['priorityTasks', 'mustTasks', 'regularTasks', 'coreTasks'].forEach(id => {
+                updateQuadrantTimeDisplay(id);
+            });
+        }
 
         // ==================== 分类卡片拖拽功能 ====================
         let draggedCat = null;
@@ -2866,6 +3030,7 @@
             loadAiNews();
             loadTodayData();  // 加载今日工作安排
             initLanguage();   // 初始化语言设置
+            initQuadrantTimeDisplay();  // 初始化四象限时间显示
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
