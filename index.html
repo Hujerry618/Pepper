@@ -1503,15 +1503,15 @@
             
             <!-- 今日工作数据 -->
             <div class="settings-section">
-                <label class="settings-label">📋 今日工作数据</label>
+                <label class="settings-label" data-i18n="todayWorkData">📋 今日工作数据</label>
                 <div class="settings-grid">
                     <button class="settings-action-btn" onclick="saveTodayWorkData()">
                         <span class="settings-action-icon">💾</span>
-                        <span>保存</span>
+                        <span data-i18n="saveBtn">保存</span>
                     </button>
                     <label class="settings-action-btn" for="importTodayFile">
                         <span class="settings-action-icon">📂</span>
-                        <span>恢复</span>
+                        <span data-i18n="loadBtn">恢复</span>
                     </label>
                     <input type="file" id="importTodayFile" accept=".json" style="display:none" onchange="loadTodayWorkData(this)">
                 </div>
@@ -1521,19 +1521,19 @@
             
             <!-- 系统数据 -->
             <div class="settings-section">
-                <label class="settings-label">🔧 系统数据</label>
+                <label class="settings-label" data-i18n="systemData">🔧 系统数据</label>
                 <div class="settings-grid">
                     <button class="settings-action-btn" onclick="exportData()">
                         <span class="settings-action-icon">📤</span>
-                        <span>导出</span>
+                        <span data-i18n="exportBtn">导出</span>
                     </button>
                     <label class="settings-action-btn" for="importFile">
                         <span class="settings-action-icon">📥</span>
-                        <span>导入</span>
+                        <span data-i18n="importBtn">导入</span>
                     </label>
                     <button class="settings-action-btn danger" onclick="resetData()">
                         <span class="settings-action-icon">🔄</span>
-                        <span>重置</span>
+                        <span data-i18n="resetBtn">重置</span>
                     </button>
                     <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)">
                 </div>
@@ -2140,6 +2140,13 @@
                 loadTodayDesc: '从文件恢复今日工作和提醒数据',
                 language: '🌐 语言 / Language',
                 langDesc: '切换界面显示语言',
+                todayWorkData: '📋 今日工作数据',
+                systemData: '🔧 系统数据',
+                saveBtn: '保存',
+                loadBtn: '恢复',
+                exportBtn: '导出',
+                importBtn: '导入',
+                resetBtn: '重置',
                 // 网站名称
                 webMail: '企业邮箱',
                 webDingTalk: '钉钉',
@@ -2223,6 +2230,13 @@
                 loadTodayDesc: 'Restore from file',
                 language: '🌐 Language / 语言',
                 langDesc: 'Switch language',
+                todayWorkData: '📋 Today\'s Work',
+                systemData: '🔧 System',
+                saveBtn: 'Save',
+                loadBtn: 'Load',
+                exportBtn: 'Export',
+                importBtn: 'Import',
+                resetBtn: 'Reset',
                 // Website names
                 webMail: 'Work Email',
                 webDingTalk: 'DingTalk',
@@ -2284,17 +2298,8 @@
             // 更新设置模态框标题
             document.querySelector('#settingsModal .modal-title').textContent = texts.settingsTitle;
             
-            // 更新设置按钮文字（横版布局只有图标 + 短文字）
-            const settingBtns = document.querySelectorAll('.settings-action-btn span:last-child');
-            if (settingBtns[0]) settingBtns[0].textContent = texts.saveToday.replace(/^[📦💾📂📤📥🔄]\s*/, '');
-            if (settingBtns[1]) settingBtns[1].textContent = texts.loadToday.replace(/^[📦💾📂📤📥🔄]\s*/, '');
-            if (settingBtns[2]) settingBtns[2].textContent = texts.exportData.replace(/^[📦💾📂📤📥🔄]\s*/, '');
-            if (settingBtns[3]) settingBtns[3].textContent = texts.importData.replace(/^[📦💾📂📤📥🔄]\s*/, '');
-            if (settingBtns[4]) settingBtns[4].textContent = texts.resetData.replace(/^[📦💾📂📤📥🔄]\s*/, '');
-            
-            // 更新语言标签和按钮
-            document.querySelector('.settings-label').textContent = texts.language;
-            document.querySelector('#settingsModal .modal-actions .btn').textContent = texts.close;
+            // 更新时间显示
+            updateTimeDisplay(lang);
         }
         
         // ==================== 设置功能 ====================
@@ -2332,9 +2337,14 @@
             // 核心任务
             summary += `【核心任务】\n`;
             summary += `───────────────────────────────────────────────────────\n`;
-            if (todayData.tasks.filter(t => t.priority === 'core').length > 0) {
-                todayData.tasks.filter(t => t.priority === 'core').forEach((t, i) => {
-                    summary += `  ${i + 1}. ${t.content}${t.time ? ` ⏰ ${t.time}` : ''}\n`;
+            const coreTasks = todayData.tasks.filter(t => t.type === 'core');
+            if (coreTasks.length > 0) {
+                coreTasks.forEach((t, i) => {
+                    summary += `  ${i + 1}. ${t.text}`;
+                    if (t.deadline) summary += ` 📅 ${t.deadline}`;
+                    if (t.timeNodes) summary += ` ⏰ ${t.timeNodes}`;
+                    summary += `\n`;
+                    if (t.note) summary += `     备注：${t.note}\n`;
                 });
             } else {
                 summary += `  (无)\n`;
@@ -2344,9 +2354,14 @@
             // 高优工作
             summary += `【高优工作 - 带时间节点】\n`;
             summary += `───────────────────────────────────────────────────────\n`;
-            if (todayData.tasks.filter(t => t.priority === 'high').length > 0) {
-                todayData.tasks.filter(t => t.priority === 'high').forEach((t, i) => {
-                    summary += `  ${i + 1}. ${t.content}${t.time ? ` ⏰ ${t.time}` : ''}\n`;
+            const priorityTasks = todayData.tasks.filter(t => t.type === 'priority');
+            if (priorityTasks.length > 0) {
+                priorityTasks.forEach((t, i) => {
+                    summary += `  ${i + 1}. ${t.text}`;
+                    if (t.deadline) summary += ` 📅 ${t.deadline}`;
+                    if (t.timeNodes) summary += ` ⏰ ${t.timeNodes}`;
+                    summary += `\n`;
+                    if (t.note) summary += `     备注：${t.note}\n`;
                 });
             } else {
                 summary += `  (无)\n`;
@@ -2356,9 +2371,14 @@
             // 常规工作
             summary += `【常规工作】\n`;
             summary += `───────────────────────────────────────────────────────\n`;
-            if (todayData.tasks.filter(t => t.priority === 'regular').length > 0) {
-                todayData.tasks.filter(t => t.priority === 'regular').forEach((t, i) => {
-                    summary += `  ${i + 1}. ${t.content}${t.time ? ` ⏰ ${t.time}` : ''}\n`;
+            const regularTasks = todayData.tasks.filter(t => t.type === 'regular');
+            if (regularTasks.length > 0) {
+                regularTasks.forEach((t, i) => {
+                    summary += `  ${i + 1}. ${t.text}`;
+                    if (t.deadline) summary += ` 📅 ${t.deadline}`;
+                    if (t.timeNodes) summary += ` ⏰ ${t.timeNodes}`;
+                    summary += `\n`;
+                    if (t.note) summary += `     备注：${t.note}\n`;
                 });
             } else {
                 summary += `  (无)\n`;
@@ -2368,9 +2388,14 @@
             // 必须完成
             summary += `【🔥 今日必须完成】\n`;
             summary += `───────────────────────────────────────────────────────\n`;
-            if (todayData.tasks.filter(t => t.priority === 'must').length > 0) {
-                todayData.tasks.filter(t => t.priority === 'must').forEach((t, i) => {
-                    summary += `  ${i + 1}. ${t.content}${t.time ? ` ⏰ ${t.time}` : ''}\n`;
+            const mustTasks = todayData.tasks.filter(t => t.type === 'must');
+            if (mustTasks.length > 0) {
+                mustTasks.forEach((t, i) => {
+                    summary += `  ${i + 1}. ${t.text}`;
+                    if (t.deadline) summary += ` 📅 ${t.deadline}`;
+                    if (t.timeNodes) summary += ` ⏰ ${t.timeNodes}`;
+                    summary += `\n`;
+                    if (t.note) summary += `     备注：${t.note}\n`;
                 });
             } else {
                 summary += `  (无)\n`;
@@ -2382,7 +2407,10 @@
             summary += `───────────────────────────────────────────────────────\n`;
             if (todayData.reminders.length > 0) {
                 todayData.reminders.forEach((r, i) => {
-                    summary += `  ${i + 1}. ${r.content}${r.time ? ` ⏰ ${r.time}` : ''}\n`;
+                    summary += `  ${i + 1}. ${r.text}`;
+                    if (r.time) summary += ` ⏰ ${r.time}`;
+                    summary += `\n`;
+                    if (r.note) summary += `     备注：${r.note}\n`;
                 });
             } else {
                 summary += `  (无)\n`;
@@ -2500,29 +2528,42 @@
         }
         
         // 更新时间显示（每分钟）
-        function updateTimeDisplay() {
+        function updateTimeDisplay(lang = 'zh') {
             const now = new Date();
             const year = now.getFullYear();
             const month = String(now.getMonth() + 1).padStart(2, '0');
             const day = String(now.getDate()).padStart(2, '0');
-            const weekday = now.toLocaleDateString('zh-CN', { weekday: 'long' });
+            const weekday = lang === 'en' 
+                ? now.toLocaleDateString('en-US', { weekday: 'long' })
+                : now.toLocaleDateString('zh-CN', { weekday: 'long' });
             const datetimeEl = document.getElementById('todayDatetime');
             if (datetimeEl) {
-                datetimeEl.textContent = `${year}年${month}月${day}日 (${weekday})`;
+                if (lang === 'en') {
+                    datetimeEl.textContent = `${weekday}, ${month}/${day}/${year}`;
+                } else {
+                    datetimeEl.textContent = `${year}年${month}月${day}日 (${weekday})`;
+                }
             }
         }
         setInterval(updateTimeDisplay, 60000); // 每分钟更新
         
         // 渲染今日工作页面
         function renderTodayWork() {
+            const lang = localStorage.getItem('panelLanguage') || 'zh';
             const now = new Date();
             const year = now.getFullYear();
             const month = String(now.getMonth() + 1).padStart(2, '0');
             const day = String(now.getDate()).padStart(2, '0');
-            const weekday = now.toLocaleDateString('zh-CN', { weekday: 'long' });
+            const weekday = lang === 'en' 
+                ? now.toLocaleDateString('en-US', { weekday: 'long' })
+                : now.toLocaleDateString('zh-CN', { weekday: 'long' });
             const datetimeEl = document.getElementById('todayDatetime');
             if (datetimeEl) {
-                datetimeEl.textContent = `${year}年${month}月${day}日 (${weekday})`;
+                if (lang === 'en') {
+                    datetimeEl.textContent = `${weekday}, ${month}/${day}/${year}`;
+                } else {
+                    datetimeEl.textContent = `${year}年${month}月${day}日 (${weekday})`;
+                }
             }
             
             // 分类任务
