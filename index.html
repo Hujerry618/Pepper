@@ -140,6 +140,44 @@
             margin-top: 0.5rem;
             padding-left: 0.5rem;
         }
+        .settings-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+        .settings-divider {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 1.5rem 0;
+        }
+        .lang-switch {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .lang-btn {
+            flex: 1;
+            padding: 0.6rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: all 0.2s;
+        }
+        .lang-btn:hover {
+            border-color: var(--accent);
+            background: var(--accent-light);
+        }
+        .lang-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
         
         .color-picker {
             display: flex;
@@ -1313,6 +1351,39 @@
     <div class="modal-overlay" id="settingsModal">
         <div class="modal">
             <h3 class="modal-title">⚙️ 设置</h3>
+            
+            <!-- 语言切换 -->
+            <div class="settings-group">
+                <label class="settings-label">🌐 语言 / Language</label>
+                <div class="lang-switch">
+                    <button class="lang-btn active" id="langZh" onclick="setLanguage('zh')">中文</button>
+                    <button class="lang-btn" id="langEn" onclick="setLanguage('en')">English</button>
+                </div>
+                <p class="settings-desc">切换界面显示语言</p>
+            </div>
+            
+            <!-- 今日工作数据保存 -->
+            <div class="settings-group">
+                <button class="settings-action-btn" onclick="saveTodayWorkData()">
+                    <span class="settings-action-icon">💾</span>
+                    <span>保存今日工作数据</span>
+                </button>
+                <p class="settings-desc">将今日工作和提醒数据保存到本地文件</p>
+            </div>
+            
+            <!-- 今日工作数据恢复 -->
+            <div class="settings-group">
+                <label class="settings-action-btn" for="importTodayFile">
+                    <span class="settings-action-icon">📂</span>
+                    <span>恢复今日工作数据</span>
+                </label>
+                <input type="file" id="importTodayFile" accept=".json" style="display:none" onchange="loadTodayWorkData(this)">
+                <p class="settings-desc">从文件恢复今日工作和提醒数据</p>
+            </div>
+            
+            <hr class="settings-divider">
+            
+            <!-- 系统数据 -->
             <div class="settings-group">
                 <button class="settings-action-btn" onclick="exportData()">
                     <span class="settings-action-icon">📤</span>
@@ -1879,6 +1950,57 @@
         // ==================== 设置功能 ====================
         function openSettingsModal() {
             document.getElementById('settingsModal').classList.add('active');
+            // 加载当前语言状态
+            const currentLang = localStorage.getItem('panelLanguage') || 'zh';
+            updateLangButtons(currentLang);
+        }
+        
+        // 语言切换
+        function setLanguage(lang) {
+            localStorage.setItem('panelLanguage', lang);
+            updateLangButtons(lang);
+            alert(lang === 'zh' ? '✅ 已切换为中文' : '✅ Switched to English');
+        }
+        
+        function updateLangButtons(lang) {
+            document.getElementById('langZh').classList.toggle('active', lang === 'zh');
+            document.getElementById('langEn').classList.toggle('active', lang === 'en');
+        }
+        
+        // 今日工作数据保存
+        function saveTodayWorkData() {
+            const dataStr = JSON.stringify(todayData, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `today-work-${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            alert('✅ 今日工作数据已保存！');
+        }
+        
+        // 今日工作数据恢复
+        function loadTodayWorkData(input) {
+            const file = input.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.tasks && data.reminders) {
+                        todayData = data;
+                        saveTodayData();
+                        alert('✅ 今日工作数据已恢复！');
+                    } else {
+                        alert('❌ 文件格式不正确！');
+                    }
+                } catch (err) {
+                    alert('❌ 文件读取失败：' + err.message);
+                }
+            };
+            reader.readAsText(file);
         }
 
         function exportData() {
@@ -2360,6 +2482,7 @@
             initLocks();
             loadAiNews();
             loadTodayData();  // 加载今日工作安排
+            initLanguage();   // 初始化语言设置
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
@@ -2367,6 +2490,13 @@
                 }
             });
         }
+        
+        // 初始化语言
+        function initLanguage() {
+            const lang = localStorage.getItem('panelLanguage') || 'zh';
+            updateLangButtons(lang);
+        }
+        
         init();
     </script>
 </body>
