@@ -1120,7 +1120,7 @@
             </div>
             <div class="sidebar left" id="sidebarLeft">
                 <div class="sidebar-header">
-                    <span class="sidebar-title" data-i18n="workZone">🖥️ 办公场景</span>
+                    <span class="sidebar-title" data-i18n="workZone">💼 工作区</span>
                     <button class="add-btn" onclick="openCatModal('left')">➕</button>
                 </div>
                 <div class="sidebar-content" id="leftCats"></div>
@@ -1196,7 +1196,7 @@
             
             <div class="sidebar right" id="sidebarRight">
                 <div class="sidebar-header">
-                    <span class="sidebar-title" data-i18n="leisureZone">🎮 休闲场景</span>
+                    <span class="sidebar-title" data-i18n="leisureZone">🏖️ 休闲区</span>
                     <button class="add-btn" onclick="openCatModal('right')">➕</button>
                 </div>
                 <div class="sidebar-content" id="rightCats"></div>
@@ -1993,8 +1993,8 @@
                 mustTasks: '今日必须完成',
                 reminders: '重要提醒',
                 // 侧边栏
-                workZone: '工作场景',
-                leisureZone: '休闲场景',
+                workZone: '💼 工作区',
+                leisureZone: '🏖️ 休闲区',
                 addCat: '➕',
                 // 分类名称
                 catWork: '工作类',
@@ -2074,8 +2074,8 @@
                 mustTasks: 'Must Complete Today',
                 reminders: 'Important Reminders',
                 // Sidebar
-                workZone: 'Work',
-                leisureZone: 'Leisure',
+                workZone: '💼 Work',
+                leisureZone: '🏖️ Leisure',
                 addCat: '➕',
                 // Categories
                 catWork: 'Work',
@@ -2152,7 +2152,12 @@
                     el.textContent = texts[key];
                 }
             });
-            // 更新侧边栏标题（重新渲染）
+            // 更新侧边栏标题
+            const sidebarTitles = document.querySelectorAll('.sidebar-title');
+            if (sidebarTitles[0]) sidebarTitles[0].textContent = texts.workZone;
+            if (sidebarTitles[1]) sidebarTitles[1].textContent = texts.leisureZone;
+            
+            // 重新渲染分类
             renderCats();
             
             // 更新设置模态框标题
