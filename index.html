@@ -498,6 +498,9 @@
             transition: all 0.3s;
             min-width: 400px;
         }
+        .center.today-work-collapsed {
+            margin-top: 4rem;
+        }
         .center.sidebar-left-visible {
             margin-left: 320px;
         }
@@ -524,30 +527,44 @@
             padding: 1rem 1.5rem;
             width: 100%;
             transition: all 0.3s ease;
-            position: sticky;
-            top: 0;
             background: var(--bg-primary);
             z-index: 100;
             border-radius: var(--radius-lg);
         }
         .today-work-page.collapsed {
-            padding: 0.5rem 1rem;
-            margin-bottom: 0;
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 640px);
+            max-width: 1200px;
+            padding: 0.4rem 1rem;
+            margin: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 1000;
         }
         .today-work-page.collapsed .today-header {
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.5rem;
+            border-bottom: none;
+            padding-bottom: 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
         .today-work-page.collapsed .today-title {
-            font-size: 1rem;
+            font-size: 0.95rem;
+            font-weight: 600;
         }
         .today-work-page.collapsed .today-datetime {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+            opacity: 0.8;
         }
         .today-work-page.collapsed .today-actions {
             display: none;
         }
         .today-work-page.collapsed .eisenhower-grid {
+            display: none;
+        }
+        .today-work-page.collapsed .today-grid {
             display: none;
         }
         .today-header {
@@ -1865,17 +1882,25 @@
         
         function collapseTodayWork() {
             const todayWorkPage = document.getElementById('todayWorkPage');
+            const centerContent = document.getElementById('centerContent');
             if (todayWorkPage) {
                 todayWorkPage.classList.add('collapsed');
                 isTodayWorkCollapsed = true;
+            }
+            if (centerContent) {
+                centerContent.classList.add('today-work-collapsed');
             }
         }
         
         function expandTodayWork() {
             const todayWorkPage = document.getElementById('todayWorkPage');
+            const centerContent = document.getElementById('centerContent');
             if (todayWorkPage) {
                 todayWorkPage.classList.remove('collapsed');
                 isTodayWorkCollapsed = false;
+            }
+            if (centerContent) {
+                centerContent.classList.remove('today-work-collapsed');
             }
             currentCatId = null;
             currentZone = null;
@@ -3139,6 +3164,9 @@
             loadAiNews();
             loadTodayData();  // 加载今日工作安排
             initLanguage();   // 初始化语言设置
+            // 初始化时显示占位页面
+            document.getElementById('placeholder').style.display = 'flex';
+            document.getElementById('detailView').classList.remove('active');
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
