@@ -1169,28 +1169,31 @@
             font-size: 0.95rem;
             padding: 0.7rem;
             height: 42px;
-            /* 强制日期格式为 YYYY-MM-DD */
+            /* 允许手动输入和日历选择 */
             line-height: normal;
         }
-        /* 修复日期输入框格式显示 */
-        .form-input[type="date"]::-webkit-datetime-edit {
-            padding: 0;
+        /* 日期时间选择器聚焦效果 */
+        .form-input[type="date"]:focus,
+        .form-input[type="datetime-local"]:focus,
+        .form-input[type="time"]:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
-        .form-input[type="date"]::-webkit-inner-spin-button,
-        .form-input[type="datetime-local"]::-webkit-inner-spin-button {
-            display: none;
-        }
-        .form-input[type="date"]::-webkit-calendar-picker-indicator {
-            background: transparent;
-            bottom: 0;
-            color: transparent;
+        /* 日历图标样式 - 保留可见性 */
+        .form-input[type="date"]::-webkit-calendar-picker-indicator,
+        .form-input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+        .form-input[type="time"]::-webkit-calendar-picker-indicator {
             cursor: pointer;
-            height: auto;
-            left: 0;
-            position: absolute;
-            right: 0;
-            top: 0;
-            width: auto;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+        .form-input[type="date"]::-webkit-calendar-picker-indicator:hover,
+        .form-input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover,
+        .form-input[type="time"]::-webkit-calendar-picker-indicator:hover {
+            opacity: 1;
         }
         .form-input[type="date"]:focus,
         .form-input[type="datetime-local"]:focus,
@@ -2867,6 +2870,24 @@
             modal.classList.add('active');
         }
         
+        // 验证日期格式 YYYY-MM-DD
+        function validateDateFormat(dateStr) {
+            if (!dateStr) return { valid: true, value: '' };
+            const regex = /^\d{4}-\d{2}-\d{2}$/;
+            if (!regex.test(dateStr)) {
+                return { valid: false, error: '日期格式应为 YYYY-MM-DD（如：2026-04-06）' };
+            }
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) {
+                return { valid: false, error: '无效的日期' };
+            }
+            const year = date.getFullYear();
+            if (year < 2020 || year > 2030) {
+                return { valid: false, error: '日期范围应在 2020-2030 年之间' };
+            }
+            return { valid: true, value: dateStr };
+        }
+        
         // 保存任务
         function saveTask() {
             const lang = localStorage.getItem('panelLanguage') || 'zh';
@@ -2879,8 +2900,16 @@
             const alertMsg = lang === 'en' ? 'Please enter task content' : '请输入任务内容';
             if (!text) { alert(alertMsg); return; }
             
-            // 标准化日期格式为 YYYY-MM-DD
-            const normalizedDeadline = deadline ? deadline : '';
+            // 验证并标准化日期格式为 YYYY-MM-DD
+            let normalizedDeadline = '';
+            if (deadline) {
+                const validation = validateDateFormat(deadline);
+                if (!validation.valid) {
+                    alert(validation.error);
+                    return;
+                }
+                normalizedDeadline = validation.value;
+            }
             
             if (editingTaskId) {
                 const task = todayData.tasks.find(t => t.id === editingTaskId);
