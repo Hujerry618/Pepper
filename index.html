@@ -1095,8 +1095,8 @@
             <div class="header-left">
                 <span class="logo">🌶️</span>
                 <div>
-                    <h1 class="brand-title">Advanced Personal Panel</h1>
-                    <p class="slogan">你的专属导航中心 · 高效从这里开始</p>
+                    <h1 class="brand-title" data-i18n="brandTitle">Advanced Personal Panel</h1>
+                    <p class="slogan" data-i18n="slogan">你的专属导航中心 · 高效从这里开始</p>
                 </div>
             </div>
             <div style="display:flex;gap:0.5rem;align-items:center;">
@@ -1980,6 +1980,9 @@
         // ==================== 国际化 ====================
         const i18n = {
             zh: {
+                // 品牌
+                brandTitle: 'Advanced Personal Panel',
+                slogan: '你的专属导航中心 · 高效从这里开始',
                 // 今日工作页面
                 todayTitle: '📋 今日工作与重要提醒',
                 addTask: '添加任务',
@@ -2058,6 +2061,9 @@
                 descThepaper: '时事新闻'
             },
             en: {
+                // Brand
+                brandTitle: 'Advanced Personal Panel',
+                slogan: 'Your Personal Navigation Center · Efficiency Starts Here',
                 // Today's Work Page
                 todayTitle: '📋 Today\'s Work & Reminders',
                 addTask: '+ Task',
@@ -2146,10 +2152,8 @@
                     el.textContent = texts[key];
                 }
             });
-            // 更新侧边栏标题
-            const sidebarTitles = document.querySelectorAll('.sidebar-title');
-            if (sidebarTitles[0]) sidebarTitles[0].textContent = (lang === 'zh' ? '💼 ' : '💼 ') + texts.workZone;
-            if (sidebarTitles[1]) sidebarTitles[1].textContent = (lang === 'zh' ? '🎮 ' : '🎮 ') + texts.leisureZone;
+            // 更新侧边栏标题（重新渲染）
+            renderCats();
             
             // 更新设置模态框标题
             document.querySelector('#settingsModal .modal-title').textContent = texts.settingsTitle;
@@ -2173,28 +2177,6 @@
             // 更新语言标签和按钮
             document.querySelector('.settings-label').textContent = texts.language;
             document.querySelector('#settingsModal .modal-actions .btn').textContent = texts.close;
-            
-            // 更新分类名称
-            document.querySelectorAll('.cat-name').forEach(el => {
-                const catId = el.closest('.cat-card')?.dataset?.catId;
-                if (catId && texts['cat' + catId.charAt(0).toUpperCase() + catId.slice(1)]) {
-                    el.textContent = texts['cat' + catId.charAt(0).toUpperCase() + catId.slice(1)];
-                }
-            });
-            
-            // 更新网站名称和描述
-            document.querySelectorAll('.web-name').forEach(el => {
-                const webId = el.closest('.web-card')?.dataset?.webId;
-                if (webId && texts['web' + webId.charAt(0).toUpperCase() + webId.slice(1)]) {
-                    el.textContent = texts['web' + webId.charAt(0).toUpperCase() + webId.slice(1)];
-                }
-            });
-            document.querySelectorAll('.web-desc').forEach(el => {
-                const webId = el.closest('.web-card')?.dataset?.webId;
-                if (webId && texts['desc' + webId.charAt(0).toUpperCase() + webId.slice(1)]) {
-                    el.textContent = texts['desc' + webId.charAt(0).toUpperCase() + webId.slice(1)];
-                }
-            });
         }
         
         // ==================== 设置功能 ====================
