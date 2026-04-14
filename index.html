@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌶️APP - 个人定制面板</title>
+    <title>🌶小辣椒APP - 高级私人定制面板</title>
     <style>
         :root {
-            --bg-primary: #f5f7fa;
+            --bg-primary: #e8eaed;
             --bg-secondary: #ffffff;
-            --bg-card: #ffffff;
+            --bg-card: #f1f3f5;
             --text-primary: #2c3e50;
             --text-secondary: #5a6c7d;
             --text-muted: #95a5b6;
-            --border-color: #e1e8ed;
-            --shadow: 0 4px 16px rgba(0,0,0,0.1);
+            --border-color: #cdd2d8;
+            --shadow: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-lg: 0 4px 16px rgba(0,0,0,0.12);
             --accent: #667eea;
             --accent-hover: #5a6fd6;
             --accent-light: rgba(102,126,234,0.1);
@@ -100,41 +101,51 @@
         }
         .settings-btn:hover { border-color: var(--accent); transform: rotate(30deg) scale(1.05); }
         
-        /* 设置模态框优化 */
+        /* 设置模态框优化 - 紧凑布局 */
         .settings-modal .modal-title {
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
+            font-size: 1.2rem;
+        }
+        .settings-modal {
+            max-width: 380px;
+            padding: 1.2rem;
         }
         .settings-section {
-            padding: 0.5rem 0;
+            padding: 0.4rem 0;
         }
         .settings-label {
             display: block;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
             color: var(--text-primary);
-            margin-bottom: 0.6rem;
+            margin-bottom: 0.5rem;
         }
         .settings-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 0.5rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.4rem;
+        }
+        .settings-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.4rem;
         }
         .settings-action-btn {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 0.4rem;
-            padding: 0.75rem 0.5rem;
+            gap: 0.3rem;
+            padding: 0.6rem 0.4rem;
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
             cursor: pointer;
             transition: all 0.2s;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             color: var(--text-primary);
             text-align: center;
-            min-height: 70px;
+            min-height: 60px;
         }
         .settings-action-btn:hover {
             border-color: var(--accent);
@@ -146,31 +157,31 @@
             background: rgba(239, 68, 68, 0.1);
         }
         .settings-action-icon {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
         }
         .settings-desc {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
-            margin-top: 0.4rem;
-            padding-left: 0.5rem;
+            margin-top: 0.3rem;
+            line-height: 1.3;
         }
         .settings-divider {
             border: none;
             border-top: 1px solid var(--border-color);
-            margin: 0.75rem 0;
+            margin: 0.5rem 0;
         }
         .lang-switch {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
         .lang-btn {
             flex: 1;
-            padding: 0.5rem 0.85rem;
+            padding: 0.4rem 0.6rem;
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
             color: var(--text-primary);
             transition: all 0.2s;
@@ -183,6 +194,19 @@
             background: var(--accent);
             color: white;
             border-color: var(--accent);
+        }
+        /* 紧凑表单 */
+        .settings-section .form-group {
+            margin-bottom: 0.5rem;
+        }
+        .settings-section .form-label {
+            font-size: 0.75rem;
+            margin-bottom: 0.3rem;
+        }
+        .settings-section .form-input {
+            padding: 0.5rem;
+            font-size: 0.85rem;
+            height: 36px;
         }
         
         .color-picker {
@@ -332,13 +356,11 @@
         .sidebar-title { font-weight: 600; font-size: 1rem; }
         .add-btn {
             background: var(--accent);
-            color: white;
             border: none;
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             cursor: pointer;
-            font-size: 0.85rem;
             transition: all 0.2s;
             display: flex;
             align-items: center;
@@ -346,8 +368,21 @@
             padding: 0;
             flex-shrink: 0;
             margin-top: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
-        .add-btn:hover { background: var(--accent-hover); transform: scale(1.15); }
+        .add-btn::before {
+            content: '+';
+            color: #ffffff;
+            font-size: 1.4rem;
+            font-weight: 400;
+            line-height: 1;
+            margin-top: -1px;
+        }
+        .add-btn:hover { 
+            background: var(--accent-hover); 
+            transform: scale(1.15);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+        }
         
 
         
@@ -395,6 +430,24 @@
             border-color: var(--accent);
             border-style: dashed;
             background: var(--accent-light);
+        }
+        /* 拖拽预览线 */
+        .drag-preview-line {
+            position: absolute;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), #a855f7);
+            border-radius: 2px;
+            left: 0.5rem;
+            right: 0.5rem;
+            pointer-events: none;
+            z-index: 10000;
+            box-shadow: 0 0 12px rgba(102, 126, 234, 0.8);
+        }
+        .drag-preview-line.top {
+            top: -2px;
+        }
+        .drag-preview-line.bottom {
+            bottom: -2px;
         }
         .cat-header {
             display: flex;
@@ -452,6 +505,8 @@
             gap: 0.5rem;
             font-size: 0.75rem;
             transition: all 0.2s;
+            height: 36px;
+            overflow: hidden;
         }
         .web-item:hover { 
             transform: translateX(3px); 
@@ -488,8 +543,8 @@
         /* Center Content */
         .center {
             flex: 1;
-            margin: 0.75rem 320px 0.75rem 320px;
-            background: var(--bg-secondary);
+            margin: 1rem;
+            background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
             padding: 0.8rem;
@@ -497,9 +552,20 @@
             overflow-x: hidden;
             transition: all 0.3s;
             min-width: 400px;
+            box-shadow: var(--shadow);
         }
         .center.today-work-collapsed {
-            margin-top: 3.5rem;
+            margin: 1rem;
+        }
+        .center.sidebar-left-visible {
+            margin-left: 320px;
+        }
+        .center.sidebar-right-visible {
+            margin-right: 320px;
+        }
+        .center.sidebar-left-visible.sidebar-right-visible {
+            margin-left: 320px;
+            margin-right: 320px;
         }
         .center.sidebar-left-visible {
             margin-left: 320px;
@@ -574,10 +640,11 @@
         }
         .today-datetime {
             font-size: 1.15rem;
-            color: white;
+            color: var(--text-primary);
             font-weight: 600;
             white-space: nowrap;
             justify-self: center;
+            transition: color 0.3s;
         }
         .today-actions {
             display: flex;
@@ -737,6 +804,31 @@
             max-height: calc(50vh - 5rem);
             padding-right: 0.25rem;
         }
+        /* 任务拖拽样式 */
+        .task-item.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+        .task-item.drag-over {
+            border-color: var(--accent);
+            border-style: dashed;
+            background: var(--accent-light);
+        }
+        .task-preview-line {
+            position: absolute;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 2px;
+            left: 0;
+            right: 0;
+            pointer-events: none;
+            z-index: 10000;
+            box-shadow: 0 0 8px rgba(102, 126, 234, 0.8);
+        }
+        .task-preview-line.top { top: -1.5px; }
+        .task-preview-line.bottom { bottom: -1.5px; }
         .task-list::-webkit-scrollbar, .priority-list::-webkit-scrollbar, .reminder-list::-webkit-scrollbar {
             width: 4px;
         }
@@ -983,11 +1075,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
             border-bottom: 2px solid var(--border-color);
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 0.75rem;
+        }
+        .detail {
+            padding-top: 0.5rem;
         }
         .detail-title {
             font-size: 1.5rem;
@@ -1017,6 +1112,11 @@
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             gap: 1rem;
         }
+        .web-grid.drag-over {
+            border: 2px dashed var(--accent);
+            border-radius: var(--radius-md);
+            background: var(--accent-light);
+        }
         .web-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -1038,6 +1138,28 @@
             box-shadow: var(--shadow);
             border-color: var(--accent);
         }
+        /* 网站卡片拖拽样式 */
+        .web-card.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+            transform: scale(1.05);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+        }
+        .web-card.drag-over {
+            border-color: var(--accent);
+            border-style: dashed;
+            background: var(--accent-light);
+        }
+        /* 网站预览线 */
+        .web-preview-line {
+            position: fixed;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), #a855f7);
+            border-radius: 2px;
+            pointer-events: none;
+            z-index: 10000;
+            box-shadow: 0 0 12px rgba(102, 126, 234, 0.8);
+        }
         .web-card .web-icon {
             width: 56px;
             height: 56px;
@@ -1052,15 +1174,25 @@
             font-weight: 600;
             font-size: 0.9rem;
             color: var(--text-primary);
+            word-break: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+            line-height: 1.3;
+            max-height: 2.6em;
+            overflow: hidden;
         }
         .web-card .web-desc {
             font-size: 0.75rem;
             color: var(--text-secondary);
+            word-break: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+            line-height: 1.3;
+            max-height: 2.6em;
+            overflow: hidden;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
-            overflow: hidden;
-            line-height: 1.4;
         }
         .web-actions {
             position: absolute;
@@ -1288,7 +1420,7 @@
                 <span class="logo">🌶️</span>
                 <div>
                     <h1 class="brand-title" data-i18n="brandTitle">Advanced Personal Panel</h1>
-                    <p class="slogan" data-i18n="slogan">你的专属导航中心 · 高效从这里开始</p>
+                    <p class="slogan" data-i18n="slogan">您的专属导航中心 · 高效从这里开始</p>
                 </div>
             </div>
             <div style="display:flex;gap:0.5rem;align-items:center;">
@@ -1313,7 +1445,7 @@
             <div class="sidebar left" id="sidebarLeft">
                 <div class="sidebar-header">
                     <span class="sidebar-title" data-i18n="workZone">🖥️ 办公区</span>
-                    <button class="add-btn" onclick="openCatModal('left')">➕</button>
+                    <button class="add-btn" onclick="openCatModal('left')"></button>
                 </div>
                 <div class="sidebar-content" id="leftCats"></div>
             </div>
@@ -1375,7 +1507,7 @@
                 <div class="detail" id="detailView" style="display:none;">
                     <div class="detail-header">
                         <h2 class="detail-title"><span id="detailIcon"></span><span id="detailName"></span></h2>
-                        <button class="add-web-btn" onclick="openWebModal()">+ 添加网站</button>
+                        <button class="add-web-btn" onclick="openWebModal()" id="addWebBtn">+ 添加网站</button>
                     </div>
                     <div class="web-grid" id="webGrid"></div>
                 </div>
@@ -1384,7 +1516,7 @@
             <div class="sidebar right" id="sidebarRight">
                 <div class="sidebar-header">
                     <span class="sidebar-title" data-i18n="leisureZone">🏖️ 安以养心</span>
-                    <button class="add-btn" onclick="openCatModal('right')">➕</button>
+                    <button class="add-btn" onclick="openCatModal('right')"></button>
                 </div>
                 <div class="sidebar-content" id="rightCats"></div>
             </div>
@@ -1394,7 +1526,7 @@
         </div>
         
         <footer class="footer">
-            <p>🌶️APP v1.0 Copyright © 2026 Jerry.h | 更新日期：<span id="updateTime"></span></p>
+            <p>🌶️小辣椒APP v1.0 Copyright © 2026 Jerry.h | 更新日期：<span id="updateTime"></span></p>
         </footer>
     </div>
     
@@ -1435,6 +1567,7 @@
                 <select class="form-select" id="webType" onchange="toggleWebType()">
                     <option value="url">🌐 网址</option>
                     <option value="app">🖥️ 程序</option>
+                    <option value="file">📄 文件</option>
                     <option value="dir">📁 目录</option>
                 </select>
             </div>
@@ -1450,9 +1583,14 @@
             </div>
             <div class="form-group">
                 <label class="form-label" id="webUrlLabel">网址</label>
-                <input type="text" class="form-input" id="webUrl" placeholder="https://github.com">
+                <div style="display:flex;gap:0.5rem;align-items:center;">
+                    <input type="text" class="form-input" id="webUrl" placeholder="https://github.com" style="flex:1;">
+                    <button type="button" id="browseFileBtn" onclick="browseFile()" style="padding:0.5rem 0.8rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-secondary);color:var(--text-primary);cursor:pointer;font-size:0.85rem;white-space:nowrap;" title="选择文件">📂 浏览</button>
+                </div>
                 <p class="settings-desc" id="webUrlHint">输入完整的网址</p>
+                <p class="settings-desc" id="browseHint" style="display:none;color:var(--text-muted);margin-top:0.4rem;">💡 浏览器安全限制无法获取完整路径，请手动补充路径前缀（如 C:\Documents\）</p>
             </div>
+            <input type="file" id="filePicker" style="display:none;" onchange="handleFilePick(this)">
             <div class="form-group">
                 <label class="form-label">图标</label>
                 <input type="text" class="form-input" id="webIcon" placeholder="如：🐙 或 emoji">
@@ -1554,26 +1692,90 @@
         </div>
     </div>
     
-    <!-- 设置模态框 -->
+    <!-- 修改密码模态框 - 精简版 -->
+    <div class="modal-overlay" id="changePasswordModal">
+        <div class="modal" style="max-width: 320px; padding: 1.2rem;">
+            <h3 class="modal-title" style="margin-bottom: 0.75rem;" data-i18n="changePasswordTitle">🔑 修改密码</h3>
+            <div class="form-group">
+                <input type="password" class="form-input" id="currentPassword" data-i18n-placeholder="currentPasswordPlaceholder" placeholder="当前密码" maxlength="4" pattern="\d{4}" style="height: 40px; font-size: 1rem;">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-input" id="newPassword" data-i18n-placeholder="newPasswordPlaceholder" placeholder="新密码" maxlength="4" pattern="\d{4}" style="height: 40px; font-size: 1rem;">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-input" id="confirmPassword" data-i18n-placeholder="confirmPasswordPlaceholder" placeholder="确认新密码" maxlength="4" pattern="\d{4}" style="height: 40px; font-size: 1rem;">
+            </div>
+            <p class="settings-desc" style="margin-bottom: 0.75rem;" data-i18n="passwordMustBe4Digits">4 位数字密码</p>
+            <div class="modal-actions" style="justify-content: center; gap: 0.5rem;">
+                <button class="btn btn-secondary" onclick="closeModal('changePasswordModal')" data-i18n="cancel">取消</button>
+                <button class="btn btn-primary" onclick="changePassword()" data-i18n="confirm">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 锁定界面模态框 -->
+    <div class="modal-overlay" id="lockScreenModal" style="backdrop-filter: blur(10px);">
+        <div class="modal" style="max-width: 320px; text-align: center;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🔒</div>
+            <h3 class="modal-title" style="margin-bottom: 0.5rem;" data-i18n="lockScreenTitle">面板已锁定</h3>
+            <p class="settings-desc" style="margin-bottom: 1.5rem;" data-i18n="lockScreenDesc">请输入 4 位密码解锁</p>
+            <div class="form-group">
+                <input type="password" class="form-input" id="unlockPassword" data-i18n-placeholder="unlockPlaceholder" placeholder="输入密码" maxlength="4" pattern="\d{4}" 
+                    style="font-size: 1.5rem; text-align: center; letter-spacing: 0.5rem; height: 60px;"
+                    onkeydown="if(event.key==='Enter')unlockPanel()">
+            </div>
+            <div class="modal-actions" style="justify-content: center; gap: 1rem;">
+                <button class="btn btn-primary" onclick="unlockPanel()" style="padding: 0.8rem 2rem;" data-i18n="unlockButton">解锁</button>
+            </div>
+            <p class="settings-desc" style="margin-top: 1rem; font-size: 0.75rem;" data-i18n="initialPasswordHint">初始密码：0000</p>
+        </div>
+    </div>
+
+    <!-- 设置模态框 - 精简版 -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal settings-modal">
-            <h3 class="modal-title">⚙️ 设置</h3>
+            <h3 class="modal-title" data-i18n="settingsTitle">⚙️ 设置</h3>
             
             <!-- 语言切换 -->
             <div class="settings-section">
-                <label class="settings-label">🌐 语言 / Language</label>
+                <label class="settings-label" data-i18n="language">🌐 语言</label>
                 <div class="lang-switch">
-                    <button class="lang-btn active" id="langZh" onclick="setLanguage('zh')">中文</button>
-                    <button class="lang-btn" id="langEn" onclick="setLanguage('en')">English</button>
+                    <button class="lang-btn active" id="langZh" onclick="setLanguage('zh')" data-i18n="langZhBtn">中文</button>
+                    <button class="lang-btn" id="langEn" onclick="setLanguage('en')" data-i18n="langEnBtn">English</button>
                 </div>
             </div>
             
             <hr class="settings-divider">
             
-            <!-- 今日工作数据 -->
+            <!-- 安全锁定 -->
             <div class="settings-section">
-                <label class="settings-label" data-i18n="todayWorkData">📋 今日工作数据</label>
+                <label class="settings-label" data-i18n="lockSettings">🔒 安全锁定</label>
+                <div class="form-group">
+                    <input type="number" class="form-input" id="lockTimeoutInput" data-i18n-placeholder="lockTimeoutPlaceholder" placeholder="0 表示禁用" min="0" max="120" value="0">
+                    <p class="settings-desc" data-i18n="lockTimeoutDesc">分钟无操作自动锁定</p>
+                </div>
                 <div class="settings-grid">
+                    <button class="settings-action-btn" onclick="saveLockSettings()">
+                        <span class="settings-action-icon">💾</span>
+                        <span data-i18n="saveLockSettings">保存</span>
+                    </button>
+                    <button class="settings-action-btn" onclick="openChangePasswordModal()">
+                        <span class="settings-action-icon">🔑</span>
+                        <span data-i18n="changePassword">改密码</span>
+                    </button>
+                    <button class="settings-action-btn" onclick="lockPanelNow()">
+                        <span class="settings-action-icon">🔒</span>
+                        <span data-i18n="lockNow">锁定</span>
+                    </button>
+                </div>
+            </div>
+            
+            <hr class="settings-divider">
+            
+            <!-- 数据管理 -->
+            <div class="settings-section">
+                <label class="settings-label" data-i18n="todayWorkData">📋 今日工作</label>
+                <div class="settings-grid-2">
                     <button class="settings-action-btn" onclick="saveTodayWorkData()">
                         <span class="settings-action-icon">💾</span>
                         <span data-i18n="saveBtn">保存</span>
@@ -1590,7 +1792,7 @@
             
             <!-- 系统数据 -->
             <div class="settings-section">
-                <label class="settings-label" data-i18n="systemData">🔧 系统数据</label>
+                <label class="settings-label" data-i18n="systemData">🔧 系统</label>
                 <div class="settings-grid">
                     <button class="settings-action-btn" onclick="exportData()">
                         <span class="settings-action-icon">📤</span>
@@ -1608,7 +1810,7 @@
                 </div>
             </div>
             
-            <div class="modal-actions">
+            <div class="modal-actions" style="justify-content: center; margin-top: 0.75rem;">
                 <button class="btn btn-secondary" onclick="closeModal('settingsModal')" data-i18n="close">关闭</button>
             </div>
         </div>
@@ -1669,6 +1871,13 @@
         let editingTaskId = null;
         let editingReminderId = null;
         let currentAlertId = null;
+        
+        // 定时锁定功能
+        let lockTimeout = parseInt(localStorage.getItem('lockTimeout')) || 0; // 分钟，0 表示禁用
+        let lockPassword = localStorage.getItem('lockPassword') || '0000';
+        let lastActivityTime = Date.now();
+        let isLocked = false;
+        let lockCheckInterval = null;
 
         function saveData() {
             localStorage.setItem('personalPanelData', JSON.stringify(appData));
@@ -1707,26 +1916,114 @@
         setColor(savedColor);
 
         // ==================== 网站类型切换 ====================
-        function toggleWebType() {
+        // 浏览选择文件
+        function browseFile() {
+            const filePicker = document.getElementById('filePicker');
+            if (filePicker) {
+                filePicker.click();
+            }
+        }
+
+        // 处理文件选择
+        function handleFilePick(input) {
+            const file = input.files[0];
+            if (!file) return;
+            
+            const urlInput = document.getElementById('webUrl');
+            const nameInput = document.getElementById('webName');
+            const iconInput = document.getElementById('webIcon');
+            const typeSelect = document.getElementById('webType');
+            
+            // 浏览器安全限制：只能获取文件名，无法获取完整路径
+            const fileName = file.name;
+            const fileExt = fileName.split('.').pop().toLowerCase();
+            
+            // 自动填充文件名（如果为空）
+            if (nameInput && !nameInput.value) {
+                nameInput.value = fileName.replace(/\.[^.]+$/, ''); // 去掉扩展名
+            }
+            
+            // 自动设置图标
+            if (iconInput) {
+                const iconMap = {
+                    'txt': '📝', 'doc': '📄', 'docx': '📄',
+                    'xls': '📊', 'xlsx': '📊', 'csv': '📊',
+                    'ppt': '📽️', 'pptx': '📽️',
+                    'pdf': '📕',
+                    'exe': '🖥️', 'bat': '⚙️', 'cmd': '⚙️',
+                    'jpg': '🖼️', 'jpeg': '🖼️', 'png': '🖼️', 'gif': '🖼️', 'webp': '🖼️',
+                    'mp3': '🎵', 'wav': '🎵', 'mp4': '🎬', 'avi': '🎬', 'mkv': '🎬'
+                };
+                iconInput.value = iconMap[fileExt] || '📄';
+            }
+            
+            // 自动设置类型
+            if (typeSelect) {
+                if (['txt', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'pdf', 'csv'].includes(fileExt)) {
+                    typeSelect.value = 'file';
+                } else if (['exe', 'bat', 'cmd', 'msi', 'ps1', 'vbs'].includes(fileExt)) {
+                    typeSelect.value = 'app';
+                }
+                toggleWebType();
+            }
+            
+            // 提示用户需要手动输入完整路径
+            const browseHint = document.getElementById('browseHint');
+            if (browseHint) {
+                browseHint.innerHTML = `✅ 已选择文件：<strong>${fileName}</strong><br>💡 请在上方输入框补充完整路径（如 <code>C:\\Users\\${encodeURIComponent(localStorage.getItem('username') || 'YourName')}\\Documents\\${fileName}</code>）`;
+                browseHint.style.display = 'block';
+                browseHint.style.background = 'var(--accent-light)';
+                browseHint.style.padding = '0.5rem';
+                browseHint.style.borderRadius = 'var(--radius-sm)';
+                browseHint.style.marginTop = '0.5rem';
+            }
+            
+            // 清空 file picker，允许重复选择同一文件
+            input.value = '';
+            
+            // 聚焦到路径输入框
+            if (urlInput) {
+                urlInput.focus();
+                urlInput.placeholder = '在此输入完整路径，如：C:\\Documents\\' + fileName;
+            }
+        }
+
+        function toggleWebType(lang = 'zh') {
             const type = document.getElementById('webType').value;
             const label = document.getElementById('webUrlLabel');
             const input = document.getElementById('webUrl');
             const hint = document.getElementById('webUrlHint');
+            const browseBtn = document.getElementById('browseFileBtn');
+            const browseHint = document.getElementById('browseHint');
+            
+            // 文件和程序类型显示浏览按钮
+            if (browseBtn) {
+                browseBtn.style.display = (type === 'file' || type === 'app') ? 'block' : 'none';
+            }
+            if (browseHint) {
+                browseHint.style.display = (type === 'file' || type === 'app') ? 'block' : 'none';
+            }
+            
             if (type === 'url') {
-                label.textContent = '网址';
+                label.textContent = lang === 'en' ? 'URL' : '网址';
                 input.placeholder = 'https://github.com';
                 input.type = 'url';
-                hint.textContent = '输入完整的网址';
+                hint.textContent = lang === 'en' ? 'Enter full URL' : '输入完整的网址';
             } else if (type === 'app') {
-                label.textContent = '程序路径';
+                label.textContent = lang === 'en' ? 'Program Path' : '程序路径';
                 input.placeholder = 'C:\\Program Files\\App\\app.exe';
                 input.type = 'text';
-                hint.textContent = '输入程序的完整路径';
+                hint.textContent = lang === 'en' ? 'Enter full program path or click Browse' : '输入程序路径或点击浏览';
+            } else if (type === 'file') {
+                label.textContent = lang === 'en' ? 'File Path' : '文件路径';
+                input.placeholder = 'C:\\Documents\\report.docx';
+                input.type = 'text';
+                hint.textContent = lang === 'en' ? 'Enter full file path or click Browse' : '输入文件路径或点击浏览';
             } else if (type === 'dir') {
-                label.textContent = '目录路径';
+                label.textContent = lang === 'en' ? 'Folder Path' : '目录路径';
                 input.placeholder = 'D:\\Projects\\MyProject';
                 input.type = 'text';
-                hint.textContent = '输入目录的完整路径';
+                hint.textContent = lang === 'en' ? 'Enter full folder path' : '输入目录的完整路径';
             }
         }
 
@@ -1833,31 +2130,32 @@
         });
 
         // ==================== 渲染分类 ====================
-        function renderCats() {
+        function renderCats(forceLang = null) {
             const leftContainer = document.getElementById('leftCats');
             const rightContainer = document.getElementById('rightCats');
             leftContainer.innerHTML = '';
             rightContainer.innerHTML = '';
-            appData.left.forEach(cat => leftContainer.appendChild(createCatCard(cat, 'left')));
-            appData.right.forEach(cat => rightContainer.appendChild(createCatCard(cat, 'right')));
+            appData.left.forEach(cat => leftContainer.appendChild(createCatCard(cat, 'left', forceLang)));
+            appData.right.forEach(cat => rightContainer.appendChild(createCatCard(cat, 'right', forceLang)));
             initCatDrag();
+            initWebDrag(); // 为分类卡片添加网站拖拽接收功能
         }
 
-        function getI18nText(catId, defaultName) {
-            const lang = localStorage.getItem('panelLanguage') || 'zh';
+        function getI18nText(catId, defaultName, forceLang = null) {
+            const lang = forceLang || localStorage.getItem('panelLanguage') || 'zh';
             const key = 'cat' + catId.charAt(0).toUpperCase() + catId.slice(1);
             return i18n[lang]?.[key] || defaultName;
         }
         
-        function getWebI18nText(webId, defaultName, isDesc = false) {
-            const lang = localStorage.getItem('panelLanguage') || 'zh';
+        function getWebI18nText(webId, defaultName, isDesc = false, forceLang = null) {
+            const lang = forceLang || localStorage.getItem('panelLanguage') || 'zh';
             const key = (isDesc ? 'desc' : 'web') + webId.charAt(0).toUpperCase() + webId.slice(1);
             return i18n[lang]?.[key] || defaultName;
         }
         
-        function createCatCard(cat, zone) {
-            const lang = localStorage.getItem('panelLanguage') || 'zh';
-            const translatedName = getI18nText(cat.id, cat.name);
+        function createCatCard(cat, zone, forceLang = null) {
+            const lang = forceLang || localStorage.getItem('panelLanguage') || 'zh';
+            const translatedName = getI18nText(cat.id, cat.name, forceLang);
             const div = document.createElement('div');
             div.className = 'cat-card' + (currentCatId === cat.id ? ' active' : '');
             div.dataset.zone = zone;
@@ -1872,7 +2170,7 @@
                     </div>
                 </div>
                 <div class="web-list">
-                    ${cat.websites.slice(0, 6).map(w => `<div class="web-item"><span class="web-icon">${w.icon}</span><span class="web-name">${getWebI18nText(w.id, w.name)}</span></div>`).join('')}
+                    ${cat.websites.slice(0, 6).map(w => `<div class="web-item"><span class="web-icon">${w.icon}</span><span class="web-name">${getWebI18nText(w.id, w.name, false, forceLang)}</span></div>`).join('')}
                 </div>
                 <div class="cat-count">${cat.websites.length} ${lang === 'zh' ? '个网站' : 'sites'}</div>
             `;
@@ -1880,6 +2178,7 @@
         }
 
         function selectCat(cat, zone) {
+            const lang = localStorage.getItem('panelLanguage') || 'zh';
             // 如果点击的是当前已选中的分类，则展开今日工作区域
             if (currentCatId === cat.id) {
                 expandTodayWork();
@@ -1900,7 +2199,12 @@
                 todayWorkPage.style.display = 'none';
             }
             document.getElementById('detailIcon').textContent = cat.icon;
-            document.getElementById('detailName').textContent = getI18nText(cat.id, cat.name);
+            document.getElementById('detailName').textContent = getI18nText(cat.id, cat.name, lang);
+            // 更新添加网站按钮
+            const addWebBtn = document.getElementById('addWebBtn');
+            if (addWebBtn) {
+                addWebBtn.textContent = lang === 'en' ? '+ Add Website' : '+ 添加网站';
+            }
             renderWebsites(cat);
             renderCats();
         }
@@ -1943,9 +2247,8 @@
             grid.innerHTML = cat.websites.map(w => {
                 const type = w.type || 'url';
                 const typeIcon = type === 'app' ? '🖥️' : type === 'dir' ? '📁' : '🌐';
-                let clickHandler = `openUrl('${w.url.replace(/\\/g, '\\\\')}', '${type}')`;
                 return `
-                <div class="web-card" data-web-id="${w.id}" onclick="${clickHandler}">
+                <div class="web-card" data-web-id="${w.id}" data-cat-id="${cat.id}" draggable="true" onclick="handleWebClick(event, '${w.url.replace(/\\/g, '\\\\')}', '${type}')">
                     <div class="web-type-badge">${typeIcon}</div>
                     <div class="web-actions">
                         <button class="web-action" onclick="event.stopPropagation();editWeb('${w.id}')">✏️</button>
@@ -1957,15 +2260,55 @@
                 </div>
             `;
             }).join('');
+            initWebDrag();
+            initWebGridDrop(); // 支持拖拽外部内容到详情页
+        }
+
+        function handleWebClick(event, url, type) {
+            // 拖拽后不触发点击
+            if (isDragging) {
+                console.log('[handleWebClick] 拖拽中，阻止点击');
+                event.preventDefault();
+                event.stopPropagation();
+                return;
+            }
+            openUrl(url, type);
         }
 
         function openUrl(url, type = 'url') {
             console.log('[openUrl] 调用参数:', { url, type });
             
-            // 自动检测：如果是 Windows 路径但没有 type，当作程序处理
+            // 自动检测：如果是 Windows 路径但没有 type，根据扩展名判断类型
             if ((!type || type === 'url') && url.match(/^[A-Za-z]:\\/)) {
-                console.log('[openUrl] 检测到 Windows 路径，自动识别为程序');
-                type = 'app';
+                // 检查文件扩展名
+                const extMatch = url.match(/\.([a-zA-Z0-9]+)$/);
+                if (extMatch) {
+                    const ext = extMatch[1].toLowerCase();
+                    // 文档类型
+                    if (['txt', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'pdf', 'csv'].includes(ext)) {
+                        type = 'file';
+                        console.log('[openUrl] 检测到文档类型:', ext);
+                    }
+                    // 可执行程序
+                    else if (['exe', 'bat', 'cmd', 'msi', 'ps1', 'vbs'].includes(ext)) {
+                        type = 'app';
+                        console.log('[openUrl] 检测到程序类型:', ext);
+                    }
+                    // 文件夹（以反斜杠结尾）
+                    else if (url.endsWith('\\')) {
+                        type = 'dir';
+                        console.log('[openUrl] 检测到目录');
+                    }
+                    // 其他文件类型
+                    else {
+                        type = 'file';
+                        console.log('[openUrl] 检测到其他文件:', ext);
+                    }
+                } else if (url.endsWith('\\')) {
+                    type = 'dir';
+                } else {
+                    type = 'app';
+                }
             }
             
             if (type === 'url' || !type) {
@@ -1974,10 +2317,10 @@
             } else if (type === 'app') {
                 console.log('[openUrl] 启动程序:', url);
                 // 程序路径 - 使用自定义协议 mypanel:// 直接启动
-                // 将 Windows 路径转换为 file:/// 格式
                 let protocolUrl = url;
                 if (url.match(/^[A-Za-z]:\\/)) {
-                    protocolUrl = 'file:///' + url.replace(/\\/g, '/');
+                    protocolUrl = url.replace(/\\/g, '/');
+                    protocolUrl = 'file:///' + protocolUrl;
                 }
                 console.log('[openUrl] 协议 URL:', 'mypanel://' + protocolUrl);
                 window.location.href = 'mypanel://' + protocolUrl;
@@ -1986,8 +2329,24 @@
                 // 目录路径 - 使用自定义协议 mypanel:// 打开文件夹
                 let protocolUrl = url;
                 if (url.match(/^[A-Za-z]:\\/)) {
-                    protocolUrl = 'file:///' + url.replace(/\\/g, '/');
+                    protocolUrl = url.replace(/\\/g, '/');
+                    protocolUrl = 'file:///' + protocolUrl;
                 }
+                window.location.href = 'mypanel://' + protocolUrl;
+            } else if (type === 'file') {
+                console.log('[openUrl] 打开文件:', url);
+                // 文件路径 - 转换为 URL 格式（正斜杠）
+                const protocolUrl = url.replace(/\\/g, '/');
+                window.location.href = 'mypanel://' + protocolUrl;
+            } else if (type === 'app') {
+                console.log('[openUrl] 启动程序:', url);
+                // 程序路径 - 转换为 URL 格式（正斜杠）
+                const protocolUrl = url.replace(/\\/g, '/');
+                window.location.href = 'mypanel://' + protocolUrl;
+            } else if (type === 'dir') {
+                console.log('[openUrl] 打开目录:', url);
+                // 目录路径 - 转换为 URL 格式（正斜杠）
+                const protocolUrl = url.replace(/\\/g, '/');
                 window.location.href = 'mypanel://' + protocolUrl;
             }
         }
@@ -1996,21 +2355,51 @@
         function openCatModal(zone) {
             editingCatId = null;
             currentZone = zone;
-            document.getElementById('catModalTitle').textContent = '添加分类';
+            const lang = localStorage.getItem('panelLanguage') || 'zh';
+            const texts = i18n[lang] || i18n.zh;
+            document.getElementById('catModalTitle').textContent = lang === 'en' ? 'Add Category' : '添加分类';
             document.getElementById('catName').value = '';
             document.getElementById('catIcon').value = '';
             document.getElementById('catZone').value = zone;
+            // 更新表单标签
+            const labels = document.querySelectorAll('#catModal .form-label');
+            if (labels[0]) labels[0].textContent = lang === 'en' ? 'Category Name' : '分类名称';
+            if (labels[1]) labels[1].textContent = lang === 'en' ? 'Icon' : '图标';
+            if (labels[2]) labels[2].textContent = lang === 'en' ? 'Zone' : '区域';
+            // 更新选项
+            const zoneOptions = document.querySelectorAll('#catZone option');
+            if (zoneOptions[0]) zoneOptions[0].textContent = lang === 'en' ? 'Office Zone' : '工作区';
+            if (zoneOptions[1]) zoneOptions[1].textContent = lang === 'en' ? 'Leisure Zone' : '休闲区';
+            // 更新按钮
+            const btns = document.querySelectorAll('#catModal .modal-actions .btn');
+            if (btns[0]) btns[0].textContent = texts.cancel;
+            if (btns[1]) btns[1].textContent = texts.saveBtn || (lang === 'en' ? 'Save' : '保存');
             document.getElementById('catModal').classList.add('active');
         }
 
         function editCat(catId, zone) {
             editingCatId = catId;
             currentZone = zone;
+            const lang = localStorage.getItem('panelLanguage') || 'zh';
+            const texts = i18n[lang] || i18n.zh;
             const cat = appData[zone].find(c => c.id === catId);
-            document.getElementById('catModalTitle').textContent = '编辑分类';
+            document.getElementById('catModalTitle').textContent = lang === 'en' ? 'Edit Category' : '编辑分类';
             document.getElementById('catName').value = cat.name;
             document.getElementById('catIcon').value = cat.icon;
             document.getElementById('catZone').value = zone;
+            // 更新表单标签
+            const labels = document.querySelectorAll('#catModal .form-label');
+            if (labels[0]) labels[0].textContent = lang === 'en' ? 'Category Name' : '分类名称';
+            if (labels[1]) labels[1].textContent = lang === 'en' ? 'Icon' : '图标';
+            if (labels[2]) labels[2].textContent = lang === 'en' ? 'Zone' : '区域';
+            // 更新选项
+            const zoneOptions = document.querySelectorAll('#catZone option');
+            if (zoneOptions[0]) zoneOptions[0].textContent = lang === 'en' ? 'Office Zone' : '工作区';
+            if (zoneOptions[1]) zoneOptions[1].textContent = lang === 'en' ? 'Leisure Zone' : '休闲区';
+            // 更新按钮
+            const btns = document.querySelectorAll('#catModal .modal-actions .btn');
+            if (btns[0]) btns[0].textContent = texts.cancel;
+            if (btns[1]) btns[1].textContent = texts.saveBtn || (lang === 'en' ? 'Save' : '保存');
             document.getElementById('catModal').classList.add('active');
         }
 
@@ -2046,7 +2435,10 @@
         function openWebModal() {
             if (!currentCatId) return;
             editingWebId = null;
-            document.getElementById('webModalTitle').textContent = '添加项目';
+            const lang = localStorage.getItem('panelLanguage') || 'zh';
+            const texts = i18n[lang] || i18n.zh;
+            
+            document.getElementById('webModalTitle').textContent = lang === 'en' ? 'Add Item' : '添加项目';
             
             // 动态加载所有分类到选择器
             const catSelect = document.getElementById('webCatSelect');
@@ -2055,7 +2447,8 @@
             allCats.forEach(cat => {
                 const option = document.createElement('option');
                 option.value = cat.id;
-                option.textContent = cat.icon + ' ' + cat.name;
+                // 使用翻译后的分类名
+                option.textContent = cat.icon + ' ' + getI18nText(cat.id, cat.name, lang);
                 if (cat.id === currentCatId) option.selected = true;
                 catSelect.appendChild(option);
             });
@@ -2066,22 +2459,66 @@
             document.getElementById('webUrl').value = '';
             document.getElementById('webIcon').value = '';
             document.getElementById('webDesc').value = '';
-            toggleWebType();
+            toggleWebType(lang);
+            updateWebModalLabels(lang);
+            
+            // 更新按钮
+            const btns = document.querySelectorAll('#webModal .modal-actions .btn');
+            if (btns[0]) btns[0].textContent = texts.cancel;
+            if (btns[1]) btns[1].textContent = texts.saveBtn || (lang === 'en' ? 'Save' : '保存');
+            
             document.getElementById('webModal').classList.add('active');
         }
 
+        function updateWebModalLabels(lang = 'zh') {
+            const texts = i18n[lang] || i18n.zh;
+            const labels = document.querySelectorAll('#webModal .form-label');
+            if (labels[0]) labels[0].textContent = lang === 'en' ? 'Type' : '类型';
+            if (labels[1]) labels[1].textContent = lang === 'en' ? 'Category' : '分类';
+            if (labels[2]) labels[2].textContent = lang === 'en' ? 'Name' : '名称';
+            if (labels[3]) labels[3].textContent = lang === 'en' ? 'URL/Path' : '网址/路径';
+            if (labels[4]) labels[4].textContent = lang === 'en' ? 'Icon' : '图标';
+            if (labels[5]) labels[5].textContent = lang === 'en' ? 'Description' : '简介';
+            
+            // 更新类型选项
+            const typeOptions = document.querySelectorAll('#webType option');
+            if (typeOptions[0]) typeOptions[0].textContent = lang === 'en' ? '🌐 URL' : '🌐 网址';
+            if (typeOptions[1]) typeOptions[1].textContent = lang === 'en' ? '🖥️ Program' : '🖥️ 程序';
+            if (typeOptions[2]) typeOptions[2].textContent = lang === 'en' ? '📄 File' : '📄 文件';
+            if (typeOptions[3]) typeOptions[3].textContent = lang === 'en' ? '📁 Folder' : '📁 目录';
+            
+            // 更新占位符
+            const nameInput = document.getElementById('webName');
+            const urlInput = document.getElementById('webUrl');
+            const iconInput = document.getElementById('webIcon');
+            const descInput = document.getElementById('webDesc');
+            if (nameInput) nameInput.placeholder = lang === 'en' ? 'e.g. GitHub' : '如：GitHub';
+            if (urlInput) urlInput.placeholder = lang === 'en' ? 'https://github.com' : 'https://github.com';
+            if (iconInput) iconInput.placeholder = lang === 'en' ? 'e.g. 🐙 or emoji' : '如：🐙 或 emoji';
+            if (descInput) descInput.placeholder = lang === 'en' ? 'Short description...' : '简短描述...';
+        }
+
         function editWeb(webId) {
+            const lang = localStorage.getItem('panelLanguage') || 'zh';
+            const texts = i18n[lang] || i18n.zh;
             const cat = appData[currentZone].find(c => c.id === currentCatId);
             const web = cat.websites.find(w => w.id === webId);
             editingWebId = webId;
-            document.getElementById('webModalTitle').textContent = '编辑项目';
+            document.getElementById('webModalTitle').textContent = lang === 'en' ? 'Edit Item' : '编辑项目';
             document.getElementById('webCatId').value = currentCatId;
             document.getElementById('webType').value = web.type || 'url';
             document.getElementById('webName').value = web.name;
             document.getElementById('webUrl').value = web.url;
             document.getElementById('webIcon').value = web.icon;
             document.getElementById('webDesc').value = web.desc || '';
-            toggleWebType();
+            toggleWebType(lang);
+            updateWebModalLabels(lang);
+            
+            // 更新按钮
+            const btns = document.querySelectorAll('#webModal .modal-actions .btn');
+            if (btns[0]) btns[0].textContent = texts.cancel;
+            if (btns[1]) btns[1].textContent = texts.saveBtn || (lang === 'en' ? 'Save' : '保存');
+            
             document.getElementById('webModal').classList.add('active');
         }
 
@@ -2089,10 +2526,16 @@
             const catId = document.getElementById('webCatId').value;
             const type = document.getElementById('webType').value;
             const name = document.getElementById('webName').value.trim();
-            const url = document.getElementById('webUrl').value.trim();
+            let url = document.getElementById('webUrl').value.trim();
             const icon = document.getElementById('webIcon').value.trim() || '🌐';
             const desc = document.getElementById('webDesc').value.trim();
             if (!name || !url) { alert('请填写名称和路径/网址'); return; }
+            
+            // 自动去除首尾双引号（Windows 快捷方式目标常带引号）
+            if (url.startsWith('"') && url.endsWith('"')) {
+                url = url.slice(1, -1);
+            }
+            
             const cat = appData[currentZone].find(c => c.id === catId);
             if (editingWebId) {
                 const web = cat.websites.find(w => w.id === editingWebId);
@@ -2148,6 +2591,7 @@
         // ==================== 分类卡片拖拽功能 ====================
         let draggedCat = null;
         let draggedCatZone = null;
+        let dropPosition = 'bottom';
 
         function initCatDrag() {
             document.querySelectorAll('.cat-card').forEach(card => {
@@ -2173,43 +2617,798 @@
             document.querySelectorAll('.cat-card').forEach(card => {
                 card.classList.remove('drag-over');
             });
+            document.querySelectorAll('.drag-preview-line').forEach(line => line.remove());
             draggedCat = null;
             draggedCatZone = null;
+            dropPosition = 'bottom';
         }
 
         function handleCatDragOver(e) {
             e.preventDefault();
-            if (this !== draggedCat) {
-                e.dataTransfer.dropEffect = 'move';
-                this.classList.add('drag-over');
-            }
+            if (this === draggedCat) return;
+            
+            e.dataTransfer.dropEffect = 'move';
+            
+            // 计算鼠标位置，决定预览线在顶部还是底部
+            const rect = this.getBoundingClientRect();
+            const midpoint = rect.top + rect.height / 2;
+            dropPosition = e.clientY < midpoint ? 'top' : 'bottom';
+            
+            // 清除其他卡片的预览线
+            document.querySelectorAll('.cat-card').forEach(card => {
+                if (card !== this) {
+                    card.classList.remove('drag-over');
+                    const lines = card.querySelectorAll('.drag-preview-line');
+                    lines.forEach(line => line.remove());
+                }
+            });
+            
+            // 添加当前卡片的拖拽样式
+            this.classList.add('drag-over');
+            
+            // 创建或更新预览线
+            updatePreviewLine(this, dropPosition);
         }
 
         function handleCatDragLeave(e) {
             this.classList.remove('drag-over');
+            const lines = this.querySelectorAll('.drag-preview-line');
+            lines.forEach(line => line.remove());
+        }
+
+        function createPreviewLine() {
+            const line = document.createElement('div');
+            line.className = 'drag-preview-line';
+            line.style.position = 'fixed';
+            line.style.pointerEvents = 'none';
+            line.style.zIndex = '10000';
+            document.body.appendChild(line);
+            return line;
+        }
+
+        function updatePreviewLine(targetCard, position) {
+            // 先移除所有预览线
+            document.querySelectorAll('.drag-preview-line').forEach(line => line.remove());
+            
+            // 创建新的预览线
+            const line = createPreviewLine();
+            const rect = targetCard.getBoundingClientRect();
+            line.className = 'drag-preview-line ' + position;
+            line.style.width = (rect.width - 32) + 'px';
+            
+            if (position === 'top') {
+                line.style.top = (rect.top + 2) + 'px';
+                line.style.left = (rect.left + 16) + 'px';
+            } else {
+                line.style.top = (rect.bottom - 2) + 'px';
+                line.style.left = (rect.left + 16) + 'px';
+            }
         }
 
         function handleCatDrop(e) {
             e.preventDefault();
-            this.classList.remove('drag-over');
             if (this === draggedCat) return;
+
+            // 清除所有预览线
+            document.querySelectorAll('.drag-preview-line').forEach(line => line.remove());
+            document.querySelectorAll('.cat-card').forEach(card => {
+                card.classList.remove('drag-over');
+            });
 
             const targetCatId = this.dataset.catId;
             const targetZone = this.dataset.zone;
             const catId = draggedCat.dataset.catId;
 
-            // 从原区域移除
             const sourceList = appData[draggedCatZone];
             const catIndex = sourceList.findIndex(c => c.id === catId);
             const [cat] = sourceList.splice(catIndex, 1);
 
-            // 添加到目标区域
             const targetList = appData[targetZone];
             const targetIndex = targetList.findIndex(c => c.id === targetCatId);
-            targetList.splice(targetIndex + 1, 0, cat);
+            
+            // 根据预览线位置决定插入位置
+            const insertIndex = dropPosition === 'top' ? targetIndex : targetIndex + 1;
+            targetList.splice(insertIndex, 0, cat);
 
             saveData();
             renderCats();
+        }
+
+        // ==================== 网站卡片拖拽功能 ====================
+        let draggedWeb = null;
+        let draggedWebCatId = null;
+        let webDropPosition = 'bottom';
+
+        function initWebDrag() {
+            document.querySelectorAll('.web-card').forEach(card => {
+                card.addEventListener('dragstart', handleWebDragStart);
+                card.addEventListener('dragend', handleWebDragEnd);
+                card.addEventListener('dragover', handleWebDragOver);
+                card.addEventListener('dragleave', handleWebDragLeave);
+                card.addEventListener('drop', handleWebDrop);
+                card.addEventListener('dragenter', handleWebDragEnter);
+            });
+            
+            // 为分类卡片添加 drop 事件（支持从详情页拖到侧边栏分类）
+            document.querySelectorAll('.cat-card').forEach(catCard => {
+                catCard.addEventListener('dragover', handleCatCardDragOver);
+                catCard.addEventListener('dragleave', handleCatCardDragLeave);
+                catCard.addEventListener('drop', handleCatCardDrop);
+                catCard.addEventListener('dragenter', handleWebDragEnter);
+            });
+            
+            console.log('[initWebDrag] 已初始化', document.querySelectorAll('.web-card').length, '个网站卡片');
+        }
+
+        let isDragging = false;
+
+        function handleWebDragStart(e) {
+            draggedWeb = this;
+            draggedWebCatId = this.dataset.catId;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', this.dataset.webId);
+            isDragging = true;
+            console.log('[handleWebDragStart] 开始拖拽:', this.dataset.webId);
+        }
+
+        function handleWebDragEnd(e) {
+            this.classList.remove('dragging');
+            document.querySelectorAll('.web-card, .cat-card').forEach(card => {
+                card.classList.remove('drag-over');
+            });
+            document.querySelectorAll('.web-preview-line').forEach(line => line.remove());
+            draggedWeb = null;
+            draggedWebCatId = null;
+            webDropPosition = 'bottom';
+            // 延迟重置，避免立即触发点击
+            setTimeout(() => { isDragging = false; }, 50);
+            console.log('[handleWebDragEnd] 拖拽结束');
+        }
+
+        function handleWebDragEnter(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.dataTransfer.dropEffect = 'move';
+            console.log('[handleWebDragEnter] 进入目标:', this.dataset.webId);
+        }
+
+        function handleWebDragOver(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (this === draggedWeb) return;
+            
+            e.dataTransfer.dropEffect = 'move';
+            
+            const rect = this.getBoundingClientRect();
+            const midpoint = rect.top + rect.height / 2;
+            webDropPosition = e.clientY < midpoint ? 'top' : 'bottom';
+            
+            console.log('[handleWebDragOver] 位置:', webDropPosition, '目标:', this.dataset.webId);
+            
+            document.querySelectorAll('.web-card').forEach(card => {
+                if (card !== this) card.classList.remove('drag-over');
+            });
+            
+            this.classList.add('drag-over');
+            updateWebPreviewLine(this, webDropPosition);
+        }
+
+        function handleWebDragLeave(e) {
+            this.classList.remove('drag-over');
+        }
+
+        function createWebPreviewLine() {
+            const line = document.createElement('div');
+            line.className = 'web-preview-line';
+            line.style.position = 'fixed';
+            line.style.pointerEvents = 'none';
+            line.style.zIndex = '10000';
+            document.body.appendChild(line);
+            return line;
+        }
+
+        function updateWebPreviewLine(targetCard, position) {
+            document.querySelectorAll('.web-preview-line').forEach(line => line.remove());
+            const line = createWebPreviewLine();
+            const rect = targetCard.getBoundingClientRect();
+            line.className = 'web-preview-line';
+            line.style.width = (rect.width - 20) + 'px';
+            
+            if (position === 'top') {
+                line.style.top = (rect.top + 2) + 'px';
+                line.style.left = (rect.left + 10) + 'px';
+            } else {
+                line.style.top = (rect.bottom - 2) + 'px';
+                line.style.left = (rect.left + 10) + 'px';
+            }
+        }
+
+        function handleWebDrop(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            console.log('[handleWebDrop] DROP 触发！', this);
+            
+            if (this === draggedWeb) {
+                console.log('[handleWebDrop] 拖到自己，忽略');
+                return;
+            }
+            
+            if (!this || !this.dataset) {
+                console.log('[handleWebDrop] 目标无效');
+                return;
+            }
+
+            document.querySelectorAll('.web-preview-line').forEach(line => line.remove());
+            document.querySelectorAll('.web-card, .cat-card').forEach(card => {
+                card.classList.remove('drag-over');
+            });
+
+            const targetWebId = this.dataset.webId;
+            const targetCatId = this.dataset.catId;
+            const webId = draggedWeb.dataset.webId;
+
+            console.log('[handleWebDrop] 拖拽完成:', { targetWebId, targetCatId, draggedWebCatId, webId, webDropPosition });
+
+            // 如果是同一分类内拖拽，执行排序
+            if (targetCatId === draggedWebCatId) {
+                console.log('[handleWebDrop] 同一分类内排序，调用 reorderWebInCat');
+                reorderWebInCat(targetCatId, targetWebId, webId, webDropPosition);
+            } else {
+                console.log('[handleWebDrop] 跨分类移动，调用 moveWebToCat');
+                // 不同分类，执行移动
+                moveWebToCat(targetCatId, targetWebId, webId, 'after');
+            }
+        }
+
+        // 支持拖拽外部内容到详情页
+        function initWebGridDrop() {
+            grid = document.getElementById('webGrid');
+            if (!grid) return;
+            
+            grid.addEventListener('dragover', handleWebGridDragOver);
+            grid.addEventListener('dragleave', handleWebGridDragLeave);
+            grid.addEventListener('drop', handleWebGridDrop);
+        }
+
+        let grid = null;
+        
+        function handleWebGridDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'copy';
+            if (grid) grid.classList.add('drag-over');
+        }
+
+        function handleWebGridDragLeave(e) {
+            if (grid) grid.classList.remove('drag-over');
+        }
+
+        function handleWebGridDrop(e) {
+            e.preventDefault();
+            grid.classList.remove('drag-over');
+            
+            if (!currentCatId || !currentZone) return;
+            
+            // 获取所有可用的拖拽数据
+            const types = e.dataTransfer.types;
+            const urlData = e.dataTransfer.getData('text/uri-list');
+            const textData = e.dataTransfer.getData('text/plain');
+            const textUrlData = e.dataTransfer.getData('text/uri');
+            const files = e.dataTransfer.files;
+            
+            // 调试输出
+            console.log('[handleWebGridDrop] 拖拽数据类型:', types);
+            console.log('[handleWebGridDrop] text/uri-list:', urlData);
+            console.log('[handleWebGridDrop] text/plain:', textData);
+            console.log('[handleWebGridDrop] text/uri:', textUrlData);
+            console.log('[handleWebGridDrop] files:', files);
+            
+            let url = '';
+            let name = '';
+            let type = 'url';
+            
+            // 1. 优先处理 text/uri 数据（Windows 文件拖拽的主要格式）
+            if (textUrlData && textUrlData.trim()) {
+                let trimmedText = textUrlData.trim();
+                console.log('[handleWebGridDrop] 使用 text/uri 数据:', trimmedText);
+                
+                // 自动去除首尾双引号（Windows 路径复制时常带引号）
+                if (trimmedText.startsWith('"') && trimmedText.endsWith('"')) {
+                    trimmedText = trimmedText.slice(1, -1);
+                    console.log('[handleWebGridDrop] 已去除双引号:', trimmedText);
+                }
+                
+                // 清理 file:/// 前缀并转换为 Windows 路径
+                if (trimmedText.startsWith('file:///')) {
+                    url = trimmedText.substring(8).replace(/\//g, '\\');
+                    // 处理 UNC 路径
+                    if (url.startsWith('\\')) {
+                        url = url.substring(1);
+                    }
+                } else if (trimmedText.match(/^[A-Za-z]:[\\/]/)) {
+                    url = trimmedText;
+                }
+                
+                if (url) {
+                    name = url.split('\\').pop();
+                    // 移除 .lnk 扩展名
+                    if (name.toLowerCase().endsWith('.lnk')) {
+                        name = name.slice(0, -4);
+                    }
+                    // 根据扩展名判断类型
+                    if (url.endsWith('\\') || !name.includes('.')) {
+                        type = 'dir';
+                    } else {
+                        const ext = name.split('.').pop().toLowerCase();
+                        // 文档类型
+                        if (['txt', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'pdf', 'csv'].includes(ext)) {
+                            type = 'file';
+                        }
+                        // 可执行程序
+                        else if (['exe', 'bat', 'cmd', 'msi', 'ps1', 'vbs', 'js'].includes(ext)) {
+                            type = 'app';
+                        }
+                        // 其他文件默认当作文件
+                        else {
+                            type = 'file';
+                        }
+                    }
+                }
+            }
+            
+            // 2. 处理 text/uri-list 数据（浏览器网址）
+            if (!url && urlData) {
+                const uriList = urlData.split('\n')[0].trim();
+                console.log('[handleWebGridDrop] 使用 text/uri-list 数据:', uriList);
+                
+                if (uriList.startsWith('http://') || uriList.startsWith('https://')) {
+                    url = uriList;
+                    try {
+                        name = new URL(url).hostname.replace('www.', '');
+                    } catch (err) {
+                        name = '新网站';
+                    }
+                    type = 'url';
+                }
+            }
+            
+            // 3. 处理 text/plain 数据（备用）
+            if (!url && textData) {
+                let trimmedText = textData.trim();
+                console.log('[handleWebGridDrop] 使用 text/plain 数据:', trimmedText);
+                
+                // 自动去除首尾双引号
+                if (trimmedText.startsWith('"') && trimmedText.endsWith('"')) {
+                    trimmedText = trimmedText.slice(1, -1);
+                    console.log('[handleWebGridDrop] 已去除双引号:', trimmedText);
+                }
+                
+                if (trimmedText.match(/^[A-Za-z]:[\\/]/) || trimmedText.startsWith('file:///')) {
+                    // Windows 路径
+                    url = trimmedText.replace(/^file:\/\/\//, '').replace(/\//g, '\\');
+                    name = url.split('\\').pop();
+                    if (name.toLowerCase().endsWith('.lnk')) {
+                        name = name.slice(0, -4);
+                    }
+                    // 根据扩展名判断类型
+                    if (url.endsWith('\\') || !name.includes('.')) {
+                        type = 'dir';
+                    } else {
+                        const ext = name.split('.').pop().toLowerCase();
+                        // 文档类型
+                        if (['txt', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'pdf', 'csv'].includes(ext)) {
+                            type = 'file';
+                        }
+                        // 可执行程序
+                        else if (['exe', 'bat', 'cmd', 'msi', 'ps1', 'vbs', 'js'].includes(ext)) {
+                            type = 'app';
+                        }
+                        // 其他文件默认当作文件
+                        else {
+                            type = 'file';
+                        }
+                    }
+                } else if (trimmedText.startsWith('http://') || trimmedText.startsWith('https://')) {
+                    url = trimmedText;
+                    try {
+                        name = new URL(url).hostname.replace('www.', '');
+                    } catch (err) {
+                        name = '新网站';
+                    }
+                    type = 'url';
+                }
+            }
+            
+            // 4. 处理文件对象（最后选择，因为浏览器安全限制无法获取路径）
+            if (!url && files && files.length > 0) {
+                const file = files[0];
+                name = file.name;
+                console.log('[handleWebGridDrop] 使用文件对象:', name);
+                console.log('[handleWebGridDrop] 注意：浏览器安全限制，无法获取完整路径');
+                
+                // 移除 .lnk 扩展名
+                if (name.toLowerCase().endsWith('.lnk')) {
+                    name = name.slice(0, -4);
+                }
+                
+                // 判断类型
+                if (file.type === '' && !name.includes('.')) {
+                    type = 'dir';
+                } else {
+                    type = 'app';
+                }
+                
+                // 浏览器安全限制：无法获取文件路径
+                // 所有现代浏览器（Chrome/Edge/Firefox）都这样
+                // 这是为了防止恶意网页窃取用户文件信息
+                url = '';
+            }
+            
+            if (!url && !name) {
+                console.log('[handleWebGridDrop] 无法获取有效数据');
+                return;
+            }
+            
+            console.log('[handleWebGridDrop] 最终结果:', { url, name, type });
+            
+            // 自动打开添加项目页并填充数据
+            openWebModalWithAutoFill(name, url, type);
+            
+            // 如果没有路径，提示用户手动输入
+            if (!url && name) {
+                setTimeout(() => {
+                    const urlInput = document.getElementById('webUrl');
+                    if (urlInput) {
+                        urlInput.focus();
+                        urlInput.placeholder = '请手动输入路径，例如：C:\\Program Files\\...';
+                        urlInput.style.borderColor = 'var(--accent)';
+                    }
+                }, 100);
+            }
+        }
+
+        function openWebModalWithAutoFill(name, url, type) {
+            const lang = localStorage.getItem('panelLanguage') || 'zh';
+            const texts = i18n[lang] || i18n.zh;
+            
+            // 打开模态框
+            const modalTitle = url 
+                ? (lang === 'en' ? 'Add Item (Auto-filled)' : '添加项目（拖拽自动填充）')
+                : (lang === 'en' ? 'Add Item (Enter path manually)' : '添加项目（请手动输入路径）');
+            document.getElementById('webModalTitle').textContent = modalTitle;
+            document.getElementById('webType').value = type;
+            document.getElementById('webName').value = name;
+            document.getElementById('webUrl').value = url;
+            document.getElementById('webIcon').value = type === 'app' ? '🖥️' : type === 'file' ? '📄' : type === 'dir' ? '📁' : '🌐';
+            document.getElementById('webDesc').value = '';
+            document.getElementById('webCatId').value = currentCatId;
+            document.getElementById('webId').value = '';
+            editingWebId = null;
+            
+            // 更新表单提示
+            toggleWebType(lang);
+            updateWebModalLabels(lang);
+            
+            // 更新按钮
+            const btns = document.querySelectorAll('#webModal .modal-actions .btn');
+            if (btns[0]) btns[0].textContent = texts.cancel;
+            if (btns[1]) btns[1].textContent = texts.saveBtn || (lang === 'en' ? 'Save' : '保存');
+            
+            // 显示模态框
+            document.getElementById('webModal').classList.add('active');
+            
+            // 如果没有路径，显示提示信息
+            if (!url && (type === 'app' || type === 'dir')) {
+                const hintDiv = document.createElement('div');
+                hintDiv.id = 'dropHint';
+                hintDiv.style.cssText = 'background:var(--accent-light);border:1px solid var(--accent);border-radius:var(--radius-sm);padding:0.6rem;margin-top:0.6rem;font-size:0.8rem;line-height:1.5;';
+                hintDiv.innerHTML = lang === 'en' 
+                    ? `<strong>💡 Tip:</strong>Browser cannot get file path.<br><strong>📋 How to:</strong>①Right-click→Properties→Copy"Target" ②Right-click file→Ctrl+Shift+C<br>Paste into the input box above.`
+                    : `<strong>💡 提示：</strong>浏览器无法获取文件路径。<br><strong>📋 获取方法：</strong>①快捷方式右键→属性→复制"目标"地址 ②文件右键→Ctrl+Shift+C 粘贴到上方输入框即可。<br>`;
+                const oldHint = document.getElementById('dropHint');
+                if (oldHint) oldHint.remove();
+                const modal = document.querySelector('#webModal .modal');
+                modal.insertBefore(hintDiv, modal.querySelector('.modal-actions'));
+            }
+        }
+
+        // 拖到分类卡片（侧边栏）
+        function handleCatCardDragOver(e) {
+            e.preventDefault();
+            if (!draggedWeb) return;
+            
+            e.dataTransfer.dropEffect = 'move';
+            this.classList.add('drag-over');
+        }
+
+        function handleCatCardDragLeave(e) {
+            this.classList.remove('drag-over');
+        }
+
+        function handleCatCardDrop(e) {
+            e.preventDefault();
+            if (!draggedWeb) return;
+
+            document.querySelectorAll('.web-preview-line').forEach(line => line.remove());
+            document.querySelectorAll('.web-card, .cat-card').forEach(card => {
+                card.classList.remove('drag-over');
+            });
+
+            const targetCatId = this.dataset.catId;
+            const webId = draggedWeb.dataset.webId;
+
+            moveWebToCat(targetCatId, null, webId, 'end');
+        }
+
+        // 同一分类内重新排序网站
+        function reorderWebInCat(catId, targetWebId, webId, position) {
+            // 找到分类
+            let cat = null;
+            for (const zone of ['left', 'right']) {
+                const c = appData[zone].find(c => c.id === catId);
+                if (c) { cat = c; break; }
+            }
+            if (!cat) return;
+
+            // 找到源和目标索引
+            const webIndex = cat.websites.findIndex(w => w.id === webId);
+            const targetIndex = cat.websites.findIndex(w => w.id === targetWebId);
+            
+            if (webIndex === -1 || targetIndex === -1) return;
+
+            // 移除并重新插入
+            const [web] = cat.websites.splice(webIndex, 1);
+            const insertIndex = position === 'top' ? targetIndex : targetIndex + 1;
+            
+            // 调整索引（因为移除后索引可能变化）
+            const adjustedIndex = webIndex < targetIndex ? insertIndex - 1 : insertIndex;
+            cat.websites.splice(adjustedIndex, 0, web);
+
+            saveData();
+            renderWebsites(cat);
+            renderCats();
+        }
+
+        function moveWebToCat(targetCatId, targetWebId, webId, position) {
+            // 找到源分类
+            let sourceCat = null;
+            let sourceZone = null;
+            for (const zone of ['left', 'right']) {
+                const cat = appData[zone].find(c => c.id === draggedWebCatId);
+                if (cat) { sourceCat = cat; sourceZone = zone; break; }
+            }
+            if (!sourceCat) return;
+
+            // 找到目标分类
+            let targetCat = null;
+            for (const zone of ['left', 'right']) {
+                const cat = appData[zone].find(c => c.id === targetCatId);
+                if (cat) { targetCat = cat; break; }
+            }
+            if (!targetCat) return;
+
+            // 从源分类移除
+            const webIndex = sourceCat.websites.findIndex(w => w.id === webId);
+            const [web] = sourceCat.websites.splice(webIndex, 1);
+
+            // 添加到目标分类
+            if (position === 'after' && targetWebId) {
+                const targetIndex = targetCat.websites.findIndex(w => w.id === targetWebId);
+                targetCat.websites.splice(targetIndex + 1, 0, web);
+            } else {
+                targetCat.websites.push(web);
+            }
+
+            saveData();
+            renderWebsites(targetCat);
+            renderCats();
+            
+            // 如果详情页显示的是源分类，刷新详情页
+            if (currentCatId === draggedWebCatId) {
+                // 源分类还有网站，刷新详情页
+                if (sourceCat.websites.length > 0) {
+                    renderWebsites(sourceCat);
+                } else {
+                    // 源分类空了，关闭详情页，显示今日工作
+                    expandTodayWork();
+                }
+            }
+        }
+
+        // ==================== 任务卡片拖拽功能 ====================
+        let draggedTask = null;
+        let draggedTaskType = null;
+
+        function initTaskDrag() {
+            // 为任务卡片添加拖拽事件
+            document.querySelectorAll('.task-item').forEach(item => {
+                item.addEventListener('dragstart', handleTaskDragStart);
+                item.addEventListener('dragend', handleTaskDragEnd);
+                item.addEventListener('dragover', handleTaskDragOver);
+                item.addEventListener('dragleave', handleTaskDragLeave);
+                item.addEventListener('drop', handleTaskDrop);
+            });
+            
+            // 为任务列表容器添加 drop 事件（支持拖到空象限）
+            document.querySelectorAll('.task-list, .priority-list').forEach(container => {
+                container.addEventListener('dragover', handleTaskContainerDragOver);
+                container.addEventListener('dragleave', handleTaskContainerDragLeave);
+                container.addEventListener('drop', handleTaskContainerDrop);
+            });
+        }
+
+        function handleTaskDragStart(e) {
+            draggedTask = this;
+            draggedTaskType = this.dataset.type;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', this.dataset.id);
+        }
+
+        function handleTaskDragEnd(e) {
+            this.classList.remove('dragging');
+            document.querySelectorAll('.task-item').forEach(item => {
+                item.classList.remove('drag-over');
+            });
+            document.querySelectorAll('.task-preview-line').forEach(line => line.remove());
+            draggedTask = null;
+            draggedTaskType = null;
+        }
+
+        function handleTaskDragOver(e) {
+            e.preventDefault();
+            if (this === draggedTask) return;
+            
+            e.dataTransfer.dropEffect = 'move';
+            
+            const rect = this.getBoundingClientRect();
+            const midpoint = rect.top + rect.height / 2;
+            const dropPos = e.clientY < midpoint ? 'top' : 'bottom';
+            
+            document.querySelectorAll('.task-item').forEach(item => {
+                if (item !== this) {
+                    item.classList.remove('drag-over');
+                }
+            });
+            
+            this.classList.add('drag-over');
+            updateTaskPreviewLine(this, dropPos);
+        }
+
+        function handleTaskDragLeave(e) {
+            this.classList.remove('drag-over');
+        }
+
+        function createTaskPreviewLine() {
+            const line = document.createElement('div');
+            line.className = 'task-preview-line';
+            line.style.position = 'fixed';
+            line.style.pointerEvents = 'none';
+            line.style.zIndex = '10000';
+            document.body.appendChild(line);
+            return line;
+        }
+
+        function updateTaskPreviewLine(targetItem, position) {
+            document.querySelectorAll('.task-preview-line').forEach(line => line.remove());
+            const line = createTaskPreviewLine();
+            const rect = targetItem.getBoundingClientRect();
+            line.className = 'task-preview-line ' + position;
+            line.style.width = rect.width + 'px';
+            
+            if (position === 'top') {
+                line.style.top = rect.top + 'px';
+                line.style.left = rect.left + 'px';
+            } else {
+                line.style.top = rect.bottom + 'px';
+                line.style.left = rect.left + 'px';
+            }
+        }
+
+        function handleTaskDrop(e) {
+            e.preventDefault();
+            if (this === draggedTask) return;
+
+            document.querySelectorAll('.task-preview-line').forEach(line => line.remove());
+            document.querySelectorAll('.task-item').forEach(item => {
+                item.classList.remove('drag-over');
+            });
+
+            const targetTaskId = this.dataset.id;
+            const targetTaskType = this.dataset.type;
+            const taskId = draggedTask.dataset.id;
+
+            const task = todayData.tasks.find(t => t.id === taskId);
+            if (!task) return;
+
+            // 从原位置移除
+            todayData.tasks = todayData.tasks.filter(t => t.id !== taskId);
+
+            // 更新任务类型（如果跨象限拖拽）
+            task.type = targetTaskType;
+
+            // 找到目标任务的索引
+            const targetIndex = todayData.tasks.findIndex(t => t.id === targetTaskId);
+            
+            // 计算插入位置
+            const rect = this.getBoundingClientRect();
+            const midpoint = rect.top + rect.height / 2;
+            const dropPos = e.clientY < midpoint ? 'top' : 'bottom';
+            const insertIndex = dropPos === 'top' ? targetIndex : targetIndex + 1;
+            
+            // 插入到目标位置
+            todayData.tasks.splice(insertIndex, 0, task);
+
+            saveTodayData();
+        }
+
+        // 处理拖到空容器
+        let taskDropContainer = null;
+        let taskDropPosition = 'bottom';
+
+        function handleTaskContainerDragOver(e) {
+            e.preventDefault();
+            if (!draggedTask) return;
+            
+            e.dataTransfer.dropEffect = 'move';
+            
+            const rect = this.getBoundingClientRect();
+            const midpoint = rect.top + rect.height / 2;
+            taskDropPosition = e.clientY < midpoint ? 'top' : 'bottom';
+            
+            // 显示预览线
+            document.querySelectorAll('.task-preview-line').forEach(line => line.remove());
+            const line = createTaskPreviewLine();
+            line.className = 'task-preview-line ' + taskDropPosition;
+            line.style.width = (rect.width - 20) + 'px';
+            
+            if (taskDropPosition === 'top') {
+                line.style.top = (rect.top + 5) + 'px';
+                line.style.left = (rect.left + 10) + 'px';
+            } else {
+                line.style.top = (rect.bottom - 5) + 'px';
+                line.style.left = (rect.left + 10) + 'px';
+            }
+            
+            taskDropContainer = this;
+        }
+
+        function handleTaskContainerDragLeave(e) {
+            taskDropContainer = null;
+            document.querySelectorAll('.task-preview-line').forEach(line => line.remove());
+        }
+
+        function handleTaskContainerDrop(e) {
+            e.preventDefault();
+            if (!draggedTask || !taskDropContainer) return;
+
+            document.querySelectorAll('.task-preview-line').forEach(line => line.remove());
+
+            const taskId = draggedTask.dataset.id;
+            const targetContainer = taskDropContainer;
+            
+            // 从容器 ID 获取目标类型
+            let targetTaskType = 'regular';
+            if (targetContainer.id === 'coreTasks') targetTaskType = 'core';
+            else if (targetContainer.id === 'priorityTasks') targetTaskType = 'priority';
+            else if (targetContainer.id === 'mustTasks') targetTaskType = 'must';
+            else if (targetContainer.id === 'regularTasks') targetTaskType = 'regular';
+
+            const task = todayData.tasks.find(t => t.id === taskId);
+            if (!task) return;
+
+            // 从原位置移除
+            todayData.tasks = todayData.tasks.filter(t => t.id !== taskId);
+
+            // 更新任务类型
+            task.type = targetTaskType;
+
+            // 插入到目标容器（空容器时直接添加到末尾）
+            todayData.tasks.push(task);
+
+            taskDropContainer = null;
+            saveTodayData();
         }
 
         // ==================== 国际化 ====================
@@ -2217,7 +3416,7 @@
             zh: {
                 // 品牌
                 brandTitle: 'Advanced Personal Panel',
-                slogan: '你的专属导航中心 · 高效从这里开始',
+                slogan: '您的专属导航中心 · 高效从这里开始',
                 // 今日工作页面
                 todayTitle: '📋 今日工作与重要提醒',
                 addTask: '添加任务',
@@ -2258,6 +3457,8 @@
                 loadTodayDesc: '从文件恢复今日工作和提醒数据',
                 language: '🌐 语言 / Language',
                 langDesc: '切换界面显示语言',
+                langZhBtn: '中文',
+                langEnBtn: 'English',
                 todayWorkData: '📋 今日工作数据',
                 systemData: '🔧 系统数据',
                 saveBtn: '保存',
@@ -2265,6 +3466,29 @@
                 exportBtn: '导出',
                 importBtn: '导入',
                 resetBtn: '重置',
+                cancel: '取消',
+                confirm: '确认',
+                // 锁定设置
+                lockSettings: '🔒 安全锁定',
+                lockTimeoutLabel: '无操作自动锁定时间（分钟）',
+                lockTimeoutPlaceholder: '0 表示禁用',
+                lockTimeoutDesc: '设定超过多少分钟无操作自动上锁，0 表示禁用此功能',
+                saveLockSettings: '保存设置',
+                changePassword: '修改密码',
+                lockNow: '立即锁定',
+                changePasswordTitle: '🔑 修改锁定密码',
+                currentPasswordLabel: '当前密码',
+                currentPasswordPlaceholder: '输入当前 4 位密码',
+                newPasswordLabel: '新密码',
+                newPasswordPlaceholder: '输入 4 位数字密码',
+                confirmPasswordLabel: '确认新密码',
+                confirmPasswordPlaceholder: '再次输入新密码',
+                passwordMustBe4Digits: '密码必须是 4 位数字',
+                lockScreenTitle: '面板已锁定',
+                lockScreenDesc: '请输入 4 位密码解锁',
+                unlockPlaceholder: '输入密码',
+                unlockButton: '解锁',
+                initialPasswordHint: '初始密码：0000',
                 // 四象限标签
                 quadrantUrgentLight: '📌 紧急·轻',
                 quadrantImportantUrgent: '🔥 重要·急',
@@ -2351,8 +3575,10 @@
                 loadToday: '📂 Load',
                 loadTodayFull: '📂 Load Today\'s Work',
                 loadTodayDesc: 'Restore from file',
-                language: '🌐 Language / 语言',
+                language: '🌐 Language',
                 langDesc: 'Switch language',
+                langZhBtn: '中文',
+                langEnBtn: 'English',
                 todayWorkData: '📋 Today\'s Work',
                 systemData: '🔧 System',
                 saveBtn: 'Save',
@@ -2360,6 +3586,29 @@
                 exportBtn: 'Export',
                 importBtn: 'Import',
                 resetBtn: 'Reset',
+                cancel: 'Cancel',
+                confirm: 'Confirm',
+                // Lock settings (English)
+                lockSettings: '🔒 Security Lock',
+                lockTimeoutLabel: 'Auto-lock after inactivity (min)',
+                lockTimeoutPlaceholder: '0 to disable',
+                lockTimeoutDesc: 'Set minutes of inactivity before auto-lock, 0 to disable',
+                saveLockSettings: 'Save Settings',
+                changePassword: 'Change Password',
+                lockNow: 'Lock Now',
+                changePasswordTitle: '🔑 Change Lock Password',
+                currentPasswordLabel: 'Current Password',
+                currentPasswordPlaceholder: 'Enter current 4-digit password',
+                newPasswordLabel: 'New Password',
+                newPasswordPlaceholder: 'Enter 4-digit password',
+                confirmPasswordLabel: 'Confirm New Password',
+                confirmPasswordPlaceholder: 'Re-enter new password',
+                passwordMustBe4Digits: 'Password must be 4 digits',
+                lockScreenTitle: 'Panel Locked',
+                lockScreenDesc: 'Enter 4-digit password to unlock',
+                unlockPlaceholder: 'Enter password',
+                unlockButton: 'Unlock',
+                initialPasswordHint: 'Initial password: 0000',
                 // Quadrant badges
                 quadrantUrgentLight: '📌 Urgent·Light',
                 quadrantImportantUrgent: '🔥 Important·Urgent',
@@ -2408,11 +3657,18 @@
         
         function updatePageLanguage(lang) {
             const texts = i18n[lang] || i18n.zh;
-            // 更新所有带 data-i18n 属性的元素
+            // 更新所有带 data-i18n 属性的元素文本
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (texts[key]) {
                     el.textContent = texts[key];
+                }
+            });
+            // 更新所有带 data-i18n-placeholder 属性的元素占位符
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (texts[key]) {
+                    el.placeholder = texts[key];
                 }
             });
             // 更新侧边栏标题
@@ -2420,11 +3676,23 @@
             if (sidebarTitles[0]) sidebarTitles[0].textContent = texts.workZone;
             if (sidebarTitles[1]) sidebarTitles[1].textContent = texts.leisureZone;
             
-            // 重新渲染分类
-            renderCats();
+            // 更新详情页添加网站按钮
+            const addWebBtn = document.getElementById('addWebBtn');
+            if (addWebBtn) {
+                addWebBtn.textContent = lang === 'en' ? '+ Add Website' : '+ 添加网站';
+            }
             
-            // 更新设置模态框标题
-            document.querySelector('#settingsModal .modal-title').textContent = texts.settingsTitle;
+            // 如果详情页打开，更新分类名称
+            if (currentCatId && currentZone) {
+                const currentCat = appData[currentZone].find(c => c.id === currentCatId);
+                if (currentCat) {
+                    document.getElementById('detailIcon').textContent = currentCat.icon;
+                    document.getElementById('detailName').textContent = getI18nText(currentCat.id, currentCat.name, lang);
+                }
+            }
+            
+            // 重新渲染分类（传入语言参数）
+            renderCats(lang);
             
             // 更新时间显示
             updateTimeDisplay(lang);
@@ -2561,27 +3829,154 @@
             alert('✅ 今日工作数据已保存为文本格式！');
         }
         
-        // 今日工作数据恢复
+        // 今日工作数据恢复（支持 JSON 和文本格式）
         function loadTodayWorkData(input) {
             const file = input.files[0];
             if (!file) return;
             
             const reader = new FileReader();
             reader.onload = function(e) {
+                const content = e.target.result;
+                
+                // 尝试 JSON 格式
                 try {
-                    const data = JSON.parse(e.target.result);
+                    const data = JSON.parse(content);
                     if (data.tasks && data.reminders) {
                         todayData = data;
                         saveTodayData();
-                        alert('✅ 今日工作数据已恢复！');
-                    } else {
-                        alert('❌ 文件格式不正确！');
+                        alert('✅ 今日工作数据已恢复（JSON 格式）！');
+                        return;
                     }
-                } catch (err) {
-                    alert('❌ 文件读取失败：' + err.message);
+                } catch (jsonErr) {
+                    // 不是 JSON 格式，尝试文本格式解析
+                }
+                
+                // 尝试文本格式解析
+                try {
+                    const parsedData = parseTodayWorkText(content);
+                    if (parsedData && (parsedData.tasks.length > 0 || parsedData.reminders.length > 0)) {
+                        todayData = parsedData;
+                        saveTodayData();
+                        alert('✅ 今日工作数据已恢复（文本格式）！\n\n恢复任务：' + parsedData.tasks.length + ' 项\n恢复提醒：' + parsedData.reminders.length + ' 项');
+                    } else {
+                        alert('❌ 无法识别的文件格式！\n\n支持格式：\n1. JSON 格式（.json）\n2. 文本格式（工作日报 .txt）');
+                    }
+                } catch (txtErr) {
+                    alert('❌ 文件解析失败：' + txtErr.message);
                 }
             };
             reader.readAsText(file);
+        }
+        
+        // 解析文本格式的今日工作数据
+        function parseTodayWorkText(text) {
+            const lines = text.split('\n');
+            const tasks = [];
+            const reminders = [];
+            let currentSection = null;
+            let taskCounter = 0;
+            
+            // 获取今天日期作为默认日期
+            const today = new Date().toISOString().split('T')[0];
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                
+                // 识别章节
+                if (line.includes('【核心任务】')) {
+                    currentSection = 'core';
+                    continue;
+                } else if (line.includes('【高优工作')) {
+                    currentSection = 'priority';
+                    continue;
+                } else if (line.includes('【常规工作】')) {
+                    currentSection = 'regular';
+                    continue;
+                } else if (line.includes('【🔥 今日必须完成】') || line.includes('【今日必须完成】')) {
+                    currentSection = 'must';
+                    continue;
+                } else if (line.includes('【⚠️ 重要提醒】') || line.includes('【重要提醒】')) {
+                    currentSection = 'reminder';
+                    continue;
+                }
+                
+                // 跳过分隔线和空行
+                if (line.startsWith('══') || line.startsWith('──') || line === '') {
+                    continue;
+                }
+                
+                // 解析任务行
+                if (currentSection && currentSection !== 'reminder') {
+                    const taskMatch = line.match(/^\s*\d+\.\s*(.+?)(?:\s*📅\s*(.+?))?(?:\s*⏰\s*(.+?))?(?:\s*$)/);
+                    if (taskMatch) {
+                        taskCounter++;
+                        const task = {
+                            id: `restored_${Date.now()}_${taskCounter}`,
+                            type: currentSection,
+                            text: taskMatch[1].trim(),
+                            deadline: taskMatch[2] ? taskMatch[2].trim() : '',
+                            timeNodes: taskMatch[3] ? taskMatch[3].trim() : '',
+                            note: '',
+                            completed: false
+                        };
+                        
+                        // 检查下一行是否有备注
+                        if (i + 1 < lines.length) {
+                            const nextLine = lines[i + 1].trim();
+                            if (nextLine.startsWith('备注：') || nextLine.startsWith('备注:')) {
+                                task.note = nextLine.replace(/^备注 [::]\s*/, '');
+                                i++; // 跳过备注行
+                            }
+                        }
+                        
+                        tasks.push(task);
+                    }
+                }
+                
+                // 解析提醒行
+                if (currentSection === 'reminder') {
+                    const reminderMatch = line.match(/^\s*\d+\.\s*(.+?)(?:\s*⏰\s*(.+?))?(?:\s*$)/);
+                    if (reminderMatch) {
+                        taskCounter++;
+                        const reminderTime = reminderMatch[2] ? reminderMatch[2].trim() : today + 'T12:00';
+                        // 尝试解析时间
+                        let isoTime = today + 'T12:00';
+                        try {
+                            // 简单处理：如果是 "4/10, 14:30" 格式
+                            const timeParts = reminderTime.split(',');
+                            if (timeParts.length >= 2) {
+                                const datePart = timeParts[0].trim();
+                                const timePart = timeParts[1].trim();
+                                const [month, day] = datePart.split('/');
+                                const year = new Date().getFullYear();
+                                isoTime = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${timePart}:00`;
+                            }
+                        } catch (e) {}
+                        
+                        const reminder = {
+                            id: `restored_${Date.now()}_${taskCounter}`,
+                            type: 'meeting',
+                            text: reminderMatch[1].trim(),
+                            time: isoTime,
+                            note: '',
+                            alerted: false
+                        };
+                        
+                        // 检查下一行是否有备注
+                        if (i + 1 < lines.length) {
+                            const nextLine = lines[i + 1].trim();
+                            if (nextLine.startsWith('备注：') || nextLine.startsWith('备注:')) {
+                                reminder.note = nextLine.replace(/^备注 [::]\s*/, '');
+                                i++; // 跳过备注行
+                            }
+                        }
+                        
+                        reminders.push(reminder);
+                    }
+                }
+            }
+            
+            return { tasks, reminders };
         }
 
         function exportData() {
@@ -2730,7 +4125,7 @@
             };
             
             container.innerHTML = tasks.map(task => `
-                <div class="task-item ${task.type} ${task.completed ? 'completed' : ''}" data-id="${task.id}">
+                <div class="task-item ${task.type} ${task.completed ? 'completed' : ''}" data-id="${task.id}" data-type="${type}" draggable="true">
                     <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask('${task.id}')">
                     <div class="task-content" title="${task.note ? escapeHtml(task.note) : ''}">
                         <div class="task-text">${escapeHtml(task.text)}</div>
@@ -2747,6 +4142,7 @@
                     </div>
                 </div>
             `).join('');
+            initTaskDrag();
         }
         
         // 渲染提醒列表
@@ -2911,6 +4307,36 @@
                 normalizedDeadline = validation.value;
             }
             
+            // 时间节点弹窗提醒 - 创建提醒项
+            let timeNodeReminders = [];
+            if (timeNodes) {
+                const timeNodesArr = timeNodes.split(/[,,]/).map(t => t.trim()).filter(t => t);
+                if (timeNodesArr.length > 0) {
+                    const confirmMsg = lang === 'en' 
+                        ? `Task will have ${timeNodesArr.length} time node reminder(s):\n${timeNodesArr.join(', ')}\n\nContinue?`
+                        : `任务将设置 ${timeNodesArr.length} 个时间节点提醒：\n${timeNodesArr.join(', ')}\n\n是否继续？`;
+                    if (!confirm(confirmMsg)) return;
+                    
+                    // 为每个时间节点创建提醒
+                    const today = new Date().toISOString().split('T')[0];
+                    timeNodesArr.forEach((timeNode, index) => {
+                        const [hours, minutes] = timeNode.split(':');
+                        const reminderTime = new Date(`${today}T${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}:00`);
+                        timeNodeReminders.push({
+                            id: `task_${Date.now()}_${index}`,
+                            type: 'meeting',
+                            text: `⏰ 任务提醒：${text}`,
+                            time: reminderTime.toISOString(),
+                            note: note || '',
+                            alerted: false,
+                            taskId: editingTaskId || `new_${Date.now()}`
+                        });
+                    });
+                }
+            }
+            
+            const taskId = editingTaskId || Date.now().toString();
+            
             if (editingTaskId) {
                 const task = todayData.tasks.find(t => t.id === editingTaskId);
                 if (task) {
@@ -2920,9 +4346,11 @@
                     task.timeNodes = timeNodes;
                     task.note = note;
                 }
+                // 删除旧的时间节点提醒
+                todayData.reminders = todayData.reminders.filter(r => !r.taskId || r.taskId !== taskId);
             } else {
                 todayData.tasks.push({
-                    id: Date.now().toString(),
+                    id: taskId,
                     type,
                     text,
                     deadline: normalizedDeadline,
@@ -2930,6 +4358,11 @@
                     note,
                     completed: false
                 });
+            }
+            
+            // 添加新的时间节点提醒
+            if (timeNodeReminders.length > 0) {
+                todayData.reminders.push(...timeNodeReminders);
             }
             
             saveTodayData();
@@ -2981,14 +4414,14 @@
             
             // 提醒类型选项翻译
             const reminderTypes = {
-                deadline: lang === 'en' ? '📅 Deadline' : '📅 截止',
-                meeting: lang === 'en' ? '🗓️ Meeting' : '🗓️ 会议',
                 risk: lang === 'en' ? '⚠️ Risk' : '⚠️ 风险',
+                deadline: lang === 'en' ? '⏰ Deadline' : '⏰ 截止',
+                meeting: lang === 'en' ? '📅 Meeting' : '📅 会议',
                 other: lang === 'en' ? '🔔 Other' : '🔔 其他'
             };
             
-            // 默认设置为 30 分钟后
-            const defaultTime = new Date(Date.now() + 30 * 60 * 1000);
+            // 默认设置为当前时间
+            const defaultTime = new Date();
             const defaultTimeStr = defaultTime.toISOString().slice(0, 16);
             
             if (reminderId) {
@@ -3002,7 +4435,7 @@
                 document.getElementById('reminderNote').value = reminder.note || '';
             } else {
                 title.textContent = modalTitles.addReminder;
-                document.getElementById('reminderType').value = 'deadline';
+                document.getElementById('reminderType').value = 'meeting';
                 document.getElementById('reminderText').value = '';
                 document.getElementById('reminderTime').value = defaultTimeStr;
                 document.getElementById('reminderNote').value = '';
@@ -3021,9 +4454,9 @@
             
             // 更新提醒类型选项
             const typeOptions = document.querySelectorAll('#reminderType option');
-            if (typeOptions[0]) typeOptions[0].textContent = reminderTypes.deadline;
-            if (typeOptions[1]) typeOptions[1].textContent = reminderTypes.meeting;
-            if (typeOptions[2]) typeOptions[2].textContent = reminderTypes.risk;
+            if (typeOptions[0]) typeOptions[0].textContent = reminderTypes.risk;
+            if (typeOptions[1]) typeOptions[1].textContent = reminderTypes.deadline;
+            if (typeOptions[2]) typeOptions[2].textContent = reminderTypes.meeting;
             if (typeOptions[3]) typeOptions[3].textContent = reminderTypes.other;
             
             // 更新按钮文字
@@ -3168,6 +4601,163 @@
             div.textContent = text;
             return div.innerHTML;
         }
+
+        // ==================== 定时锁定功能 ====================
+        
+        // 记录用户活动
+        function recordActivity() {
+            if (isLocked) return;
+            lastActivityTime = Date.now();
+        }
+
+        // 检查是否需要锁定
+        function checkLockStatus() {
+            if (isLocked || lockTimeout <= 0) return;
+            
+            const inactiveTime = Date.now() - lastActivityTime;
+            const timeoutMs = lockTimeout * 60 * 1000; // 转换为毫秒
+            
+            if (inactiveTime >= timeoutMs) {
+                lockPanel();
+            }
+        }
+
+        // 锁定面板
+        function lockPanel() {
+            if (isLocked) return;
+            isLocked = true;
+            document.getElementById('lockScreenModal').classList.add('active');
+            document.getElementById('unlockPassword').value = '';
+            document.getElementById('unlockPassword').focus();
+            
+            // 停止活动检测
+            if (lockCheckInterval) {
+                clearInterval(lockCheckInterval);
+                lockCheckInterval = null;
+            }
+        }
+
+        // 解锁面板
+        function unlockPanel() {
+            const input = document.getElementById('unlockPassword');
+            const password = input.value.trim();
+            
+            if (password === lockPassword) {
+                // 密码正确
+                isLocked = false;
+                document.getElementById('lockScreenModal').classList.remove('active');
+                lastActivityTime = Date.now();
+                startLockCheck(); // 重新开始检测
+                input.value = '';
+            } else {
+                // 密码错误
+                input.value = '';
+                input.style.borderColor = 'var(--danger)';
+                setTimeout(() => {
+                    input.style.borderColor = 'var(--border-color)';
+                }, 1000);
+                
+                // 震动反馈
+                input.animate([
+                    { transform: 'translateX(0)' },
+                    { transform: 'translateX(-10px)' },
+                    { transform: 'translateX(10px)' },
+                    { transform: 'translateX(0)' }
+                ], { duration: 300 });
+            }
+        }
+
+        // 开始锁定检测
+        function startLockCheck() {
+            if (lockCheckInterval) clearInterval(lockCheckInterval);
+            
+            if (lockTimeout > 0 && !isLocked) {
+                lockCheckInterval = setInterval(checkLockStatus, 10000); // 每 10 秒检查一次
+            }
+        }
+
+        // 保存锁定设置
+        function saveLockSettings() {
+            const input = document.getElementById('lockTimeoutInput');
+            const value = parseInt(input.value) || 0;
+            
+            if (value < 0 || value > 120) {
+                alert('锁定时间必须在 0-120 分钟之间');
+                return;
+            }
+            
+            lockTimeout = value;
+            localStorage.setItem('lockTimeout', value);
+            
+            if (value > 0) {
+                startLockCheck();
+                alert(`✅ 已设置 ${value} 分钟无操作自动锁定`);
+            } else {
+                if (lockCheckInterval) {
+                    clearInterval(lockCheckInterval);
+                    lockCheckInterval = null;
+                }
+                alert('✅ 已禁用自动锁定功能');
+            }
+        }
+
+        // 打开修改密码模态框
+        function openChangePasswordModal() {
+            closeModal('settingsModal');
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+            document.getElementById('changePasswordModal').classList.add('active');
+        }
+
+        // 修改密码
+        function changePassword() {
+            const current = document.getElementById('currentPassword').value.trim();
+            const newPwd = document.getElementById('newPassword').value.trim();
+            const confirm = document.getElementById('confirmPassword').value.trim();
+            
+            // 验证
+            if (!/^\d{4}$/.test(current)) {
+                alert('当前密码必须是 4 位数字');
+                return;
+            }
+            if (!/^\d{4}$/.test(newPwd)) {
+                alert('新密码必须是 4 位数字');
+                return;
+            }
+            if (newPwd !== confirm) {
+                alert('两次输入的新密码不一致');
+                return;
+            }
+            if (current !== lockPassword) {
+                alert('当前密码错误');
+                return;
+            }
+            if (newPwd === current) {
+                alert('新密码不能与当前密码相同');
+                return;
+            }
+            
+            // 保存新密码
+            lockPassword = newPwd;
+            localStorage.setItem('lockPassword', newPwd);
+            
+            closeModal('changePasswordModal');
+            alert('✅ 密码修改成功！新密码已生效');
+        }
+
+        // 立即锁定面板
+        function lockPanelNow() {
+            closeModal('settingsModal');
+            lockPanel();
+        }
+
+        // 初始化活动监听
+        function initActivityListeners() {
+            ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'].forEach(event => {
+                document.addEventListener(event, recordActivity, { passive: true });
+            });
+        }
         
         // ==================== 数据修复 ====================
         function fixLegacyData() {
@@ -3200,6 +4790,12 @@
             initLocks();
             loadTodayData();  // 加载今日工作安排
             initLanguage();   // 初始化语言设置
+            initActivityListeners();  // 初始化活动监听
+            startLockCheck();  // 启动锁定检测
+            
+            // 初始化锁定时长输入框
+            document.getElementById('lockTimeoutInput').value = lockTimeout;
+            
             // 初始化时显示今日工作页面，隐藏详情页面
             const todayWorkPage = document.getElementById('todayWorkPage');
             const detailView = document.getElementById('detailView');
@@ -3212,6 +4808,7 @@
                 if (e.key === 'Escape') {
                     document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
                     document.getElementById('reminderAlertOverlay').classList.remove('active');
+                    document.getElementById('lockScreenModal').classList.remove('active');
                 }
             });
         }

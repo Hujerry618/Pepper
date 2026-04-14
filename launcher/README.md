@@ -1,44 +1,85 @@
-# Personal Panel 协议处理器
+# Personal Panel 协议处理器 (PowerShell 版)
 
 ## 功能说明
 
-通过注册自定义协议 `mypanel://`，实现从浏览器直接启动 Windows 本地程序。
+通过注册自定义协议 `mypanel://`，实现从浏览器直接启动 Windows 本地程序或打开文件/文件夹。
+
+**✨ 新增支持：**
+- ✅ 中文文件名/路径（如 `C:\文档\报告.docx`）
+- ✅ 中文程序名（如 `C:\程序\微信.exe`）
+- ✅ Windows 10/11 兼容
+- ✅ UTF-8 编码完美支持
 
 ## 安装步骤
 
-### 1. 运行安装程序
+### 方法一：运行安装脚本（推荐）
 
-双击 `install.bat`（或以管理员身份运行）
+1. **右键点击** `install.bat`
+2. **选择** "以管理员身份运行"
+3. **等待** 安装完成
 
-安装后会注册 `mypanel://` 协议到 Windows 系统。
+安装后会自动：
+- 注册 `mypanel://` 协议
+- 设置 PowerShell 执行策略
+- 备份旧版本 VBScript（如果有）
 
-### 2. 验证安装
+### 方法二：手动导入注册表
 
-按 `Win + R`，输入 `mypanel://notepad.exe` 测试是否打开记事本。
+1. 编辑 `register.reg` 文件
+2. 修改路径为你的实际路径
+3. 双击运行导入注册表
 
 ## 使用方法
 
-### 在 Personal Panel 中添加程序
+### 在 Personal Panel 中添加文件/程序
 
 1. 点击侧边栏分类卡片
 2. 点击「+ 添加网站」
-3. 类型选择 **「程序」**
-4. 路径填写完整程序路径，例如：
-   - `C:\Program Files\Google\Chrome\Application\chrome.exe`
-   - `D:\Tools\VSCode\Code.exe`
-   - `C:\Windows\System32\notepad.exe`
+3. 类型选择：
+   - **🌐 网址** - 网站链接
+   - **🖥️ 程序** - 可执行程序（.exe, .bat 等）
+   - **📄 文件** - 文档文件（.docx, .xlsx, .pdf 等）
+   - **📁 目录** - 文件夹
+4. 路径填写完整路径，例如：
+   - `C:\Users\你的用户名\Documents\报告.docx`
+   - `D:\工作\项目\预算.xlsx`
+   - `C:\Program Files\Tencent\WeChat\WeChat.exe`
 
-### 路径格式
+### 测试安装
 
-- ✅ 绝对路径：`C:\Program Files\App\app.exe`
-- ✅ file 协议：`file:///C:/Program Files/App/app.exe`
-- ✅ 带空格路径：`C:\Program Files\My App\app.exe`
+按 `Win + R`，输入：
+```
+mypanel://notepad.exe
+```
+
+应该打开记事本。
 
 ## 技术原理
 
-1. **注册表注册** - 在 `HKEY_CLASSES_ROOT\mypanel` 下创建协议定义
-2. **协议处理器** - `launcher.vbs` 接收协议调用，解析路径并执行程序
+1. **协议注册** - 在注册表 `HKEY_CLASSES_ROOT\mypanel` 下创建协议定义
+2. **PowerShell 处理器** - `launcher.ps1` 接收协议调用，解码 URL，执行文件
 3. **浏览器调用** - 网页中使用 `window.location.href = 'mypanel://路径'` 触发
+
+### 为什么用 PowerShell？
+
+| 特性 | VBScript | PowerShell |
+|------|----------|------------|
+| UTF-8 支持 | ❌ 差 | ✅ 完美 |
+| 中文路径 | ❌ 乱码 | ✅ 正常 |
+| Win11 兼容 | ⚠️ 有问题 | ✅ 完全兼容 |
+| 错误处理 | ⚠️ 基础 | ✅ 完善 |
+| 调试日志 | ⚠️ 简单 | ✅ 详细 |
+
+## 文件清单
+
+```
+launcher/
+├── install.bat       # 安装脚本（管理员运行）
+├── launcher.ps1      # PowerShell 协议处理器（核心）
+├── register.reg      # 注册表文件（备用）
+├── README.md         # 说明文档
+└── launcher.vbs.bak  # 旧版 VBScript 备份（如果有）
+```
 
 ## 卸载
 
@@ -48,30 +89,49 @@
 reg delete HKEY_CLASSES_ROOT\mypanel /f
 ```
 
+## 调试
+
+### 查看日志
+
+安装后每次打开文件/程序都会记录日志：
+
+```
+%TEMP%\mypanel-debug.txt
+```
+
+日志包含：
+- 接收到的原始 URL
+- 处理后的路径
+- 文件/文件夹是否存在
+- 执行的操作
+
+### 常见问题
+
+**Q: 点击无反应**
+- 检查协议是否安装：运行 `mypanel://notepad.exe` 测试
+- 检查路径是否正确
+- 查看调试日志
+
+**Q: 中文路径乱码**
+- 确认使用 PowerShell 版本（`launcher.ps1`）
+- 重新运行 `install.bat` 安装
+
+**Q: PowerShell 执行策略错误**
+- 安装脚本会自动设置执行策略
+- 手动设置：`powershell -Command "Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force"`
+
+**Q: 浏览器提示"此网站试图打开 xxx"**
+- 这是正常的安全提示
+- 选择"允许"即可
+- 可在浏览器设置中添加例外
+
 ## 安全说明
 
 - 协议处理器仅执行本地文件，不会下载或执行网络内容
 - 建议仅添加可信程序路径
 - 安装程序需要管理员权限
+- PowerShell 脚本已签名，可安全执行
 
-## 故障排除
+---
 
-### 点击程序卡片无反应
-
-1. 检查协议是否正确注册（运行 `mypanel://notepad.exe` 测试）
-2. 检查程序路径是否正确（复制路径到资源管理器地址栏测试）
-3. 重新运行 `install.bat` 安装
-
-### 提示「此网站试图打开 xxx」
-
-这是浏览器的安全提示，选择「允许」即可。可在浏览器设置中为本地文件添加例外。
-
-## 文件清单
-
-```
-launcher/
-├── install.bat      # 安装脚本（运行此文件）
-├── launcher.vbs     # 协议处理器
-├── register.reg     # 注册表文件（备用）
-└── README.md        # 说明文档
-```
+🌶️ 花椒（Huājiāo）| 过程省略，只看结果
