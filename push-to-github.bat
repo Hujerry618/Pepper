@@ -2,65 +2,65 @@
 chcp 65001 >nul
 echo.
 echo ========================================
-echo   🌶️ Advanced Personal Panel - 推送到 GitHub
+echo   ðŸŒ¶ï¸ Advanced Personal Panel - æŽ¨é€åˆ° GitHub
 echo ========================================
 echo.
-echo 仓库：https://github.com/hujerry618/advanced-personal-panel
+echo ä»“åº“ï¼šhttps://github.com/hujerry618/advanced-personal-panel
 echo.
-echo 请在弹出的窗口中输入 GitHub 密码或 Token
-echo (勾选"记住凭据"以后就不用再输入了)
+echo è¯·åœ¨å¼¹å‡ºçš„çª—å£ä¸­è¾“å…¥ GitHub å¯†ç æˆ– Token
+echo (å‹¾é€‰"è®°ä½å‡­æ®"ä»¥åŽå°±ä¸ç”¨å†è¾“å…¥äº†)
 echo.
 pause
 echo.
-echo 开始推送...
+echo å¼€å§‹æŽ¨é€...
 echo.
 
 cd /d "%~dp0"
 
-REM 使用 Git 凭据管理器
+REM ä½¿ç”¨ Git å‡­æ®ç®¡ç†å™¨
 git config --global credential.helper wincred
 
-REM 推送代码
+REM æŽ¨é€ä»£ç 
 git push -u origin main
 
 if %ERRORLEVEL% EQU 0 (
     echo.
     echo ========================================
-    echo   ✅ 推送成功！
+    echo   âœ… æŽ¨é€æˆåŠŸï¼
     echo ========================================
     echo.
-    echo 🎉 项目已上传到 GitHub!
+    echo ðŸŽ‰ é¡¹ç›®å·²ä¸Šä¼ åˆ° GitHub!
     echo.
-    echo 访问仓库：https://github.com/hujerry618/advanced-personal-panel
+    echo è®¿é—®ä»“åº“ï¼šhttps://github.com/hujerry618/advanced-personal-panel
     echo.
-    echo 下一步:
-    echo 1. 访问上面的链接查看你的代码
-    echo 2. 在仓库 Settings ^→ Pages 中启用 GitHub Pages
-    echo 3. 访问你的在线面板：https://hujerry618.github.io/advanced-personal-panel/
+    echo ä¸‹ä¸€æ­¥:
+    echo 1. è®¿é—®ä¸Šé¢çš„é“¾æŽ¥æŸ¥çœ‹ä½ çš„ä»£ç 
+    echo 2. åœ¨ä»“åº“ Settings ^â†’ Pages ä¸­å¯ç”¨ GitHub Pages
+    echo 3. è®¿é—®ä½ çš„åœ¨çº¿é¢æ¿ï¼šhttps://hujerry618.github.io/advanced-personal-panel/
     echo.
 ) else (
     echo.
     echo ========================================
-    echo   ❌ 推送失败
+    echo   âŒ æŽ¨é€å¤±è´¥
     echo ========================================
     echo.
-    echo 可能原因:
-    echo 1. 密码或 Token 错误
-    echo 2. 仓库不存在 (需要先在 GitHub 创建)
-    echo 3. 网络连接问题
+    echo å¯èƒ½åŽŸå› :
+    echo 1. å¯†ç æˆ– Token é”™è¯¯
+    echo 2. ä»“åº“ä¸å­˜åœ¨ (éœ€è¦å…ˆåœ¨ GitHub åˆ›å»º)
+    echo 3. ç½‘ç»œè¿žæŽ¥é—®é¢˜
     echo.
-    echo 解决方法:
-    echo 1. 创建仓库：https://github.com/new
-    echo    仓库名：advanced-personal-panel
-    echo    设为 Public 或 Private 都可以
+    echo è§£å†³æ–¹æ³•:
+    echo 1. åˆ›å»ºä»“åº“ï¼šhttps://github.com/new
+    echo    ä»“åº“åï¼šadvanced-personal-panel
+    echo    è®¾ä¸º Public æˆ– Private éƒ½å¯ä»¥
     echo.
-    echo 2. 使用 Token 而不是密码:
+    echo 2. ä½¿ç”¨ Token è€Œä¸æ˜¯å¯†ç :
     echo    https://github.com/settings/tokens
-    echo    生成 Token 时勾选 repo 权限
+    echo    ç”Ÿæˆ Token æ—¶å‹¾é€‰ repo æƒé™
     echo.
-    echo 3. 检查网络连接
+    echo 3. æ£€æŸ¥ç½‘ç»œè¿žæŽ¥
     echo.
 )
 
-echo 按任意键关闭窗口...
+echo æŒ‰ä»»æ„é”®å…³é—­çª—å£...
 pause >nul
