@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "name": "personal-panel-backend",
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "server.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "regions": ["hnd1"],
+  "functions": {
+    "server.js": {
+      "maxDuration": 10
+    }
+  }
+}
