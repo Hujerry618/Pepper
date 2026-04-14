@@ -15,11 +15,5 @@
   ],
   "env": {
     "NODE_ENV": "production"
-  },
-  "regions": ["hnd1"],
-  "functions": {
-    "server.js": {
-      "maxDuration": 10
-    }
   }
 }
