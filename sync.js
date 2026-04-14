@@ -13,10 +13,10 @@
 // 配置
 // ============================================
 const SYNC_CONFIG = {
-  // 后端 API 地址（根据部署环境修改）
+  // 后端 API 地址
   API_URL: window.location.hostname === 'localhost' 
     ? 'http://localhost:3000/api' 
-    : 'https://your-backend.vercel.app/api',
+    : 'https://pepper-sync-ng9l864i8-hujerry618s-projects.vercel.app/api',
   
   // 自动同步间隔（毫秒）
   AUTO_SYNC_INTERVAL: 30000, // 30 秒
