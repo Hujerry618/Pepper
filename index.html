@@ -4891,6 +4891,13 @@
             }
         }
 
+        // ==================== 同步配置 ====================
+        const SYNC_CONFIG = {
+            API_URL: window.location.hostname === 'localhost' 
+                ? 'http://localhost:3000/api' 
+                : 'https://pepper-sync-api.vercel.app/api'
+        };
+        
         // ==================== 账户管理 ====================
         
         // 检查登录状态
@@ -4994,9 +5001,9 @@
                     localStorage.setItem('panel_user_email', result.data.user.email);
                     localStorage.setItem('panel_is_logged_in', 'true');
                     
-                    showLoginMessage('登录成功！', false);
-                    checkAuthStatus();
+                    // 先关闭模态框，再更新状态
                     closeModal('loginModal');
+                    checkAuthStatus();
                     
                     // 如果有 sync.js，触发同步
                     if (typeof PanelSync !== 'undefined') {
@@ -5052,9 +5059,9 @@
                     localStorage.setItem('panel_user_email', result.data.user.email);
                     localStorage.setItem('panel_is_logged_in', 'true');
                     
-                    showRegisterMessage('注册成功！已自动登录', false);
-                    checkAuthStatus();
+                    // 先关闭模态框，再更新状态
                     closeModal('registerModal');
+                    checkAuthStatus();
                 } else {
                     showRegisterMessage(result.message || '注册失败', true);
                 }
