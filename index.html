@@ -5099,6 +5099,11 @@
             const lastSync = localStorage.getItem('panel_last_sync');
             const lastSyncEl = document.getElementById('lastSyncTime');
             
+            if (!lastSyncEl) {
+                console.warn('[updateLastSyncTime] lastSyncTime 元素不存在');
+                return;
+            }
+            
             if (lastSync) {
                 const date = new Date(lastSync);
                 lastSyncEl.textContent = date.toLocaleString('zh-CN');

@@ -10,15 +10,9 @@
  */
 
 // ============================================
-// 配置
-: 'https://pepper-sync-api.vercel.app/api',
+// 配置（SYNC_CONFIG 已在 index.html 中定义）
 // ============================================
-const SYNC_CONFIG = {
-  // 后端 API 地址
-  API_URL: window.location.hostname === 'localhost' 
-    ? 'http://localhost:3000/api' 
-    : 'https://pepper-sync-api.vercel.app/api',
-  
+Object.assign(SYNC_CONFIG, {
   // 自动同步间隔（毫秒）
   AUTO_SYNC_INTERVAL: 30000, // 30 秒
   
