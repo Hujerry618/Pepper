@@ -1751,63 +1751,40 @@
             <div class="settings-section">
                 <label class="settings-label" data-i18n="accountSettings">👤 账户与同步</label>
                 
-                <!-- 未登录状态：显示登录/注册表单 -->
+                <!-- 未登录状态：简洁按钮 -->
                 <div id="loginSection">
-                    <div class="form-group" style="margin-bottom: 0.5rem;">
-                        <input type="email" id="loginEmail" class="form-input" placeholder="邮箱" style="margin-bottom: 0.5rem;">
-                        <input type="password" id="loginPassword" class="form-input" placeholder="密码" style="margin-bottom: 0.5rem;">
-                        <div class="settings-grid-2" style="gap: 0.5rem;">
-                            <button class="settings-action-btn" onclick="handleLogin()" style="min-height: 40px;">
-                                <span class="settings-action-icon">🔐</span>
-                                <span data-i18n="loginBtn">登录</span>
-                            </button>
-                            <button class="settings-action-btn" onclick="toggleRegister()" style="min-height: 40px;">
-                                <span class="settings-action-icon">📝</span>
-                                <span data-i18n="registerBtn">注册</span>
-                            </button>
-                        </div>
+                    <div class="settings-grid-2" style="gap: 0.5rem;">
+                        <button class="settings-action-btn" onclick="openLoginModal()" style="min-height: 50px;">
+                            <span class="settings-action-icon">🔐</span>
+                            <span data-i18n="loginBtn">登录</span>
+                        </button>
+                        <button class="settings-action-btn" onclick="openRegisterModal()" style="min-height: 50px;">
+                            <span class="settings-action-icon">📝</span>
+                            <span data-i18n="registerBtn">注册</span>
+                        </button>
                     </div>
-                    
-                    <!-- 注册表单（默认隐藏） -->
-                    <div id="registerSection" style="display: none; margin-top: 0.5rem;">
-                        <input type="email" id="registerEmail" class="form-input" placeholder="邮箱" style="margin-bottom: 0.5rem;">
-                        <input type="password" id="registerPassword" class="form-input" placeholder="密码（至少 6 位）" style="margin-bottom: 0.5rem;">
-                        <input type="password" id="registerConfirm" class="form-input" placeholder="确认密码" style="margin-bottom: 0.5rem;">
-                        <div class="settings-grid-2" style="gap: 0.5rem;">
-                            <button class="settings-action-btn" onclick="handleRegister()" style="min-height: 40px;">
-                                <span class="settings-action-icon">✅</span>
-                                <span data-i18n="confirmRegister">确认注册</span>
-                            </button>
-                            <button class="settings-action-btn" onclick="toggleRegister()" style="min-height: 40px;">
-                                <span class="settings-action-icon">❌</span>
-                                <span data-i18n="cancelBtn">取消</span>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <p id="loginMessage" class="settings-desc" style="margin-top: 0.5rem; text-align: center;"></p>
                 </div>
                 
                 <!-- 已登录状态：显示用户信息和同步控制 -->
                 <div id="loggedInSection" style="display: none;">
                     <div style="background: var(--bg-card); padding: 0.75rem; border-radius: 8px; margin-bottom: 0.5rem;">
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
-                            <span style="font-size: 0.9rem; font-weight: 600;">👤 <span id="userEmail"></span></span>
-                            <button class="btn btn-secondary" onclick="handleLogout()" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;" data-i18n="logoutBtn">退出</button>
+                            <span style="font-size: 0.85rem; font-weight: 600;">👤 <span id="userEmail"></span></span>
+                            <button class="btn btn-secondary" onclick="handleLogout()" style="padding: 0.25rem 0.5rem; font-size: 0.7rem;" data-i18n="logoutBtn">退出</button>
                         </div>
-                        <p class="settings-desc" data-i18n="lastSync">最后同步：<span id="lastSyncTime">从未</span></p>
+                        <p class="settings-desc" style="font-size: 0.7rem;" data-i18n="lastSync">最后同步：<span id="lastSyncTime">从未</span></p>
                     </div>
                     <div class="settings-grid-2" style="gap: 0.5rem;">
                         <button class="settings-action-btn" onclick="manualSync()" style="min-height: 40px;">
                             <span class="settings-action-icon">🔄</span>
-                            <span data-i18n="syncNow">立即同步</span>
+                            <span data-i18n="syncNow">同步</span>
                         </button>
                         <button class="settings-action-btn" onclick="toggleAutoSync()" style="min-height: 40px;">
                             <span class="settings-action-icon" id="autoSyncIcon">⏸️</span>
-                            <span id="autoSyncText" data-i18n="pauseSync">暂停同步</span>
+                            <span id="autoSyncText" data-i18n="pauseSync">暂停</span>
                         </button>
                     </div>
-                    <p id="syncMessage" class="settings-desc" style="margin-top: 0.5rem; text-align: center;"></p>
+                    <p id="syncMessage" class="settings-desc" style="margin-top: 0.5rem; text-align: center; font-size: 0.7rem;"></p>
                 </div>
             </div>
             
@@ -1878,6 +1855,50 @@
             
             <div class="modal-actions" style="justify-content: center; margin-top: 0.75rem;">
                 <button class="btn btn-secondary" onclick="closeModal('settingsModal')" data-i18n="close">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 登录模态框 -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal" style="max-width: 320px; padding: 1.5rem;">
+            <h3 class="modal-title">🔐 用户登录</h3>
+            <div class="form-group">
+                <label class="settings-label">邮箱</label>
+                <input type="email" id="loginEmail" class="form-input" placeholder="your@email.com">
+            </div>
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label class="settings-label">密码</label>
+                <input type="password" id="loginPassword" class="form-input" placeholder="请输入密码">
+            </div>
+            <p id="loginMessage" class="settings-desc" style="margin-bottom: 1rem; text-align: center; min-height: 1.2em;"></p>
+            <div class="modal-actions" style="gap: 0.5rem;">
+                <button class="btn btn-secondary" onclick="closeModal('loginModal')">取消</button>
+                <button class="btn btn-primary" onclick="handleLogin()" style="flex: 1;">登录</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 注册模态框 -->
+    <div class="modal-overlay" id="registerModal">
+        <div class="modal" style="max-width: 320px; padding: 1.5rem;">
+            <h3 class="modal-title">📝 用户注册</h3>
+            <div class="form-group">
+                <label class="settings-label">邮箱</label>
+                <input type="email" id="registerEmail" class="form-input" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+                <label class="settings-label">密码</label>
+                <input type="password" id="registerPassword" class="form-input" placeholder="至少 6 位密码">
+            </div>
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label class="settings-label">确认密码</label>
+                <input type="password" id="registerConfirm" class="form-input" placeholder="再次输入密码">
+            </div>
+            <p id="registerMessage" class="settings-desc" style="margin-bottom: 1rem; text-align: center; min-height: 1.2em;"></p>
+            <div class="modal-actions" style="gap: 0.5rem;">
+                <button class="btn btn-secondary" onclick="closeModal('registerModal')">取消</button>
+                <button class="btn btn-primary" onclick="handleRegister()" style="flex: 1;">注册</button>
             </div>
         </div>
     </div>
@@ -2649,6 +2670,7 @@
         }
 
         // ==================== 通用函数 ====================
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
         document.querySelectorAll('.modal-overlay').forEach(m => {
             m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('active'); });
@@ -4889,30 +4911,57 @@
             }
         }
         
-        // 切换注册表单
-        function toggleRegister() {
-            const registerSection = document.getElementById('registerSection');
-            registerSection.style.display = registerSection.style.display === 'none' ? 'block' : 'none';
-            clearLoginMessages();
+        // 打开登录模态框
+        function openLoginModal() {
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('loginMessage').textContent = '';
+            openModal('loginModal');
+        }
+        
+        // 打开注册模态框
+        function openRegisterModal() {
+            document.getElementById('registerEmail').value = '';
+            document.getElementById('registerPassword').value = '';
+            document.getElementById('registerConfirm').value = '';
+            document.getElementById('registerMessage').textContent = '';
+            openModal('registerModal');
         }
         
         // 清除消息
         function clearLoginMessages() {
-            document.getElementById('loginMessage').textContent = '';
-            document.getElementById('syncMessage').textContent = '';
+            const loginMsg = document.getElementById('loginMessage');
+            const registerMsg = document.getElementById('registerMessage');
+            const syncMsg = document.getElementById('syncMessage');
+            if (loginMsg) loginMsg.textContent = '';
+            if (registerMsg) registerMsg.textContent = '';
+            if (syncMsg) syncMsg.textContent = '';
         }
         
-        // 显示消息
+        // 显示登录消息
         function showLoginMessage(message, isError = false) {
             const msgEl = document.getElementById('loginMessage');
-            msgEl.textContent = message;
-            msgEl.style.color = isError ? 'var(--danger)' : 'var(--success)';
+            if (msgEl) {
+                msgEl.textContent = message;
+                msgEl.style.color = isError ? 'var(--danger)' : 'var(--success)';
+            }
+        }
+        
+        // 显示注册消息
+        function showRegisterMessage(message, isError = false) {
+            const msgEl = document.getElementById('registerMessage');
+            if (msgEl) {
+                msgEl.textContent = message;
+                msgEl.style.color = isError ? 'var(--danger)' : 'var(--success)';
+            }
         }
         
         function showSyncMessage(message, isError = false) {
             const msgEl = document.getElementById('syncMessage');
-            msgEl.textContent = message;
-            msgEl.style.color = isError ? 'var(--danger)' : 'var(--success)';
+            if (msgEl) {
+                msgEl.textContent = message;
+                msgEl.style.color = isError ? 'var(--danger)' : 'var(--success)';
+            }
         }
         
         // 处理登录
@@ -4994,19 +5043,14 @@
                     localStorage.setItem('panel_user_email', result.data.user.email);
                     localStorage.setItem('panel_is_logged_in', 'true');
                     
-                    showLoginMessage('注册成功！已自动登录', false);
+                    showRegisterMessage('注册成功！已自动登录', false);
                     checkAuthStatus();
-                    
-                    // 清空注册表单
-                    document.getElementById('registerEmail').value = '';
-                    document.getElementById('registerPassword').value = '';
-                    document.getElementById('registerConfirm').value = '';
-                    document.getElementById('registerSection').style.display = 'none';
+                    closeModal('registerModal');
                 } else {
-                    showLoginMessage(result.message || '注册失败', true);
+                    showRegisterMessage(result.message || '注册失败', true);
                 }
             } catch (error) {
-                showLoginMessage('网络错误，请稍后重试', true);
+                showRegisterMessage('网络错误，请稍后重试', true);
                 console.error('注册错误:', error);
             }
         }
@@ -5020,7 +5064,7 @@
                 localStorage.removeItem('panel_is_logged_in');
                 
                 checkAuthStatus();
-                showLoginMessage('已退出登录', false);
+                showSyncMessage('已退出登录', false);
             }
         }
         
