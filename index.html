@@ -3622,14 +3622,14 @@
                 descThepaper: '时事新闻',
                 // 账户与同步
                 accountSettings: '👤 账户与同步',
-                loginBtn: '🔐 登录',
-                registerBtn: '📝 注册',
+                loginBtn: '登录',
+                registerBtn: '注册',
                 confirmRegister: '✅ 确认注册',
                 cancelBtn: '❌ 取消',
                 logoutBtn: '🚪 退出',
                 lastSync: '最后同步：',
-                syncNow: '🔄 立即同步',
-                pauseSync: '⏸️ 暂停同步',
+                syncNow: '立即同步',
+                pauseSync: '暂停同步',
                 resumeSync: '▶️ 启用同步'
             },
             en: {
@@ -3753,8 +3753,8 @@
                 descThepaper: 'Current affairs',
                 // Account & Sync
                 accountSettings: '👤 Account & Sync',
-                loginBtn: '🔐 Login',
-                registerBtn: '📝 Register',
+                loginBtn: 'Login',
+                registerBtn: 'Register',
                 confirmRegister: '✅ Confirm',
                 cancelBtn: '❌ Cancel',
                 logoutBtn: '🚪 Logout',
@@ -4981,6 +4981,10 @@
                     body: JSON.stringify({ email, password })
                 });
                 
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status);
+                }
+                
                 const result = await response.json();
                 
                 if (result.success) {
@@ -4992,6 +4996,7 @@
                     
                     showLoginMessage('登录成功！', false);
                     checkAuthStatus();
+                    closeModal('loginModal');
                     
                     // 如果有 sync.js，触发同步
                     if (typeof PanelSync !== 'undefined') {
@@ -5001,7 +5006,7 @@
                     showLoginMessage(result.message || '登录失败', true);
                 }
             } catch (error) {
-                showLoginMessage('网络错误，请稍后重试', true);
+                showLoginMessage('网络错误：' + error.message, true);
                 console.error('登录错误:', error);
             }
         }
@@ -5034,6 +5039,10 @@
                     body: JSON.stringify({ email, password })
                 });
                 
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status);
+                }
+                
                 const result = await response.json();
                 
                 if (result.success) {
@@ -5050,7 +5059,7 @@
                     showRegisterMessage(result.message || '注册失败', true);
                 }
             } catch (error) {
-                showRegisterMessage('网络错误，请稍后重试', true);
+                showRegisterMessage('网络错误：' + error.message, true);
                 console.error('注册错误:', error);
             }
         }
