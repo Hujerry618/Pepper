@@ -1747,6 +1747,72 @@
             
             <hr class="settings-divider">
             
+            <!-- 账户登录 -->
+            <div class="settings-section">
+                <label class="settings-label" data-i18n="accountSettings">👤 账户与同步</label>
+                
+                <!-- 未登录状态：显示登录/注册表单 -->
+                <div id="loginSection">
+                    <div class="form-group" style="margin-bottom: 0.5rem;">
+                        <input type="email" id="loginEmail" class="form-input" placeholder="邮箱" style="margin-bottom: 0.5rem;">
+                        <input type="password" id="loginPassword" class="form-input" placeholder="密码" style="margin-bottom: 0.5rem;">
+                        <div class="settings-grid-2" style="gap: 0.5rem;">
+                            <button class="settings-action-btn" onclick="handleLogin()" style="min-height: 40px;">
+                                <span class="settings-action-icon">🔐</span>
+                                <span data-i18n="loginBtn">登录</span>
+                            </button>
+                            <button class="settings-action-btn" onclick="toggleRegister()" style="min-height: 40px;">
+                                <span class="settings-action-icon">📝</span>
+                                <span data-i18n="registerBtn">注册</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 注册表单（默认隐藏） -->
+                    <div id="registerSection" style="display: none; margin-top: 0.5rem;">
+                        <input type="email" id="registerEmail" class="form-input" placeholder="邮箱" style="margin-bottom: 0.5rem;">
+                        <input type="password" id="registerPassword" class="form-input" placeholder="密码（至少 6 位）" style="margin-bottom: 0.5rem;">
+                        <input type="password" id="registerConfirm" class="form-input" placeholder="确认密码" style="margin-bottom: 0.5rem;">
+                        <div class="settings-grid-2" style="gap: 0.5rem;">
+                            <button class="settings-action-btn" onclick="handleRegister()" style="min-height: 40px;">
+                                <span class="settings-action-icon">✅</span>
+                                <span data-i18n="confirmRegister">确认注册</span>
+                            </button>
+                            <button class="settings-action-btn" onclick="toggleRegister()" style="min-height: 40px;">
+                                <span class="settings-action-icon">❌</span>
+                                <span data-i18n="cancelBtn">取消</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <p id="loginMessage" class="settings-desc" style="margin-top: 0.5rem; text-align: center;"></p>
+                </div>
+                
+                <!-- 已登录状态：显示用户信息和同步控制 -->
+                <div id="loggedInSection" style="display: none;">
+                    <div style="background: var(--bg-card); padding: 0.75rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="font-size: 0.9rem; font-weight: 600;">👤 <span id="userEmail"></span></span>
+                            <button class="btn btn-secondary" onclick="handleLogout()" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;" data-i18n="logoutBtn">退出</button>
+                        </div>
+                        <p class="settings-desc" data-i18n="lastSync">最后同步：<span id="lastSyncTime">从未</span></p>
+                    </div>
+                    <div class="settings-grid-2" style="gap: 0.5rem;">
+                        <button class="settings-action-btn" onclick="manualSync()" style="min-height: 40px;">
+                            <span class="settings-action-icon">🔄</span>
+                            <span data-i18n="syncNow">立即同步</span>
+                        </button>
+                        <button class="settings-action-btn" onclick="toggleAutoSync()" style="min-height: 40px;">
+                            <span class="settings-action-icon" id="autoSyncIcon">⏸️</span>
+                            <span id="autoSyncText" data-i18n="pauseSync">暂停同步</span>
+                        </button>
+                    </div>
+                    <p id="syncMessage" class="settings-desc" style="margin-top: 0.5rem; text-align: center;"></p>
+                </div>
+            </div>
+            
+            <hr class="settings-divider">
+            
             <!-- 安全锁定 -->
             <div class="settings-section">
                 <label class="settings-label" data-i18n="lockSettings">🔒 安全锁定</label>
@@ -3531,7 +3597,18 @@
                 descWeibo: '社交媒体',
                 descXiaohongshu: '生活分享',
                 descToutiao: '新闻资讯',
-                descThepaper: '时事新闻'
+                descThepaper: '时事新闻',
+                // 账户与同步
+                accountSettings: '👤 账户与同步',
+                loginBtn: '🔐 登录',
+                registerBtn: '📝 注册',
+                confirmRegister: '✅ 确认注册',
+                cancelBtn: '❌ 取消',
+                logoutBtn: '🚪 退出',
+                lastSync: '最后同步：',
+                syncNow: '🔄 立即同步',
+                pauseSync: '⏸️ 暂停同步',
+                resumeSync: '▶️ 启用同步'
             },
             en: {
                 // Brand
@@ -3651,7 +3728,18 @@
                 descWeibo: 'Social media',
                 descXiaohongshu: 'Life sharing',
                 descToutiao: 'News',
-                descThepaper: 'Current affairs'
+                descThepaper: 'Current affairs',
+                // Account & Sync
+                accountSettings: '👤 Account & Sync',
+                loginBtn: '🔐 Login',
+                registerBtn: '📝 Register',
+                confirmRegister: '✅ Confirm',
+                cancelBtn: '❌ Cancel',
+                logoutBtn: '🚪 Logout',
+                lastSync: 'Last sync: ',
+                syncNow: '🔄 Sync Now',
+                pauseSync: '⏸️ Pause',
+                resumeSync: '▶️ Resume'
             }
         };
         
@@ -4781,6 +4869,234 @@
             }
         }
 
+        // ==================== 账户管理 ====================
+        
+        // 检查登录状态
+        function checkAuthStatus() {
+            const token = localStorage.getItem('panel_token');
+            const userEmail = localStorage.getItem('panel_user_email');
+            
+            if (token && userEmail) {
+                // 已登录
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('loggedInSection').style.display = 'block';
+                document.getElementById('userEmail').textContent = userEmail;
+                updateLastSyncTime();
+            } else {
+                // 未登录
+                document.getElementById('loginSection').style.display = 'block';
+                document.getElementById('loggedInSection').style.display = 'none';
+            }
+        }
+        
+        // 切换注册表单
+        function toggleRegister() {
+            const registerSection = document.getElementById('registerSection');
+            registerSection.style.display = registerSection.style.display === 'none' ? 'block' : 'none';
+            clearLoginMessages();
+        }
+        
+        // 清除消息
+        function clearLoginMessages() {
+            document.getElementById('loginMessage').textContent = '';
+            document.getElementById('syncMessage').textContent = '';
+        }
+        
+        // 显示消息
+        function showLoginMessage(message, isError = false) {
+            const msgEl = document.getElementById('loginMessage');
+            msgEl.textContent = message;
+            msgEl.style.color = isError ? 'var(--danger)' : 'var(--success)';
+        }
+        
+        function showSyncMessage(message, isError = false) {
+            const msgEl = document.getElementById('syncMessage');
+            msgEl.textContent = message;
+            msgEl.style.color = isError ? 'var(--danger)' : 'var(--success)';
+        }
+        
+        // 处理登录
+        async function handleLogin() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!email || !password) {
+                showLoginMessage('请输入邮箱和密码', true);
+                return;
+            }
+            
+            try {
+                const response = await fetch(SYNC_CONFIG.API_URL + '/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // 保存 token 和用户信息
+                    localStorage.setItem('panel_token', result.data.token);
+                    localStorage.setItem('panel_refresh_token', result.data.refreshToken);
+                    localStorage.setItem('panel_user_email', result.data.user.email);
+                    localStorage.setItem('panel_is_logged_in', 'true');
+                    
+                    showLoginMessage('登录成功！', false);
+                    checkAuthStatus();
+                    
+                    // 如果有 sync.js，触发同步
+                    if (typeof PanelSync !== 'undefined') {
+                        PanelSync.init();
+                    }
+                } else {
+                    showLoginMessage(result.message || '登录失败', true);
+                }
+            } catch (error) {
+                showLoginMessage('网络错误，请稍后重试', true);
+                console.error('登录错误:', error);
+            }
+        }
+        
+        // 处理注册
+        async function handleRegister() {
+            const email = document.getElementById('registerEmail').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const confirm = document.getElementById('registerConfirm').value;
+            
+            if (!email || !password) {
+                showLoginMessage('请输入邮箱和密码', true);
+                return;
+            }
+            
+            if (password.length < 6) {
+                showLoginMessage('密码至少 6 位', true);
+                return;
+            }
+            
+            if (password !== confirm) {
+                showLoginMessage('两次输入的密码不一致', true);
+                return;
+            }
+            
+            try {
+                const response = await fetch(SYNC_CONFIG.API_URL + '/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // 保存 token 和用户信息
+                    localStorage.setItem('panel_token', result.data.token);
+                    localStorage.setItem('panel_refresh_token', result.data.refreshToken);
+                    localStorage.setItem('panel_user_email', result.data.user.email);
+                    localStorage.setItem('panel_is_logged_in', 'true');
+                    
+                    showLoginMessage('注册成功！已自动登录', false);
+                    checkAuthStatus();
+                    
+                    // 清空注册表单
+                    document.getElementById('registerEmail').value = '';
+                    document.getElementById('registerPassword').value = '';
+                    document.getElementById('registerConfirm').value = '';
+                    document.getElementById('registerSection').style.display = 'none';
+                } else {
+                    showLoginMessage(result.message || '注册失败', true);
+                }
+            } catch (error) {
+                showLoginMessage('网络错误，请稍后重试', true);
+                console.error('注册错误:', error);
+            }
+        }
+        
+        // 处理退出
+        function handleLogout() {
+            if (confirm('确定要退出登录吗？')) {
+                localStorage.removeItem('panel_token');
+                localStorage.removeItem('panel_refresh_token');
+                localStorage.removeItem('panel_user_email');
+                localStorage.removeItem('panel_is_logged_in');
+                
+                checkAuthStatus();
+                showLoginMessage('已退出登录', false);
+            }
+        }
+        
+        // 更新最后同步时间
+        function updateLastSyncTime() {
+            const lastSync = localStorage.getItem('panel_last_sync');
+            const lastSyncEl = document.getElementById('lastSyncTime');
+            
+            if (lastSync) {
+                const date = new Date(lastSync);
+                lastSyncEl.textContent = date.toLocaleString('zh-CN');
+            } else {
+                lastSyncEl.textContent = '从未';
+            }
+        }
+        
+        // 手动同步
+        async function manualSync() {
+            const token = localStorage.getItem('panel_token');
+            if (!token) {
+                showSyncMessage('请先登录', true);
+                return;
+            }
+            
+            showSyncMessage('正在同步...', false);
+            
+            try {
+                // 如果有 PanelSync，使用它
+                if (typeof PanelSync !== 'undefined') {
+                    const result = await PanelSync.sync();
+                    if (result) {
+                        showSyncMessage('同步成功！', false);
+                        updateLastSyncTime();
+                    } else {
+                        showSyncMessage('同步失败，请检查网络', true);
+                    }
+                } else {
+                    // 直接使用 fetch
+                    const response = await fetch(SYNC_CONFIG.API_URL + '/data', {
+                        method: 'GET',
+                        headers: { 'Authorization': 'Bearer ' + token }
+                    });
+                    
+                    const result = await response.json();
+                    if (result.success) {
+                        showSyncMessage('同步成功！', false);
+                        localStorage.setItem('panel_last_sync', new Date().toISOString());
+                        updateLastSyncTime();
+                    } else {
+                        showSyncMessage('同步失败', true);
+                    }
+                }
+            } catch (error) {
+                showSyncMessage('网络错误', true);
+                console.error('同步错误:', error);
+            }
+        }
+        
+        // 切换自动同步
+        let autoSyncEnabled = true;
+        function toggleAutoSync() {
+            autoSyncEnabled = !autoSyncEnabled;
+            const icon = document.getElementById('autoSyncIcon');
+            const text = document.getElementById('autoSyncText');
+            
+            if (autoSyncEnabled) {
+                icon.textContent = '⏸️';
+                text.textContent = '暂停同步';
+                showSyncMessage('自动同步已启用', false);
+            } else {
+                icon.textContent = '▶️';
+                text.textContent = '启用同步';
+                showSyncMessage('自动同步已暂停', false);
+            }
+        }
+        
         // ==================== 初始化 ====================
         function init() {
             saveData();
@@ -4790,6 +5106,7 @@
             initLocks();
             loadTodayData();  // 加载今日工作安排
             initLanguage();   // 初始化语言设置
+            checkAuthStatus(); // 检查登录状态
             initActivityListeners();  // 初始化活动监听
             startLockCheck();  // 启动锁定检测
             
@@ -4822,5 +5139,8 @@
         
         init();
     </script>
+    
+    <!-- 数据同步模块 -->
+    <script src="sync.js"></script>
 </body>
 </html>
