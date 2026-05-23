@@ -5,6 +5,8 @@
 
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
+import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 import { initDatabase } from './database.js';
@@ -14,6 +16,20 @@ import { authenticateToken } from './middleware/auth.js';
 
 // 加载环境变量
 dotenv.config();
+
+// 校验必要环境变量
+const requiredEnvVars = ['JWT_SECRET'];
+for (const envVar of requiredEnvVars) {
+  if (!process.env[envVar]) {
+    console.error(`❌ 缺少必要环境变量: ${envVar}`);
+    console.error('请在 .env 文件中设置 JWT_SECRET（至少 32 位随机字符串）');
+    process.exit(1);
+  }
+}
+
+if (process.env.JWT_SECRET && process.env.JWT_SECRET.length < 32) {
+  console.warn('⚠️  JWT_SECRET 长度不足 32 位，建议使用更长的随机字符串以提高安全性');
+}
 
 // 创建 Express 应用
 const app = express();
@@ -31,13 +47,46 @@ async function ensureDbInitialized() {
 // 中间件配置
 // ============================================
 
+// 安全头 - 使用 helmet 设置各种 HTTP 安全头
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'"],
+      fontSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'"],
+      frameSrc: ["'none'"],
+    },
+  },
+  crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+}));
+
+// Gzip 压缩 - 减少响应体积，提升传输速度
+app.use(compression({
+  level: 6, // 压缩级别 1-9，6 是平衡点
+  threshold: 1024, // 只压缩大于 1KB 的响应
+  filter: (req, res) => {
+    // 如果请求头包含 x-no-compression，跳过压缩
+    if (req.headers['x-no-compression']) {
+      return false;
+    }
+    // 使用默认过滤函数
+    return compression.filter(req, res);
+  }
+}));
+
 // CORS 配置 - 只允许 GitHub Pages 域名
 const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'];
 app.use(cors({
   origin: function(origin, callback) {
     // 允许没有 origin 的请求（如 Postman、curl）
     if (!origin) return callback(null, true);
-    
+
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -50,11 +99,11 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// 解析 JSON 请求体
-app.use(express.json({ limit: '10mb' }));
+// 解析 JSON 请求体 - 限制为 1MB
+app.use(express.json({ limit: '1mb' }));
 
-// 解析 URL 编码请求体
-app.use(express.urlencoded({ extended: true }));
+// 解析 URL 编码请求体 - 限制为 1MB
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 // 速率限制 - 防止滥用
 const limiter = rateLimit({

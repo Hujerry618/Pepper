@@ -15,3 +15,12 @@ Thumbs.db
 # 临时文件
 *.tmp
 *.bak
+
+# 备份文件和目录
+bak/
+*- Copy.html
+*_backup*.html
+*_[0-9][0-9][0-9][0-9].html
+
+# 一次性脚本
+fix-*.js

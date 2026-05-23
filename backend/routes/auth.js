@@ -4,6 +4,7 @@
  */
 
 import express from 'express';
+import { body, validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
 import { userOps, ensureDbInitialized } from '../database.js';
 import { generateToken, generateRefreshToken } from '../middleware/auth.js';
@@ -16,40 +17,41 @@ router.use(async (req, res, next) => {
   next();
 });
 
+// 验证错误处理中间件
+const validate = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      message: '输入验证失败',
+      errors: errors.array().map(err => ({
+        field: err.path,
+        message: err.msg
+      }))
+    });
+  }
+  next();
+};
+
 /**
  * POST /api/register
  * 用户注册
  * 请求体：{ email, password }
  */
-router.post('/register', async (req, res) => {
+router.post('/register', [
+  body('email')
+    .isEmail()
+    .withMessage('邮箱格式不正确')
+    .normalizeEmail(),
+  body('password')
+    .isLength({ min: 6 })
+    .withMessage('密码长度至少为 6 位')
+    .isLength({ max: 128 })
+    .withMessage('密码长度不能超过 128 位')
+], validate, async (req, res) => {
   try {
     const { email, password } = req.body;
-    
-    // 验证输入
-    if (!email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: '邮箱和密码不能为空'
-      });
-    }
-    
-    // 验证邮箱格式
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({
-        success: false,
-        message: '邮箱格式不正确'
-      });
-    }
-    
-    // 验证密码强度（至少 6 位）
-    if (password.length < 6) {
-      return res.status(400).json({
-        success: false,
-        message: '密码长度至少为 6 位'
-      });
-    }
-    
+
     // 检查邮箱是否已存在
     const existingUser = userOps.findByEmail(email);
     if (existingUser) {
@@ -58,19 +60,19 @@ router.post('/register', async (req, res) => {
         message: '该邮箱已被注册'
       });
     }
-    
+
     // 加密密码
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);
-    
+
     // 创建用户
     const userId = userOps.create(email, passwordHash);
-    
+
     // 生成 token
     const user = { id: userId, email };
     const token = generateToken(user);
     const refreshToken = generateRefreshToken(user);
-    
+
     res.status(201).json({
       success: true,
       message: '注册成功',
@@ -83,7 +85,7 @@ router.post('/register', async (req, res) => {
         refreshToken
       }
     });
-    
+
   } catch (error) {
     console.error('注册错误:', error);
     res.status(500).json({
@@ -98,18 +100,18 @@ router.post('/register', async (req, res) => {
  * 用户登录
  * 请求体：{ email, password }
  */
-router.post('/login', async (req, res) => {
+router.post('/login', [
+  body('email')
+    .isEmail()
+    .withMessage('邮箱格式不正确')
+    .normalizeEmail(),
+  body('password')
+    .notEmpty()
+    .withMessage('密码不能为空')
+], validate, async (req, res) => {
   try {
     const { email, password } = req.body;
-    
-    // 验证输入
-    if (!email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: '邮箱和密码不能为空'
-      });
-    }
-    
+
     // 查找用户
     const user = userOps.findByEmail(email);
     if (!user) {
@@ -118,7 +120,7 @@ router.post('/login', async (req, res) => {
         message: '邮箱或密码错误'
       });
     }
-    
+
     // 验证密码
     const passwordMatch = await bcrypt.compare(password, user.password_hash);
     if (!passwordMatch) {
@@ -127,11 +129,11 @@ router.post('/login', async (req, res) => {
         message: '邮箱或密码错误'
       });
     }
-    
+
     // 生成 token
     const token = generateToken(user);
     const refreshToken = generateRefreshToken(user);
-    
+
     res.json({
       success: true,
       message: '登录成功',
@@ -144,7 +146,7 @@ router.post('/login', async (req, res) => {
         refreshToken
       }
     });
-    
+
   } catch (error) {
     console.error('登录错误:', error);
     res.status(500).json({
@@ -159,21 +161,20 @@ router.post('/login', async (req, res) => {
  * 刷新 token
  * 请求体：{ refreshToken }
  */
-router.post('/refresh', async (req, res) => {
+router.post('/refresh', [
+  body('refreshToken')
+    .notEmpty()
+    .withMessage('请提供刷新 token')
+    .isString()
+    .withMessage('刷新 token 必须是字符串')
+], validate, async (req, res) => {
   try {
     const { refreshToken } = req.body;
-    
-    if (!refreshToken) {
-      return res.status(400).json({
-        success: false,
-        message: '请提供刷新 token'
-      });
-    }
-    
+
     // 验证刷新 token
     const jwt = await import('jsonwebtoken');
     const decoded = jwt.default.verify(refreshToken, process.env.JWT_SECRET);
-    
+
     // 检查是否为刷新 token
     if (decoded.type !== 'refresh') {
       return res.status(403).json({
@@ -181,7 +182,7 @@ router.post('/refresh', async (req, res) => {
         message: '无效的刷新 token'
       });
     }
-    
+
     // 验证用户是否存在
     const user = userOps.findById(decoded.userId);
     if (!user) {
@@ -190,11 +191,11 @@ router.post('/refresh', async (req, res) => {
         message: '用户不存在'
       });
     }
-    
+
     // 生成新的 token 和刷新 token
     const newToken = generateToken(user);
     const newRefreshToken = generateRefreshToken(user);
-    
+
     res.json({
       success: true,
       message: 'Token 刷新成功',
@@ -203,24 +204,24 @@ router.post('/refresh', async (req, res) => {
         refreshToken: newRefreshToken
       }
     });
-    
+
   } catch (error) {
     console.error('Token 刷新错误:', error);
-    
+
     if (error.name === 'TokenExpiredError') {
       return res.status(401).json({
         success: false,
         message: '刷新 token 已过期，请重新登录'
       });
     }
-    
+
     if (error.name === 'JsonWebTokenError') {
       return res.status(403).json({
         success: false,
         message: '无效的刷新 token'
       });
     }
-    
+
     res.status(500).json({
       success: false,
       message: '服务器错误，请稍后重试'

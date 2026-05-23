@@ -1,7 +1,7 @@
 /**
  * 数据同步模块
  * Advanced Personal Panel 前端数据同步
- * 
+ *
  * 功能：
  * - 自动检测网络状态
  * - 离线时使用 localStorage
@@ -10,21 +10,29 @@
  */
 
 // ============================================
-// 配置（SYNC_CONFIG 已在 index.html 中定义）
+// 配置（防御性初始化，兼容独立使用）
 // ============================================
-Object.assign(SYNC_CONFIG, {
+window.SYNC_CONFIG = window.SYNC_CONFIG || {};
+
+Object.assign(window.SYNC_CONFIG, {
+  // API 地址（默认使用当前域名）
+  API_URL: window.SYNC_CONFIG.API_URL || '',
+
   // 自动同步间隔（毫秒）
-  AUTO_SYNC_INTERVAL: 30000, // 30 秒
-  
+  AUTO_SYNC_INTERVAL: window.SYNC_CONFIG.AUTO_SYNC_INTERVAL || 30000, // 30 秒
+
   // 本地存储键名
   STORAGE_KEYS: {
     TOKEN: 'panel_token',
     REFRESH_TOKEN: 'panel_refresh_token',
     USER_DATA: 'panel_user_data',
     LAST_SYNC: 'panel_last_sync',
-    IS_LOGGED_IN: 'panel_is_logged_in'
-  }
-};
+    IS_LOGGED_IN: 'panel_is_logged_in',
+  },
+});
+
+// 本地引用，方便后续使用
+const SYNC_CONFIG = window.SYNC_CONFIG;
 
 // ============================================
 // 状态管理

@@ -24,6 +24,13 @@ let SQL = null;
 let dbInitialized = false;
 
 /**
+ * 延迟保存相关
+ */
+let saveScheduled = false;
+let saveTimer = null;
+const SAVE_DELAY = 1000; // 1 秒延迟批量保存
+
+/**
  * 初始化数据库
  * 创建必要的表结构
  */
@@ -135,6 +142,32 @@ export function saveDatabase() {
 }
 
 /**
+ * 延迟保存数据库（防抖）
+ * 多次写操作会合并为一次保存，减少磁盘 I/O
+ */
+function scheduleSave() {
+  if (saveTimer) {
+    clearTimeout(saveTimer);
+  }
+  saveTimer = setTimeout(() => {
+    saveDatabase();
+    saveTimer = null;
+  }, SAVE_DELAY);
+}
+
+/**
+ * 强制立即保存数据库
+ * 用于关键操作（如用户注册、登录）确保数据立即持久化
+ */
+export function forceSave() {
+  if (saveTimer) {
+    clearTimeout(saveTimer);
+    saveTimer = null;
+  }
+  saveDatabase();
+}
+
+/**
  * 获取数据库实例
  */
 export function getDatabase() {
@@ -146,7 +179,7 @@ export function getDatabase() {
  */
 export function closeDatabase() {
   if (db) {
-    saveDatabase();
+    forceSave();
     db.close();
     db = null;
     console.log('数据库连接已关闭');
@@ -191,8 +224,8 @@ function getAll(sql, params = []) {
  */
 function run(sql, params = []) {
   db.run(sql, params);
-  saveDatabase();
-  
+  scheduleSave();
+
   // 获取最后插入的 ID
   const result = getOne('SELECT last_insert_rowid() as lastId');
   return { lastInsertRowid: result?.lastId };
@@ -328,3 +361,22 @@ export const syncLogOps = {
     return result?.LAST_SYNC || result?.last_sync || null;
   }
 };
+
+// 进程退出时确保数据保存
+process.on('exit', () => {
+  if (db) {
+    forceSave();
+  }
+});
+
+process.on('SIGINT', () => {
+  console.log('\n收到 SIGINT 信号，正在保存数据库...');
+  closeDatabase();
+  process.exit(0);
+});
+
+process.on('SIGTERM', () => {
+  console.log('\n收到 SIGTERM 信号，正在保存数据库...');
+  closeDatabase();
+  process.exit(0);
+});
