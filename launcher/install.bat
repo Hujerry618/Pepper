@@ -27,7 +27,7 @@ reg add "HKEY_CLASSES_ROOT\mypanel\shell" /v "" /t REG_SZ /d "open" /f >nul
 reg add "HKEY_CLASSES_ROOT\mypanel\shell\open" /v "" /t REG_SZ /d "open" /f >nul
 
 :: 使用 PowerShell 作为协议处理器
-reg add "HKEY_CLASSES_ROOT\mypanel\shell\open\command" /v "" /t REG_SZ /d "powershell.exe -ExecutionPolicy Bypass -File \"%~dp0launcher.ps1\" \"%%1\"" /f >nul
+reg add "HKEY_CLASSES_ROOT\mypanel\shell\open\command" /v "" /t REG_SZ /d "powershell.exe -WindowStyle Hidden -ExecutionPolicy Bypass -File \"%~dp0launcher.ps1\" \"%%1\"" /f >nul
 
 echo.
 echo ========================================

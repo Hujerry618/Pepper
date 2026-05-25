@@ -11,7 +11,7 @@ if "!url:~0,8!"=="file:///" set "url=!url:~8!"
 if "!url:~0,8!"=="file:\\\" set "url=!url:~8!"
 
 REM Use PowerShell to decode and execute (handles UTF-8 properly)
-powershell -Command ^
+powershell -WindowStyle Hidden -Command ^
     "$url='%url%'; ^
     $decoded = [System.Net.WebUtility]::UrlDecode($url); ^
     $decoded = $decoded -replace '/', '\\'; ^
